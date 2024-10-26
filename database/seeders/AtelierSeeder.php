@@ -41,13 +41,13 @@ class AtelierSeeder extends Seeder
 
                 // Create equipment for this atelier with allowed types
                 foreach ($assignedTypes as $type) {
-                    Equipment::factory()
+                    $equipments = Equipment::factory()
                         ->count(fake()->numberBetween(0, 3))
                         ->create([
                             'type_id' => $type->id,
-                            'atelier_id' => $atelier->id,
                             'owner_id' => $manager->id,
                         ]);
+                    $atelier->equipments()->attach($equipments);
                 }
             });
     }

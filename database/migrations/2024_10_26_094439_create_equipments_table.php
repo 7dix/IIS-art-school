@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('type_id')->constrained('types')->onDelete('cascade');
-            $table->foreignId('atelier_id')->constrained('ateliers')->onDelete('cascade');
             $table->foreignId('owner_id')->constrained('users')->onDelete('cascade');
             $table->year('year_of_manufacture');
             $table->timestamp('date_of_purchase');

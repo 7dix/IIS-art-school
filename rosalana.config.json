@@ -1,0 +1,14 @@
+{
+  "rosalana-dev": "1.0.5",
+  "paths": {
+    "components": "./resources/js/Components",
+    "composables": "./resources/js/Composables",
+    "types": "./resources/js/Types"
+  },
+  "installed": {
+    "components": [],
+    "composables": [
+      "VisualTable"
+    ]
+  }
+}

@@ -16,6 +16,7 @@ class AtelierResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'name' => $this->name,
             'room' => $this->room,
             'types' => TypeResource::collection($this->whenLoaded('types')),  
             'equipments' => EquipmentResource::collection($this->whenLoaded('equipments')),

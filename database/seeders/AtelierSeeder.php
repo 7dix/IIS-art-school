@@ -16,12 +16,12 @@ class AtelierSeeder extends Seeder
      */
     public function run(): void
     {
-        $types = Type::factory()->count(5)->create();
+        $types = Type::factory()->count(12)->create();
         $users = User::factory()->count(50)->create();
 
         Atelier::factory()
-            ->count(10)
-            ->sequence(fn($sequence) => ['name' => "Atelier {$sequence->index}"])
+            ->count(20)
+            ->sequence(fn($sequence) => ['name' => sprintf("Atelier %02d", $sequence->index)])
             ->create()
             ->each(function ($atelier) use ($types, $users) {
                 // Assign a random manager to each atelier

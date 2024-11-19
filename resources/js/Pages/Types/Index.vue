@@ -23,10 +23,32 @@ const columns = [
     {
         key: "equipments",
         header: "Equipments",
+        renderAs: (item) => {
+            return h(
+                Button,
+                {
+                    onClick: () => {
+                        console.log(item);
+                    },
+                },
+                item.equipments.length
+            );
+        },
     },
     {
         key: "ateliers",
         header: "Ateliers",
+        renderAs: (item) => {
+            return h(
+                Button,
+                {
+                    onClick: () => {
+                        console.log(item);
+                    },
+                },
+                item.ateliers.length
+            );
+        },
     },
     {
         key: "actions",

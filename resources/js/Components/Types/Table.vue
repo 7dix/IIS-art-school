@@ -1,3 +1,5 @@
+<!-- REMOVE deprecated -->
+
 <script setup lang="ts">
 import { defineProps, onMounted } from "vue";
 import { useVisualTable, VTRender } from "@/Composables/useVisualTable";

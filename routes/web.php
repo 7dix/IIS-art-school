@@ -5,11 +5,12 @@ use App\Http\Controllers\MyReservationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\ProfileController;
-use App\Models\Reservation;
 use App\Http\Controllers\TypeController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\ReservationController;
+
 
 
 Route::get('/', function () {
@@ -39,6 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('atelier', AtelierController::class);
 
     Route::resource('my-reservation', MyReservationController::class);
+    Route::resource('reservation', ReservationController::class);
 
     Route::resource('user', UserController::class);
     Route::resource('equipment', EquipmentController::class);

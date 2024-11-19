@@ -71,6 +71,7 @@ const props = withDefaults(
         showFilters?: boolean;
         showSearch?: boolean;
         showPagination?: boolean;
+        noDataMessage?: string;
     }>(),
     {
         columns: () => [],
@@ -88,6 +89,7 @@ const props = withDefaults(
         showFilters: false,
         showSearch: true,
         showpagination: true,
+        noDataMessage: "No data available",
     }
 );
 
@@ -467,6 +469,7 @@ let columnsFilters = getFiltersForCols();
                   v-for="column in table.columns.visible"
                   :key="column.key"
                   @click="sortBy(column.key)"
+                  class="select-none border-x"
                   :class="{
                     'cursor-pointer': column.enableSort,
                     'hover:text-muted-foreground': !column.enableSort,
@@ -517,7 +520,7 @@ let columnsFilters = getFiltersForCols();
                     name="lucide:database"
                     class="h-12 w-12 text-muted-foreground"
                   />
-                  <span class="mt-2">No data available.</span>
+                  <span class="mt-2">{{props.noDataMessage}}</span>
                 </div>
               </TableEmpty>
             </TableBody>

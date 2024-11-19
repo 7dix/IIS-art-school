@@ -1,0 +1,36 @@
+<script setup lang="ts">
+import { ref, watch } from "vue";
+import { Button } from "@/Components/ui/button";
+import { forEachChild } from "typescript";
+import { VTFilter } from "@/types";
+
+const props = defineProps({
+    statuses: {
+        type: Array<VTFilter>,
+        required: true,
+    },
+});
+const statuses = ref(props.statuses);
+
+</script>
+
+<template>
+    <div class="w-fit my-2" v-if="statuses">
+        <b>Status filter</b>
+        <div class="flex space-x-2">
+            <Button variant="outline" @click="() => statuses.forEach(status => { status.operator = true; })">
+                Show all
+            </Button>
+            <Button
+                variant="outline"
+                v-for="status in statuses"
+                :key="status"
+                @click="() => { status.operator == true ? status.operator = '!==' : status.operator = true }"
+                :class="status.operator == true ? 'bg-green-400 hover:bg-green-400' : 'bg-slate-300 hover:bg-slate-300'"
+                class="hover:shadow-md active:shadow-sm"
+            >
+                {{ status.value.charAt(0).toUpperCase() + status.value.slice(1) }}
+            </Button>
+        </div>
+    </div>
+</template>

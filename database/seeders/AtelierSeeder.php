@@ -6,6 +6,7 @@ use App\Models\Atelier;
 use App\Models\Equipment;
 use App\Models\Type;
 use App\Models\User;
+use App\Models\Reservation;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -50,6 +51,14 @@ class AtelierSeeder extends Seeder
                         ]);
                     // $atelier->equipments()->attach($equipments);
                 }
+
+                // Create reservations for this atelier
+                Reservation::factory()
+                    ->count(5)
+                    ->create([
+                        'equipment_id' => $atelier->equipments->random()->id, // Associate with a random equipment
+                        'user_id' => $assignedUsers->random()->id, // Associate with a random assigned user
+                    ]);
             });
     }
 }

@@ -14,7 +14,7 @@ const props = defineProps({
 
 </script>
 <template>
-    <Head title="Dashboard" />
+    <Head title="Atelier" />
     <AuthenticatedLayout>
         <template #header>
             <h2

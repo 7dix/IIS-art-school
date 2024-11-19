@@ -1,7 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
-import Table from '@/Components/Equipment/Table.vue';
+import Table from '@/Components/Table.vue';
+import { VTColumn } from "@/types";
+import { h } from "vue";
+import { Button } from '@/Components/ui/button'
 
 
 const props = defineProps({
@@ -18,6 +21,53 @@ const props = defineProps({
         required: true,
     },
 })
+
+const columns: VTColumn[] = [
+    {
+        "key": "name",
+        "header": "Name",
+    },
+    {
+        "key": "type",
+        "header": "Type",
+        renderAs: (item) => {
+            return h('span', item.type.name)
+        }
+    },
+
+    {
+        "key": "owner",
+        "header": "Owner",
+        renderAs: (item) => {
+            return h('span', item.owner.first_name + " " + item.owner.last_name)
+        }
+    },
+    {
+        "key": "atelier",
+        "header": "Atelier",
+        renderAs: (item) => {
+            return h('span', item.atelier.name)
+        }
+    }, 
+    {
+        "key": "actions",
+        "header": "Actions",
+        renderAs: (item) => {
+            return h(
+                Button,
+                {
+                    onClick: () => {
+                        console.log(item);
+                    },
+                    class: 'bg-blue-500 text-white'
+                },
+                'Edit'
+            );
+        },
+    }
+]
+
+
 </script>
 
 <template>
@@ -46,7 +96,7 @@ const props = defineProps({
 
 
                     <div class="p-6 text-gray-900">
-                        <Table :equipments="equipments" :types="types" />
+                        <Table :data="equipments.data" :columns="columns" icon="solar:case-minimalistic-outline" />
                     </div>
                 </div>
             </div>

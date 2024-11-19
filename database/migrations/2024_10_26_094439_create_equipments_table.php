@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('maximum_leasing_period');
             // Hodiny ve kterých je možné zařízení pronajmout
             // example: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
-            $table->json('allowed_leasing_hours'); 
+            $table->json('allowed_leasing_hours')->nullable(); 
             $table->string('image')->nullable();
             $table->timestamps();
             $table->boolean('can_be_borrowed')->default(true);

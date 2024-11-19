@@ -48,6 +48,10 @@ Route::middleware('auth')->group(function () {
 
 
     //Api routes
+    //php artisan route:list
+    //php artisan route:cache
+    //php artisan route:clear
+
     Route::put('/api/user/{id}', [UserController::class, 'update']);
     Route::get('/api/getAteliersWithType/{id}', [AtelierController::class, 'getAteliersWithType']);
 });

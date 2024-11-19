@@ -18,17 +18,13 @@ let ateliers = ref({});
 const form = useForm({
     name: '',
     maximum_leasing_period: '',
-    allowed_leasing_hours: [],
     type_id: '',
     atelier_id: '',
 });
 
-const createEquipment = () => {
-    
+const createEquipment = () => {    
     form.post(route('equipment.store'));
-    
 };
-
 
 watch(
     () => form.type_id, //kdyz se zmeni typ vybaveni -> v atelierech jen ty ateliery co maji ten typ

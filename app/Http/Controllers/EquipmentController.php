@@ -45,16 +45,16 @@ class EquipmentController extends Controller
         return inertia('Equipment/Create', ['types' => $types]);
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $validatedData = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'maximum_leasing_period' => ['required', 'integer', 'digits:1', 'min:1900', 'max:8'],
-            'allowed_leasing_hours' => ['required', 'json'],
+            'maximum_leasing_period' => ['required', 'integer'],
+            // 'allowed_leasing_hours' => ['required', 'json'],
             'type_id' => ['required', 'exists:types,id'],
+            'atelier_id' => ['required', 'exists:ateliers,id']
         ]);
-
-        $validatedData['owner_id'] = Auth::id();
+        $user = Auth::user();
+        $validatedData['owner_id'] = $user->id;
 
         $equipment = Equipment::create($validatedData);
 

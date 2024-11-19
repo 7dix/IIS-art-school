@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\AtelierController;
+use App\Http\Controllers\MyReservationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Reservation;
 use App\Http\Controllers\TypeController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +36,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('atelier', AtelierController::class);
+
+    Route::resource('my-reservation', MyReservationController::class);
 
     Route::resource('user', UserController::class);
     Route::put('/api/user/{id}', [UserController::class, 'update']);

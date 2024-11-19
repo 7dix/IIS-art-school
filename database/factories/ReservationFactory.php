@@ -19,7 +19,7 @@ class ReservationFactory extends Factory
         return [
             'start_date' => $this->faker->dateTimeBetween('-7 days', 'now'),
             'end_date' => $this->faker->dateTimeBetween('now', '+7 days'),
-            'status' => $this->faker->randomElement(['ongoing', 'completed', 'cancelled']),
+            'status' => $this->faker->randomElement(['pending','approved','rejected','ongoing', 'completed', 'cancelled']),
         ];
     }
 }

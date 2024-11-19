@@ -25,6 +25,7 @@ return new class extends Migration
             $table->json('allowed_leasing_hours'); 
             $table->string('image')->nullable();
             $table->timestamps();
+            $table->boolean('can_be_borrowed')->default(true);
         });
     }
 

@@ -38,6 +38,18 @@ const showingNavigationDropdown = ref(false);
                                     Dashboard
                                 </NavLink>
                                 <NavLink
+                                    :href="route('my-reservation.index')"
+                                    :active="route().current('my-reservation.index')"
+                                >
+                                    My Reservations
+                                </NavLink>
+                                <NavLink
+                                    :href="route('reservation.index')"
+                                    :active="route().current('reservation.index')"
+                                >
+                                    Manage Reservations
+                                </NavLink>
+                                <NavLink
                                     :href="route('atelier.index')"
                                     :active="route().current('atelier.index')"
                                 >
@@ -57,7 +69,8 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Types
                                 </NavLink>
-                                <NavLink :href="route('equipment.index')" 
+                                <NavLink 
+                                    :href="route('equipment.index')" 
                                     :active="route().current('equipment.index')"
                                 >
                                     Equipments

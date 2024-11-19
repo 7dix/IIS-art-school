@@ -100,7 +100,7 @@ const columns: VTColumn[] = [
                         </Link>
                     </div>
                     <div class="p-6 text-gray-900">
-                        <Table :data="ateliers.data" :columns="columns" />
+                        <Table :data="ateliers.data" :columns="columns" icon="solar:case-minimalistic-outline" />
                     </div>
                 </div>
             </div>

@@ -16,10 +16,11 @@ class ReservationResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'equipments' => EquipmentResource::collection($this->whenLoaded('equipments')),
-            'date_start' => $this->date_start,
-            'date_end' => $this->date_end,
-            'user' => UserResource::collection($this->whenLoaded('user')),
+            'equipment' => new EquipmentResource($this->whenLoaded('equipment')),
+            'created_at' => $this->created_at,
+            'start_date' => $this->start_date,
+            'end_date' => $this->end_date,
+            'user' =>  new UserResource($this->whenLoaded('user')),
             'status' => $this->status,
         ];
     }

@@ -545,7 +545,7 @@ let columnsFilters = getFiltersForCols();
             <div
               class="relative mb-4 flex items-center gap-3 self-start font-semibold text-action"
             >
-              <Icon :name="props.icon" class="size-6" />
+              <Icon :icon="props.icon" class="size-6" />
               <VTRender
                 :content="table.columns.bind('name')?.content()"
                 :item="row"

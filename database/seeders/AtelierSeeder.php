@@ -52,13 +52,15 @@ class AtelierSeeder extends Seeder
                     // $atelier->equipments()->attach($equipments);
                 }
 
+                // $equipment = $equipments->random();
+
                 // Create reservations for this atelier
-                Reservation::factory()
-                    ->count(5)
-                    ->create([
-                        'equipment_id' => $atelier->equipments->random()->id, // Associate with a random equipment
-                        'user_id' => $assignedUsers->random()->id, // Associate with a random assigned user
-                    ]);
+                // Reservation::factory()
+                //     ->count(5)
+                //     ->create([
+                //         'equipment_id' => $equipment->id, // Associate with a random equipment
+                //         'user_id' => $assignedUsers->random()->id, // Associate with a random assigned user
+                //     ]);
             });
     }
 }

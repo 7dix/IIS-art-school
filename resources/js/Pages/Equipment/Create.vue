@@ -17,6 +17,8 @@ let ateliers = ref({});
 const form = useForm({
     name: '',
     maximum_leasing_period: '',
+    year_of_manufacture: '',
+    date_of_purchase: '',
     type_id: '',
     atelier_id: '',
 });
@@ -65,12 +67,8 @@ const getAteliers = (type_id) => {
                     <form @submit.prevent="createEquipment">
                         <div class="p-6 bg-white border-b border-gray-200">
                             <div class="mb-4">
-                                <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                                <label for="name" class="block text-sm font-medium text-gray-700">Name:</label>
                                 <input type="text" id="name" v-model="form.name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
-                            </div>
-                            <div class="mb-4">
-                                <label for="room" class="block text-sm font-medium text-gray-700">Maximum leasing period</label>
-                                <input type="text" id="room" v-model="form.maximum_leasing_period" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
                             </div>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700" for="role">Type:</label>
@@ -79,11 +77,26 @@ const getAteliers = (type_id) => {
                                 </select>
                             </div>
                             <div class="mb-4">    
-                                <label class="block text-sm font-medium text-gray-700" for="role">Ateliers:</label>
+                                <label class="block text-sm font-medium text-gray-700" for="role">Atelier:</label>
                                 <select v-model="form.atelier_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                                     <option v-for="atelier in ateliers.data" :key="atelier.id" :value="atelier.id">{{ atelier.name }}</option>
+                                    <option v-if="form.type_id == ''"> -- Select Type of equipment first -- </option>
                                 </select>
                             </div>
+                            <div class="mb-4">
+                                <label for="room" class="block text-sm font-medium text-gray-700">Maximum leasing period:</label>
+                                <input type="text" id="room" v-model="form.maximum_leasing_period" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="room" class="block text-sm font-medium text-gray-700">Year of manufacture:</label>
+                                <input type="text" id="room" v-model="form.year_of_manufacture" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="room" class="block text-sm font-medium text-gray-700">Date of purchase:</label>
+                                <input type="date" id="room" v-model="form.date_of_purchase" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                            </div>
+                            
 
                             <div class="flex items-center justify-end mt-4">
                                 <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-700">

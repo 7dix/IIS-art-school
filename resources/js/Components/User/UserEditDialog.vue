@@ -36,7 +36,7 @@
   
   <script setup lang="ts">
   import axios from 'axios';
-import { defineProps, defineEmits, ref, watch, onMounted, onUnmounted } from 'vue';
+  import { defineProps, defineEmits, ref, watch, onMounted, onUnmounted } from 'vue';
   
   const props = defineProps<{
     user: any,

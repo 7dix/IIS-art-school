@@ -49,7 +49,8 @@ class EquipmentController extends Controller
         $validatedData = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'maximum_leasing_period' => ['required', 'integer'],
-            // 'allowed_leasing_hours' => ['required', 'json'],
+            'year_of_manufacture' => ['integer', 'nullable', 'max:'.date('Y')],
+            'date_of_purchase' => ['date', 'nullable', 'max:'.date('Y-m-d')],
             'type_id' => ['required', 'exists:types,id'],
             'atelier_id' => ['required', 'exists:ateliers,id']
         ]);

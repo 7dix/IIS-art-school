@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\AtelierController;
+use App\Http\Controllers\MyReservationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Reservation;
+use App\Http\Controllers\TypeController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -35,10 +38,13 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('atelier', AtelierController::class);
 
+    Route::resource('my-reservation', MyReservationController::class);
+
     Route::resource('user', UserController::class);
     Route::resource('equipment', EquipmentController::class);
     Route::put('/api/user/{id}', [UserController::class, 'update']);
 
+    Route::resource('types', TypeController::class);
 });
 
 require __DIR__.'/auth.php';

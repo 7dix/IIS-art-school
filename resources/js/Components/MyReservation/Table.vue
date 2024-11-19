@@ -28,10 +28,10 @@ import {
 
 const props = withDefaults(
     defineProps<{
-        ateliers: any[] | any;
+        reservations: any[] | any;
     }>(),
     {
-        ateliers: {}
+        reservations: {}
     }
 );
 
@@ -104,7 +104,7 @@ const columns: VTColumn[] = [
 
 const table = useVisualTable({
     get data() { 
-        return props.ateliers.data
+        return props.reservations.data
     },
     get columns() { 
         return columns
@@ -166,7 +166,7 @@ const table = useVisualTable({
         </div>
 
         <div>
-            <!-- <pre>{{props.ateliers}}</pre> -->
+            <!-- <pre>{{props.reservations}}</pre> -->
         </div>
     </div>
 </template>

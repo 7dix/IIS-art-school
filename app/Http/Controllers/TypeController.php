@@ -13,4 +13,22 @@ class TypeController extends Controller
         $types = Type::with(['equipments', 'ateliers'])->get();
         return inertia('Types/Index', ['types' => TypeResource::collection($types)]);
     }
+
+    public function create()
+    {
+        return inertia('Types/Create');
+    }
+
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => ['required', 'string', 'max:255', 'unique:types,name'],
+        ], [
+            'name.unique' => 'This Type already exists.',
+        ]);
+    
+        $type = Type::create($validatedData);
+    
+        return $this->index();
+    }
 }

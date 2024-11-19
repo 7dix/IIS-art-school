@@ -57,18 +57,16 @@ const columns: VTColumn[] = [
         "key": "owner",
         "header": "Owner",
         renderAs: (item) => {
-            return h('span', item.owner.firstName + item.owner.lastName)
+            return h('span', item.owner.first_name + " " + item.owner.last_name)
         }
     },
     {
-        "key": "owner_id",
-        "header": "Owner Id",
+        "key": "atelier",
+        "header": "Atelier",
         renderAs: (item) => {
-            return h('span', item.owner_id)
+            return h('span', item.atelier.name)
         }
-    },
-   
-
+    }, 
     {
         "key": "actions",
         "header": "Actions",

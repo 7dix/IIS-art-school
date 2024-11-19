@@ -15,6 +15,7 @@ class Equipment extends Model
         'name',
         'type_id',
         'owner_id',
+        'atelier_id',
         'year_of_manufacture',
         'date_of_purchase',
         // Maximální doba pronájmu (ve dnech)
@@ -34,9 +35,9 @@ class Equipment extends Model
         return $this->belongsTo(User::class, 'owner_id');
     }
 
-    public function ateliers()
+    public function atelier()
     {
-        return $this->belongsToMany(Atelier::class);
+        return $this->belongsTo(Atelier::class);
     }
 
     

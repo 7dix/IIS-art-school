@@ -19,9 +19,9 @@ class EquipmentResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'year_of_manufacture' => $this->year_of_manufacture,
             'owner' => new UserResource($this->owner),
             'type' => new TypeResource($this->type),
+            'atelier' => new AtelierResource($this->atelier),
         ];
     }
 }

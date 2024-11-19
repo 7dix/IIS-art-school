@@ -16,8 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->foreignId('type_id')->constrained('types')->onDelete('cascade');
             $table->foreignId('owner_id')->constrained('users')->onDelete('cascade');
-            $table->year('year_of_manufacture');
-            $table->timestamp('date_of_purchase');
+            $table->foreignId('atelier_id')->constrained('ateliers')->onDelete('cascade');
+            $table->year('year_of_manufacture')->nullable();;
+            $table->timestamp('date_of_purchase')->nullable();;
              // Maximální doba pronájmu ve dnech
             $table->integer('maximum_leasing_period');
             // Hodiny ve kterých je možné zařízení pronajmout

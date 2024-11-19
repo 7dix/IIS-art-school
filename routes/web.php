@@ -42,9 +42,14 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('user', UserController::class);
     Route::resource('equipment', EquipmentController::class);
-    Route::put('/api/user/{id}', [UserController::class, 'update']);
 
     Route::resource('types', TypeController::class);
+
+
+
+    //Api routes
+    Route::put('/api/user/{id}', [UserController::class, 'update']);
+    Route::get('/api/getAteliersWithType/{id}', [AtelierController::class, 'getAteliersWithType']);
 });
 
 require __DIR__.'/auth.php';

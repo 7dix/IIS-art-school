@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Resources\EquipmentResource;
+use App\Http\Resources\AtelierResource;
 use App\Http\Resources\RoleResource;
 use App\Http\Resources\TypeResource;
 use App\Models\Equipment;
+use App\Models\Atelier;
 use App\Models\Role;
 use App\Models\Type;
 use App\Http\Requests\UpdateUserRequest;
@@ -33,6 +35,30 @@ class EquipmentController extends Controller
         $types = TypeResource::collection(Type::all());
         return inertia('Equipment/Index', ['equipments' => $equipments, 'types' => $types, 'user' => $user]);
 
+    }
+
+
+    public function create()
+    {
+        $types = TypeResource::collection(Type::all());
+     
+        return inertia('Equipment/Create', ['types' => $types]);
+    }
+
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'maximum_leasing_period' => ['required', 'integer', 'digits:1', 'min:1900', 'max:8'],
+            'allowed_leasing_hours' => ['required', 'json'],
+            'type_id' => ['required', 'exists:types,id'],
+        ]);
+
+        $validatedData['owner_id'] = Auth::id();
+
+        $equipment = Equipment::create($validatedData);
+
+        return $this->index();
     }
 
 }

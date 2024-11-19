@@ -24,7 +24,7 @@ import {
   PaginationNext,
   PaginationPrev,
 } from '@/Components/ui/pagination'
-import { Input } from '@/components/ui/input'
+import { Input } from '@/Components/ui/input'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -38,7 +38,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from '@/Components/ui/dropdown-menu'
 import {
   Select,
   SelectContent,
@@ -47,7 +47,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from '@/Components/ui/select'
 import { Icon } from '@iconify/vue';
 
 

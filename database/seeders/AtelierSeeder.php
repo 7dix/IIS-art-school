@@ -46,8 +46,9 @@ class AtelierSeeder extends Seeder
                         ->create([
                             'type_id' => $type->id,
                             'owner_id' => $manager->id,
+                            'atelier_id' => $atelier->id,
                         ]);
-                    $atelier->equipments()->attach($equipments);
+                    // $atelier->equipments()->attach($equipments);
                 }
             });
     }

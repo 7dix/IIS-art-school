@@ -48,8 +48,8 @@ const columns: VTColumn[] = [
         },
     },
     {
-        "key": "equipments",
-        "header": "Equipments",
+        "key": "types",
+        "header": "Types",
         renderAs: (item) => {
             return h(
                 Button,
@@ -58,7 +58,7 @@ const columns: VTColumn[] = [
                         console.log(item);
                     },
                 },
-                item.equipments.length
+                item.types.length
             );
         },
     },

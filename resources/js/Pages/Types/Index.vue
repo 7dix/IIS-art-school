@@ -1,7 +1,12 @@
-<script setup>
+<script setup lang="ts">
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import Table from "@/Components/Types/Table.vue";
 import { Head, Link } from "@inertiajs/vue3";
+import { VTColumn } from "@/types";
+import Table from "@/Components/Table.vue";
+import { h, ref } from "vue";
+import { Button } from "@/Components/ui/button";
+import EditUserDialog from "@/Components/User/UserEditDialog.vue";
+import axios from "axios";
 
 const props = defineProps({
     types: {
@@ -9,6 +14,35 @@ const props = defineProps({
         required: true,
     },
 });
+
+const columns = [
+    {
+        key: "name",
+        header: "Name",
+    },
+    {
+        key: "equipments",
+        header: "Equipments",
+    },
+    {
+        key: "ateliers",
+        header: "Ateliers",
+    },
+    {
+        key: "actions",
+        header: "Actions",
+        renderAs: (item) => {
+            return h(
+                Button,
+                {
+                    onClick: () => openEditDialog(item),
+                    class: "bg-blue-500 text-white",
+                },
+                "Edit"
+            );
+        },
+    },
+];
 </script>
 
 <template>
@@ -23,15 +57,17 @@ const props = defineProps({
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div
-                        class="mt-4 sm:mt-0 sm:ml-16 sm:flex sm:justify-end pr-6 pt-6">
+                        class="mt-4 sm:mt-0 sm:ml-16 sm:flex sm:justify-end pr-6 pt-6"
+                    >
                         <Link
                             :href="route('types.create')"
-                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        >
                             Create Type
                         </Link>
                     </div>
                     <div class="p-6 text-gray-900">
-                        <Table :types="types" />
+                        <Table :data="types.data" :columns="columns" />
                     </div>
                 </div>
             </div>

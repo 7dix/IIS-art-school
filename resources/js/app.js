@@ -5,8 +5,12 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+import { addCollection, Icon } from '@iconify/vue';
+import solarIcons from '@iconify-json/solar/icons.json';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+
+addCollection(solarIcons);
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -19,6 +23,7 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
+            .component('Icon', Icon)
             .mount(el);
     },
     progress: {

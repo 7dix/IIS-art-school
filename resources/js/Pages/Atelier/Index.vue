@@ -1,7 +1,11 @@
-<script setup>
+<script setup lang="ts">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import Table from '@/Components/Atelier/Table.vue';
+import Table from '@/Components/Table.vue';
 import { Head, Link } from '@inertiajs/vue3';
+import { VTColumn } from "@/types";
+import { h } from "vue";
+import { Button } from '@/Components/ui/button'
+
 
 
 
@@ -11,6 +15,70 @@ const props = defineProps({
         required: true,
     },
 })
+
+const columns: VTColumn[] = [
+    {
+        "key": "name",
+        "header": "Name",
+    },
+    {
+        "key": "room",
+        "header": "Room",
+    },
+    {
+        "key": "manager",
+        "header": "Manager",
+        renderAs: (item) => {
+            return h('span', item.manager.first_name + ' ' + item.manager.last_name)
+        }
+    },
+    {
+        "key": "users",
+        "header": "Students",
+        renderAs: (item) => {
+            return h(
+                Button,
+                {
+                    onClick: () => {
+                        console.log(item);
+                    }
+                },
+                item.users.length
+            );
+        },
+    },
+    {
+        "key": "equipments",
+        "header": "Equipments",
+        renderAs: (item) => {
+            return h(
+                Button,
+                {
+                    onClick: () => {
+                        console.log(item);
+                    },
+                },
+                item.equipments.length
+            );
+        },
+    },
+    {
+        "key": "actions",
+        "header": "Actions",
+        renderAs: (item) => {
+            return h(
+                Button,
+                {
+                    onClick: () => {
+                        console.log(item);
+                    },
+                    class: 'bg-blue-500 text-white'
+                },
+                'Edit'
+            );
+        },
+    }
+]
 
 </script>
 <template>
@@ -32,7 +100,7 @@ const props = defineProps({
                         </Link>
                     </div>
                     <div class="p-6 text-gray-900">
-                        <Table :ateliers="ateliers" />
+                        <Table :data="ateliers.data" :columns="columns" />
                     </div>
                 </div>
             </div>

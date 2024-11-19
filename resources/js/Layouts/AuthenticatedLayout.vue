@@ -50,6 +50,7 @@ const showingNavigationDropdown = ref(false);
                                     Manage Reservations
                                 </NavLink>
                                 <NavLink
+                                    
                                     :href="route('atelier.index')"
                                     :active="route().current('atelier.index')"
                                 >
@@ -58,15 +59,13 @@ const showingNavigationDropdown = ref(false);
 
                                 <NavLink
                                     :href="route('user.index')"
-                                    :active="route().current('user.index')"
-                                >
+                                    :active="route().current('user.index')">
                                     Users
                                 </NavLink>
 
                                 <NavLink
                                     :href="route('types.index')"
-                                    :active="route().current('types.index')"
-                                >
+                                    :active="route().current('types.index')">
                                     Types
                                 </NavLink>
                                 <NavLink 
@@ -75,6 +74,7 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Equipments
                                 </NavLink>
+                               
                             </div>
                         </div>
 

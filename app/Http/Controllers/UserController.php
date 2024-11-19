@@ -17,6 +17,7 @@ class UserController extends Controller
             User::with('role')->get()
         );
         $roles = RoleResource::collection(Role::all());
+
         return inertia('User/Index', ['users' => $users, 'roles' => $roles]);
     }
 

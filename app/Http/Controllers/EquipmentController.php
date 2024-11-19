@@ -8,6 +8,7 @@ use App\Http\Resources\AtelierResource;
 use App\Http\Resources\RoleResource;
 use App\Http\Resources\TypeResource;
 use App\Models\Equipment;
+use App\Models\User;
 use App\Models\Atelier;
 use App\Models\Role;
 use App\Models\Type;
@@ -30,10 +31,12 @@ class EquipmentController extends Controller
             Equipment::with('type')->get()
         );
 
+        /** @var \App\Models\User */
+        $user = Auth::user();  
 
-        $user = Auth::user();
         $types = TypeResource::collection(Type::all());
         return inertia('Equipment/Index', ['equipments' => $equipments, 'types' => $types, 'user' => $user]);
+        
 
     }
 

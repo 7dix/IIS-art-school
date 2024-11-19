@@ -45,6 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('user', UserController::class);
     Route::resource('equipment', EquipmentController::class);
 
+    Route::get('/types/create', [TypeController::class, 'create'])->name('types.create');
     Route::resource('types', TypeController::class);
 
 

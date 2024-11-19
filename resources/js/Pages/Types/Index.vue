@@ -5,7 +5,7 @@ import { VTColumn } from "@/types";
 import Table from "@/Components/Table.vue";
 import { h, ref } from "vue";
 import { Button } from "@/Components/ui/button";
-import EditUserDialog from "@/Components/User/UserEditDialog.vue";
+import DeleteDialog from "@/Components/DeleteDialog.vue";
 import axios from "axios";
 
 const props = defineProps({
@@ -14,6 +14,30 @@ const props = defineProps({
         required: true,
     },
 });
+
+const isDeleteDialogOpen = ref(false);
+const selectedType = ref(null);
+
+const openDeleteDialog = (item) => {
+    selectedType.value = item;
+    isDeleteDialogOpen.value = true;
+};
+
+const confirmDelete = async (type) => {
+    if (type) {
+        try {
+            await axios.delete(`/types/${type.id}`);
+            window.location.reload(); // Reload page after delete
+            isDeleteDialogOpen.value = false; // Close dialog after delete
+        } catch (error) {
+            console.error("Failed to delete type:", error);
+        }
+    }
+};
+
+const cancelDelete = () => {
+    isDeleteDialogOpen.value = false; // Close dialog on cancel
+};
 
 const columns = [
     {
@@ -54,14 +78,16 @@ const columns = [
         key: "actions",
         header: "Actions",
         renderAs: (item) => {
-            return h(
-                Button,
-                {
-                    onClick: () => openEditDialog(item),
-                    class: "bg-blue-500 text-white",
-                },
-                "Edit"
-            );
+            return h("div", {}, [
+                h(
+                    Button,
+                    {
+                        onClick: () => openDeleteDialog(item),
+                        class: "bg-red-500 text-white hover:bg-red-700",
+                    },
+                    "Delete"
+                ),
+            ]);
         },
     },
 ];
@@ -89,10 +115,21 @@ const columns = [
                         </Link>
                     </div>
                     <div class="p-6 text-gray-900">
-                        <Table :data="types.data" :columns="columns" />
+                        <Table
+                            :data="types.data"
+                            :columns="columns"
+                            icon="solar:case-minimalistic-outline"
+                        />
                     </div>
                 </div>
             </div>
         </div>
+        <DeleteDialog
+            :isOpen="isDeleteDialogOpen"
+            :type="selectedType"
+            @onConfirm="confirmDelete"
+            @onCancel="cancelDelete"
+            @update:isOpen="isDeleteDialogOpen = $event"
+        />
     </AuthenticatedLayout>
 </template>

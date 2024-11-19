@@ -17,6 +17,8 @@ class TypeResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'equipments' => EquipmentResource::collection($this->whenLoaded('equipments')),
+            'ateliers' => AtelierResource::collection($this->whenLoaded('ateliers')),
         ];
     }
 }

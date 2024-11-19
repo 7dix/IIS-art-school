@@ -18,18 +18,24 @@ class TypeFactory extends Factory
     {
         return [
             'name' => $this->faker->unique()->randomElement([
-                'Notebook', 
-                'Klávesy', 
-                'Mikrofon', 
-                'Sluchátka', 
-                'Monitor', 
-                'Kamera', 
-                'Stojan',
-                'Kabel',
-                'Reproduktor',
-                'Housle',
-                'Bubínek',
-                'Bicí',]),
+                'Drawing Tools',
+                'Painting Supplies',
+                'Sculpting Tools',
+                'Craft Supplies',
+                'Printmaking Tools',
+                'Ceramics Tools',
+                'Computers',
+                'Graphic Tablets',
+                'Digital Cameras',
+                '3D Printers',
+                'Scanners',
+                'Musical Instruments',
+                'Audio Equipment',
+                'Woodworking Tools',
+                'Metalworking Tools',
+                'Textile Tools',
+                'Jewelry Making Tools',
+            ]),
         ];
     }
 }

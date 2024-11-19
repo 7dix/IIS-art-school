@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AtelierController;
-use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\MyReservationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Reservation;
@@ -36,7 +36,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('atelier', AtelierController::class);
 
-    Route::resource('reservation', ReservationController::class);
+    Route::resource('my-reservation', MyReservationController::class);
 
     Route::resource('user', UserController::class);
     Route::put('/api/user/{id}', [UserController::class, 'update']);

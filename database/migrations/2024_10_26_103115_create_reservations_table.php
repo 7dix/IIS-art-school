@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('equipment_id')->constrained('equipments')->onDelete('cascade');
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->enum('status', ['ongoing', 'completed', 'cancelled']);
+            $table->datetime('start_date');
+            $table->datetime('end_date');
+            $table->enum('status', ['pending','approved','rejected','ongoing', 'completed', 'cancelled']);
             $table->timestamps();
         });
     }

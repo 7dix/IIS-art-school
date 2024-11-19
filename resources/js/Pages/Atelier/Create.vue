@@ -58,7 +58,7 @@ const createAtelier = () => {
                                 <label for="room" class="block text-sm font-medium text-gray-700">Room</label>
                                 <input type="text" id="room" v-model="form.room" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
                             </div>
-                            <label for="role">Role:</label>
+                            <label for="role">Manager:</label>
                             <select v-model="form.manager_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                                 <option v-for="user in props.users.data" :key="user.id" :value="user.id">{{ user.first_name + " " + user.last_name }}</option>
                             </select>   

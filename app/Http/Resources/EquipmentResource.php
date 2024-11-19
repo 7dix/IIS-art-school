@@ -20,6 +20,7 @@ class EquipmentResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'year_of_manufacture' => $this->year_of_manufacture,
+            'owner' => new UserResource($this->owner),
             'type' => new TypeResource($this->type),
         ];
     }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AtelierController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('atelier', AtelierController::class);
 
     Route::resource('user', UserController::class);
+    Route::resource('equipment', EquipmentController::class);
     Route::put('/api/user/{id}', [UserController::class, 'update']);
 
 });

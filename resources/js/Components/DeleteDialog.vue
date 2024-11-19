@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import {
     AlertDialog,
     AlertDialogTrigger,
@@ -11,10 +11,6 @@ import {
 } from "@/Components/ui/alert-dialog";
 
 const props = defineProps({
-    isOpen: {
-        type: Boolean,
-        required: true,
-    },
     onConfirm: {
         type: Function,
         required: true,
@@ -29,22 +25,32 @@ const props = defineProps({
     },
 });
 
-// Instead of using a local ref, directly use props.isOpen
+const isDialogOpen = ref(false);
+
+const openDialog = () => {
+    isDialogOpen.value = true;
+};
+
 const handleConfirm = () => {
-    props.onConfirm(props.type);
-    // Emit an event to close the dialog
-    emit("update:isOpen", false);
+    console.log(props.type);
+    if (typeof props.onConfirm === "function") {
+        props.onConfirm(props.type);
+    }
+    isDialogOpen.value = false;
 };
 
 const handleCancel = () => {
-    props.onCancel();
-    // Emit an event to close the dialog
-    emit("update:isOpen", false);
+    if (typeof props.onCancel === "function") {
+        props.onCancel();
+    }
+    isDialogOpen.value = false;
 };
+
+defineExpose({ openDialog });
 </script>
 
 <template>
-    <AlertDialog :open="props.isOpen">
+    <AlertDialog :open="isDialogOpen">
         <AlertDialogTrigger asChild>
             <button class="hidden"></button>
         </AlertDialogTrigger>

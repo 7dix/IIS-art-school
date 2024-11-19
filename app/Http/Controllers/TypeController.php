@@ -32,7 +32,7 @@ class TypeController extends Controller
         return $this->index();
     }
 
-    public function delete(Type $type)
+    public function destroy(Type $type)
     {
         $type->delete();
         return $this->index();

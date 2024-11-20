@@ -7,6 +7,17 @@ import { VTColumn, VTFilter } from "@/types";
 import { h, ref, render } from "vue";
 import { Button } from '@/Components/ui/button'
 import { Badge } from '@/Components/ui/badge'
+import { statusClassColor, parseDateTime } from "@/Composables/reservationUtils";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb'
+
+
 
 
 
@@ -17,41 +28,17 @@ const props = defineProps({
     },
 })
 
-const parseDateTime = (date: string) => {
-    const dateObj = new Date(date);
-    return dateObj.toLocaleDateString('cs-CZ', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-    });
-}
 
-const statusClass = (status: string) => {
-    switch (status) {
-        case 'pending':
-            return 'bg-yellow-500';
-        case 'approved':
-            return 'bg-green-500';
-        case 'rejected':
-            return 'bg-red-500';
-        case 'ongoing':
-            return 'bg-blue-500';
-        case 'completed':
-            return 'bg-green-500';
-        default:
-            return 'bg-gray-500';
-    }
-}
+
 
 const columns: VTColumn[] = [
     {
         "key": "equipment",
         "header": "Equipment",
-        renderAs: (item) => {
-            return h('span', item.equipment.name)
-        }
+    },
+    {
+        "key": "user",
+        "header": "User",
     },
     {
         "key": "created_at",
@@ -81,17 +68,28 @@ const columns: VTColumn[] = [
             return h(
                 Badge,
                 {
-                    class: statusClass(item.status)
+                    class: statusClassColor(item.status)
                 },
                 item.status
             );
         }
     },
     {
-        "key": "user",
-        "header": "User",
+    "key": "id",
+        "header": "Actions",
         renderAs: (item) => {
-            return h('span', item.user.first_name + ' ' + item.user.last_name)
+            return h('div', 
+                { class: "flex items-center justify-center" },
+                [
+                    h(Link, 
+                        {
+                            href: route('reservation.show', item.id),
+                            class: "inline-flex items-center px-4 py-2 bg-primary text-white font-semibold text-xs uppercase tracking-widest hover:bg-primary/90 focus:bg-primary/90 active:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 rounded-md"
+                        },
+                        'Show'
+                    )
+                ]
+            )
         }
     }
 ]
@@ -107,21 +105,28 @@ const statuses = ref<VTFilter[]>([
 
 </script>
 <template>
-    <Head title="Atelier" />
+    <Head title="Manage Reservations" />
     <AuthenticatedLayout>
         <template #header>
+            <Breadcrumb>
+                <BreadcrumbList>
+                    <BreadcrumbItem>
+                        <BreadcrumbLink href="/reservation">Reservations</BreadcrumbLink>
+                    </BreadcrumbItem>
+                </BreadcrumbList>
+            </Breadcrumb>
             <h2
                 class="text-xl font-semibold leading-tight text-gray-800"
             >
                 Manage reservations
             </h2>
         </template>
-        <div class="py-12">
+        <div class="py-8">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
                     <StatusFilter :statuses="statuses" />
-                    <Table :data="reservations.data" :columns="columns" :filter="statuses"/>
+                    <Table :data="reservations" :columns="columns" :filter="statuses" :flatData="true"/>
                     </div>
                 </div>
             </div>

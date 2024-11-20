@@ -301,9 +301,6 @@ let columnsFilters = getFiltersForCols();
                         class="hidden w-40 bg-slate-200 transition focus:bg-slate-300/60 sm:inline-block"
                         @input="applySearchFilter"
                     />
-                    {{ props.data.length }}
-                    {{ table.data.original.length }}
-                    {{ table.data.paginated.length }}
                     <div
                         class="inline-flex h-10 items-center gap-2 rounded-md p-2"
                         v-if="props.showFilters"
@@ -471,7 +468,7 @@ let columnsFilters = getFiltersForCols();
                                             table.sortState.value.key ===
                                                 column.key && column.enableSort
                                         "
-                                        :name="
+                                        :icon="
                                             table.sortState.value.direction ===
                                             'asc'
                                                 ? 'solar:double-alt-arrow-up-line-duotone'
@@ -508,19 +505,23 @@ let columnsFilters = getFiltersForCols();
 
                         <TableRow
                             v-if="table.data.paginated.length === 0"
-                            :colspan="table.columns.visible.length"
                         >
-                            <div
-                                class="flex w-full flex-col items-center justify-center gap-5 py-5"
+                            <TableCell
+                                class="text-center"
+                                :colspan="table.columns.visible.length"
                             >
-                                <Icon
-                                    name="lucide:database"
-                                    class="h-12 w-12 text-muted-foreground"
-                                />
-                                <span class="mt-2">{{
-                                    props.noDataMessage
-                                }}</span>
-                            </div>
+                                <div
+                                    class="flex w-full flex-col items-center justify-center gap-5 py-5"
+                                >
+                                    <Icon
+                                        icon="solar:sad-circle-broken"
+                                        class="h-12 w-12 text-muted-foreground"
+                                    />
+                                    <span class="mt-2">{{
+                                        props.noDataMessage
+                                    }}</span>
+                                </div>
+                            </TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>

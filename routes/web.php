@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('my-reservation', MyReservationController::class);
     Route::resource('reservation', ReservationController::class);
+    Route::resource('reservation/{id}', ReservationController::class);
 
     Route::resource('user', UserController::class);
     Route::resource('equipment', EquipmentController::class);

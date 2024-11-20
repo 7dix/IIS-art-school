@@ -82,4 +82,5 @@ class AtelierController extends Controller
     
         return response()->json(['message' => 'User removed from atelier successfully.']);
     }
+
 }

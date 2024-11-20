@@ -20,14 +20,10 @@ const props = defineProps({
         required: true,
     },
     atelierId: {
-        type: Object,
+        type: Number,
         required: true,
     },
     onAddUser: {
-        type: Function,
-        required: true,
-    },
-    onRemoveUser: {
         type: Function,
         required: true,
     },
@@ -61,14 +57,10 @@ const confirmDelete = async (id: number) => {
 const handleAddUser = () => {
     props.onAddUser();
 };
-
-const handleRemoveUser = (user) => {
-    props.onRemoveUser(user);
-};
 </script>
 
 <template>
-    <Card class="mb-6 w-full max-w-sm">
+    <Card class="mb-6 w-full max-w-sm h-auto">
         <CardHeader class="grid grid-cols-3 items-center">
             <div></div>
             <CardTitle

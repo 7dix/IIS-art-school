@@ -27,7 +27,7 @@ class RoleSeeder extends Seeder
         }
 
          //edit permissions
-         $permissions = ['edit_atelier', 'edit_type', 'edit_equipment', 'assign_teacher'];
+         $permissions = ['edit_atelier', 'edit_type', 'edit_equipment', 'assign_teacher', 'edit_user'];
          foreach ($permissions as $permission) {
              Permission::create(['name' => $permission]);
          }

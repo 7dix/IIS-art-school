@@ -25,8 +25,14 @@ class EquipmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index() {
+         /** @var \App\Models\User */
+         $user = Auth::user();
+
+         if (!$user->can('create_equipment')) {
+             return back();
+         }
+
         $equipments = EquipmentResource::collection(
             Equipment::with('type')->get()
         );
@@ -42,12 +48,27 @@ class EquipmentController extends Controller
 
     public function create()
     {
+        /** @var \App\Models\User */
+        $user = Auth::user();
+
+        if (!$user->can('create_equipment')) {
+            return back();
+        }
+        
         $types = TypeResource::collection(Type::all());
      
         return inertia('Equipment/Create', ['types' => $types]);
     }
 
     public function store(Request $request) {
+
+         /** @var \App\Models\User */
+         $user = Auth::user();
+
+         if (!$user->can('create_equipment')) {
+             return back();
+         }
+
         $validatedData = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'maximum_leasing_period' => ['required', 'integer'],

@@ -83,4 +83,33 @@ class AtelierController extends Controller
         return response()->json(['message' => 'User removed from atelier successfully.']);
     }
 
+    public function availableUsers($atelierId)
+    {
+        $atelier = Atelier::findOrFail($atelierId);
+        $usersInAtelier = $atelier->users->pluck('id');
+        $availableUsers = User::whereNotIn('id', $usersInAtelier)->get();
+    
+        return response()->json($availableUsers);
+    }
+
+    public function addUsers(Request $request, $atelierId)
+    {
+        $atelier = Atelier::findOrFail($atelierId);
+    
+        // Validate the request
+        $request->validate([
+            'users' => 'required|array',
+            'users.*.id' => 'required|exists:users,id',
+        ]);
+    
+        // Attach users to the atelier
+        $userIds = collect($request->input('users'))->pluck('id');
+        $atelier->users()->attach($userIds);
+    
+        // Fetch the newly added users with the correct table alias
+        $newUsers = $atelier->users()->whereIn('users.id', $userIds)->get();
+    
+        return response()->json(['message' => 'Users added successfully.', 'users' => $newUsers]);
+    }
+
 }

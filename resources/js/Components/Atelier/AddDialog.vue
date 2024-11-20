@@ -17,22 +17,38 @@ const props = defineProps({
         type: Function,
         required: true,
     },
+    atelierId: {
+        type: Number,
+        required: true,
+    },
 });
 
 const isDialogOpen = ref(false);
-const id = ref(null);
+const availableUsers = ref([]); // Initialize availableUsers array
+const selectedUsers = ref([]); // Initialize selectedUsers array
 
-const openDialog = (id_) => {
+const openDialog = () => {
     isDialogOpen.value = true;
-    id.value = id_;
+    fetchAvailableUsers(); // Fetch available users when dialog is opened
+};
+
+const fetchAvailableUsers = async () => {
+    try {
+        const response = await axios.get(
+            `/api/ateliers/${props.atelierId}/available-users`
+        );
+        console.log("Fetched users:", response.data); // Log the fetched users
+        availableUsers.value = response.data;
+    } catch (error) {
+        console.error("Failed to fetch available users:", error);
+    }
 };
 
 const handleConfirm = () => {
     if (typeof props.onConfirm === "function") {
-        console.log(id.value);
-        props.onConfirm(id.value);
+        props.onConfirm(selectedUsers.value); // Pass selected users to the onConfirm function
     }
-    id.value = null;
+    selectedUsers.value = []; // Clear selected users
     isDialogOpen.value = false;
 };
 
@@ -50,7 +66,7 @@ defineExpose({ openDialog });
         </AlertDialogTrigger>
         <AlertDialogContent>
             <AlertDialogHeader>
-                <h2 class="text-lg font-semibold">Add users</h2>
+                <AlertDialogTitle>Add users</AlertDialogTitle>
             </AlertDialogHeader>
             <AlertDialogDescription>
                 <Multiselect
@@ -63,10 +79,13 @@ defineExpose({ openDialog });
                     placeholder="Select users"
                     label="name"
                     track-by="id"
+                    :customLabel="
+                        (user) => `${user.first_name} ${user.last_name}`
+                    "
                 />
             </AlertDialogDescription>
             <AlertDialogFooter>
-                <AlertDialogCancel @click="handleCancel()"
+                <AlertDialogCancel @click="handleCancel"
                     >Cancel</AlertDialogCancel
                 >
                 <AlertDialogAction @click="handleConfirm"

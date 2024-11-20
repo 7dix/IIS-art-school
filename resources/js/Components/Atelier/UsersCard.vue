@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/Components/ui/card";
 import { Button } from "@/Components/ui/button";
 import { Icon } from "@iconify/vue";
 import DeleteDialog from "@/Components/DeleteDialog.vue";
+import AddDialog from "@/Components/Atelier/AddDialog.vue";
 import axios from "axios";
 
 const props = defineProps({
@@ -30,10 +31,17 @@ const props = defineProps({
 });
 
 const deleteDialogRef = ref(null);
+const addDialogRef = ref(null);
 
 const openDeleteDialog = (item) => {
     if (deleteDialogRef.value) {
         deleteDialogRef.value.openDialog(item.id);
+    }
+};
+
+const openAddDialog = () => {
+    if (addDialogRef.value) {
+        addDialogRef.value.openDialog();
     }
 };
 
@@ -54,8 +62,20 @@ const confirmDelete = async (id: number) => {
     return { confirmDelete };
 };
 
-const handleAddUser = () => {
-    props.onAddUser();
+const addUser = async (selectedUsers) => {
+    try {
+        const response = await axios.post(
+            `/ateliers/${props.atelierId}/users`,
+            { users: selectedUsers.map((user) => ({ id: user.id })) }
+        );
+        if (response.status === 200) {
+            props.users.push(...response.data.users);
+        } else {
+            console.error(response);
+        }
+    } catch (error) {
+        console.error("Failed to add users to atelier:", error);
+    }
 };
 </script>
 
@@ -70,7 +90,7 @@ const handleAddUser = () => {
             </CardTitle>
             <div class="flex justify-end">
                 <Button
-                    @click="handleAddUser"
+                    @click="openAddDialog"
                     class="bg-blue-500 text-white hover:bg-blue-700 w-10 h-10 flex items-center justify-center"
                 >
                     <Icon icon="mingcute:add-fill" class="w-5 h-5" />
@@ -95,5 +115,10 @@ const handleAddUser = () => {
             </ul>
         </CardContent>
         <DeleteDialog ref="deleteDialogRef" :onConfirm="confirmDelete" />
+        <AddDialog
+            ref="addDialogRef"
+            :onConfirm="addUser"
+            :atelierId="props.atelierId"
+        />
     </Card>
 </template>

@@ -36,9 +36,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/api/ateliers/{atelier}/available-users', [AtelierController::class, 'availableUsers']);
+    Route::get('/api/ateliers/{atelier}/available-users', [AtelierController::class, 'availableUsers']);    Route::delete('/ateliers/{atelier}/users/{user}', [AtelierController::class, 'removeUser']);    Route::get('/atelier/{id}/dashboard', [AtelierController::class, 'dashboard'])->name('ateliers.dashboard');
     Route::delete('/ateliers/{atelier}/users/{user}', [AtelierController::class, 'removeUser']);    Route::get('/atelier/{id}/dashboard', [AtelierController::class, 'dashboard'])->name('ateliers.dashboard');
-    Route::resource('atelier', AtelierController::class);
+    Route::resource('atelier', AtelierController::class);Route::post('/ateliers/{atelier}/users', [AtelierController::class, 'addUsers']);
+    Route::post('/ateliers/{atelier}/users', [AtelierController::class, 'addUsers']);
 
     Route::resource('my-reservation', MyReservationController::class);
     Route::resource('reservation', ReservationController::class);

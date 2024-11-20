@@ -5,8 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Models\Role as SpatieRole;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Spatie\Permission\Contracts\Role as RoleContract;
 
-class Role extends SpatieRole
+class Role extends SpatieRole implements RoleContract
 {
     protected $fillable = [
         'name',
@@ -14,6 +15,6 @@ class Role extends SpatieRole
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'model_has_roles', 'role_id', 'model_id');
+        return $this->belongsToMany('model_has_roles', 'role_id', 'model_id');
     }
 }

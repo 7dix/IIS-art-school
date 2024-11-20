@@ -74,7 +74,7 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Equipments
                                 </NavLink>
-                               
+                               {{$page.props.auth.user.roles}}
                             </div>
                         </div>
 

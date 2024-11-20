@@ -20,7 +20,6 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'email',
-        'role_id',
         'password',
     ];
 
@@ -46,7 +45,7 @@ class User extends Authenticatable
 
     public function role()
     {
-        return $this->belongsTo(Role::class);
+        return $this->hasMany(Role::class);
     }
 
     protected $hidden = [
@@ -59,5 +58,6 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
 
 }

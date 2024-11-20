@@ -35,8 +35,7 @@ class EquipmentController extends Controller
         $user = Auth::user();  
 
         $types = TypeResource::collection(Type::all());
-        return inertia('Equipment/Index', ['equipments' => $equipments, 'types' => $types, 'user' => $user]);
-        
+        return inertia('Equipment/Index', ['equipments' => $equipments, 'types' => $types]);
 
     }
 

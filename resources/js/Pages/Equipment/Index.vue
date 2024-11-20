@@ -12,10 +12,6 @@ const props = defineProps({
         type: Object,
         required: true,
     },
-    user: {
-        type: Object,
-        required: true,
-    },
     types: {
         type: Object,
         required: true,
@@ -84,7 +80,7 @@ const columns: VTColumn[] = [
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
 
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                    <h1> Logged user: {{user.first_name + " " + user.last_name + " (id: " + user.id + ")"}} </h1>
+                    <h1> Logged user: {{ $page.props.auth.user["first_name"] + " " + $page.props.auth.user["last_name"] }} </h1>
                     <div
                         class="mt-4 sm:mt-0 sm:ml-16 sm:flex sm:justify-end pr-6 pt-6">
                         <Link

@@ -21,32 +21,41 @@ class UserSeeder extends Seeder
                 'last_name' => 'bigboss',
                 'email' => 'admin@IIS.com',
                 'password' => bcrypt('admin'),
-                'role_id' => Role::where('name', 'admin')->first()->id,
             ],
             [
                 'first_name' => 'teacher',
                 'last_name' => 'lilbro',
                 'email' => 'teacher@IIS.com',
                 'password' => bcrypt('teacher'),
-                'role_id' => Role::where('name', 'teacher')->first()->id,
             ],
             [
                 'first_name' => 'manager',
                 'last_name' => 'lilbro',
                 'email' => 'manager@IIS.com',
                 'password' => bcrypt('manager'),
-                'role_id' => Role::where('name', 'manager')->first()->id,
             ],
             [
                 'first_name' => 'user',
                 'last_name' => 'lilbro',
                 'email' => 'user@IIS.com',
                 'password' => bcrypt('user'),
-                'role_id' => Role::where('name', 'user')->first()->id,
             ],
 
         ];
 
         User::insert($users);
+
+
+        $user = User::find(1);
+        $user->assignRole('admin');
+        $user = User::find(2);
+        $user->assignRole('teacher');
+        $user = User::find(3);
+        $user->assignRole('manager');
+        $user = User::find(4);
+        $user->assignRole('user');
+
+
+
     }
 }

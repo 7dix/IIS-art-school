@@ -19,6 +19,9 @@ class AtelierSeeder extends Seeder
     {
         $types = Type::factory()->count(12)->create();
         $users = User::factory()->count(50)->create();
+        $users->each(function ($user) {
+            $user->assignRole('user');
+        });
 
         Atelier::factory()
             ->count(20)

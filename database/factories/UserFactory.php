@@ -30,7 +30,6 @@ class UserFactory extends Factory
             'last_name' => $last_name,
             'email' => $first_name . '.' . $last_name . '@example.com',
             'password' => static::$password ??= Hash::make('password'),
-            'role_id' => 1, 
         ];
     }
 }

@@ -72,8 +72,8 @@ class EquipmentController extends Controller
         $validatedData = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'maximum_leasing_period' => ['required', 'integer'],
-            'year_of_manufacture' => ['integer', 'nullable', 'max:'.date('Y')],
-            'date_of_purchase' => ['date', 'nullable', 'max:'.date('Y-m-d')],
+            'year_of_manufacture' => ['integer', 'nullable'],
+            'date_of_purchase' => ['date', 'nullable'],
             'type_id' => ['required', 'exists:types,id'],
             'atelier_id' => ['required', 'exists:ateliers,id']
         ]);
@@ -81,6 +81,29 @@ class EquipmentController extends Controller
         $validatedData['owner_id'] = $user->id;
 
         $equipment = Equipment::create($validatedData);
+
+        return $this->index();
+    }
+
+
+    public function update(Request $request, $id) {
+
+        /** @var \App\Models\User */
+        $user = Auth::user();
+
+        if (!$user->can('create_equipment')) {
+            return back();
+        }
+
+        $equipment = Equipment::find($id);
+        $equipment->update($request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'maximum_leasing_period' => ['required', 'integer'],
+            'year_of_manufacture' => ['integer', 'nullable'],
+            'date_of_purchase' => ['date', 'nullable'],
+            'type_id' => ['required', 'exists:types,id'],
+            'atelier_id' => ['required', 'exists:ateliers,id']
+        ]));
 
         return $this->index();
     }

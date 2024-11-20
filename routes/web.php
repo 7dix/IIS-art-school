@@ -43,7 +43,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('my-reservation', MyReservationController::class);
     Route::resource('reservation', ReservationController::class);
-    Route::resource('reservation/{id}', ReservationController::class);
+    // Route::resource('reservation/{id}', ReservationController::class);
 
     Route::resource('user', UserController::class);
     Route::resource('equipment', EquipmentController::class);
@@ -61,6 +61,7 @@ Route::middleware('auth')->group(function () {
 
     Route::put('/api/user/{id}', [UserController::class, 'update']);
     Route::put('/api/type/{id}', [TypeController::class, 'update']);
+    Route::put('/api/equipment/{id}', [EquipmentController::class, 'update']);
     Route::get('/api/getAteliersWithType/{id}', [AtelierController::class, 'getAteliersWithType']);
 });
 

@@ -15,7 +15,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
+} from '@/Components/ui/breadcrumb'
 
 
 
@@ -111,7 +111,7 @@ const statuses = ref<VTFilter[]>([
             <Breadcrumb>
                 <BreadcrumbList>
                     <BreadcrumbItem>
-                        <BreadcrumbLink href="/reservation">Reservations</BreadcrumbLink>
+                        <BreadcrumbLink>Reservations</BreadcrumbLink>
                     </BreadcrumbItem>
                 </BreadcrumbList>
             </Breadcrumb>

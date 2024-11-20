@@ -20,7 +20,9 @@ const props = defineProps({
 
 })
 
-
+////////////////////
+////EDIT dialog/////
+////////////////////
 const showDialog = ref(false);
 const selectedUser = ref(null);
 
@@ -36,7 +38,6 @@ const saveUser = async (updatedUser) => {
     for (let i = 0; i < props.users.data.length; i++) {
         if (props.users.data[i].id === updatedUser.id) {
         props.users.data[i] = updatedUser;
-        props.users.data[i];
         break;
         }
     }
@@ -51,7 +52,9 @@ const closeDialog = () => {
   showDialog.value = false;
 };
 
-
+////////////////////
+////TABLE/////
+////////////////////
 const columns: VTColumn[] = [
     {
         "key": "full_name",

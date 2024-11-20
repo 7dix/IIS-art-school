@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,7 +7,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
+} from '@/Components/ui/breadcrumb'
 import { statusClassColor, parseDateTime } from "@/Composables/reservationUtils";
 import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
@@ -34,39 +33,53 @@ const state = ref(props.reservation.status);
             <Breadcrumb>
                 <BreadcrumbList>
                     <BreadcrumbItem>
-                        <BreadcrumbLink href="/reservation">Reservations</BreadcrumbLink>
+                        <BreadcrumbLink :href="route('reservation.index')">Reservations</BreadcrumbLink>
                     </BreadcrumbItem>
                     <BreadcrumbSeparator />
                     <BreadcrumbItem>
-                        <BreadcrumbLink class="font-bold" href="/reservation/{{ reservation.id }}">Reservation #{{reservation.id}}</BreadcrumbLink>
+                        <BreadcrumbLink class="font-bold">Reservation #{{reservation.id}}</BreadcrumbLink>
                     </BreadcrumbItem>
                 </BreadcrumbList>
             </Breadcrumb>
-            <h2
-                class="text-xl font-semibold leading-tight text-gray-800"
-            >
-                Reservation detail
-            </h2>
         </template>
         <div class="py-8">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg ">
                     <!-- Actions -->
-                    <div>
-                        <div class="flex justify-end p-4">
-                            <Button
+                    <div class="flex items-start justify-between p-4">
+                        <h2
+                            class="text-xl font-semibold leading-tight text-gray-800"
+                        >
+                            Reservation detail
+                        </h2>
+                        <div class="flex items-end justify-end space-x-4">
+                            <Button v-if="state === 'pending'"
                                 variant="outline"
                                 class="btn-accept"
                                 @click="() => state = 'approved'"
                             >
                                 Accept
                             </Button>
-                            <Button
+                            <Button v-if="state === 'pending'"
                                 variant="outline"
                                 class="btn-reject"
                                 @click="() => state = 'rejected'"
-                            >
+                                >
                                 Reject
+                            </Button>
+                            <Button v-if="state === 'approved'"
+                                variant="outline"
+                                class="btn-accept"
+                                @click="() => state = 'approved'"
+                            >
+                                Confirm received equipment
+                            </Button>
+                            <Button v-if="state === 'ongoing'"
+                                variant="outline"
+                                class="btn-accept"
+                                @click="() => state = 'approved'"
+                            >
+                                Confirm returned equipment
                             </Button>
                         </div>
                     </div>
@@ -113,7 +126,11 @@ const state = ref(props.reservation.status);
                                 
                                 <div class="info-box">
                                     <div class="info-box-label">Atelier</div>
-                                    <div class="info-box-value">{{ reservation.equipment.atelier.name }}</div>
+                                    <a 
+                                        :href="route('atelier.dashboard', reservation.equipment.atelier.id)" 
+                                        class="font-semibold info-box-value bg-blue-100 px-4 rounded">
+                                        {{ reservation.equipment.atelier.name }}
+                                    </a>
                                 </div>
                                 <div class="info-box">
                                     <div class="info-box-label">Location</div>
@@ -177,9 +194,5 @@ const state = ref(props.reservation.status);
 
     .info-box-label {
         font-weight: 600;
-    }
-
-    .info-box-value {
-        font-weight: 400;
     }
 </style>

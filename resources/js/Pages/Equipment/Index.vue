@@ -33,6 +33,7 @@ const openEditDialog = (equipment) => {
 };
 
 const saveEquipment = async (updatedEquipment) => {
+  updatedEquipment = JSON.parse(JSON.stringify(updatedEquipment));
   const response = await axios.put(`/api/equipment/${updatedEquipment.id}`, updatedEquipment);
   if (response.status === 200) {
     for (let i = 0; i < props.equipments.data.length; i++) {

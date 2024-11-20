@@ -38,7 +38,6 @@ const saveUser = async (updatedUser) => {
     for (let i = 0; i < props.users.data.length; i++) {
         if (props.users.data[i].id === updatedUser.id) {
         props.users.data[i] = updatedUser;
-        props.users.data[i];
         break;
         }
     }

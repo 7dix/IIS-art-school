@@ -61,6 +61,8 @@ const openEditDialog = (type) => {
 
 const saveType = async (updatedType) => {
   console.log(updatedType.id);
+  updatedType = JSON.parse(JSON.stringify(updatedType));
+
     const response = await axios.put(`/api/type/${updatedType.id}`, updatedType);
     if (response.status === 200) {
         for (let i = 0; i < props.types.data.length; i++) {

@@ -468,7 +468,7 @@ let columnsFilters = getFiltersForCols();
                                             table.sortState.value.key ===
                                                 column.key && column.enableSort
                                         "
-                                        :name="
+                                        :icon="
                                             table.sortState.value.direction ===
                                             'asc'
                                                 ? 'solar:double-alt-arrow-up-line-duotone'

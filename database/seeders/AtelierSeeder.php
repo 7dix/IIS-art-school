@@ -29,6 +29,7 @@ class AtelierSeeder extends Seeder
             ->each(function ($atelier) use ($types, $users) {
                 // Assign a random manager to each atelier
                 $manager = $users->random();
+                $teacher = User::where('email', 'teacher@IIS.com')->first();
 
                 // Ensure the manager is not one of the users that will be assigned
                 $assignedUsers = $users->where('id', '!=', $manager->id)->random(5);
@@ -48,7 +49,7 @@ class AtelierSeeder extends Seeder
                         ->count(fake()->numberBetween(0, 3))
                         ->create([
                             'type_id' => $type->id,
-                            'owner_id' => $manager->id,
+                            'owner_id' => $teacher->id,
                             'atelier_id' => $atelier->id,
                         ]);
 

@@ -3,7 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { VTColumn } from "@/types";
 import Table from "@/Components/Table.vue";
-import { h, ref } from "vue";
+import { h, ref, watch } from "vue";
 import { Button } from "@/Components/ui/button";
 import DeleteDialog from "@/Components/DeleteDialog.vue";
 import { Icon } from "@iconify/vue";
@@ -13,33 +13,32 @@ const props = defineProps({
     types: {
         type: Object,
         required: true,
+        default: () => ({data: []}),
     },
 });
 
 const deleteDialogRef = ref(null);
 const selectedType = ref(null);
 
+
 const openDeleteDialog = (item) => {
     selectedType.value = item;
     if (deleteDialogRef.value) {
-        deleteDialogRef.value.openDialog();
+        deleteDialogRef.value.openDialog(item.id);
     }
 };
 
-const confirmDelete = async (type) => {
-    console.log(type);
-    if (type) {
-        try {
-            const response = await axios.delete(`/types/${type.id}`);
-            window.location.reload();
-        } catch (error) {
-            console.error("Failed to delete type:", error);
+const confirmDelete = async (id: number) => {
+    if (id) {
+        const response = await axios.delete(route("types.destroy", id));
+        if (response.status === 200) {
+            props.types.data.splice(
+                props.types.data.findIndex((item) => item.id === id),
+                1
+            );
         }
     }
-};
-
-const cancelDelete = () => {
-    // Handle cancel action if needed
+    return { confirmDelete }
 };
 
 const columns = [
@@ -50,7 +49,7 @@ const columns = [
     {
         key: "equipments",
         header: "Equipments",
-        renderAs: (item) => {
+        renderAs: (item: any) => {
             return h(
                 Button,
                 {
@@ -65,7 +64,7 @@ const columns = [
     {
         key: "ateliers",
         header: "Ateliers",
-        renderAs: (item) => {
+        renderAs: (item: any) => {
             return h(
                 Button,
                 {
@@ -80,7 +79,7 @@ const columns = [
     {
         key: "actions",
         header: "Actions",
-        renderAs: (item) => {
+        renderAs: (item: any) => {
             return h("div", {}, [
                 h(
                     Button,
@@ -121,6 +120,7 @@ const columns = [
                         </Link>
                     </div>
                     <div class="p-6 text-gray-900">
+                        {{ props.types.data.length }}
                         <Table
                             :data="types.data"
                             :columns="columns"
@@ -132,9 +132,7 @@ const columns = [
         </div>
         <DeleteDialog
             ref="deleteDialogRef"
-            :type="selectedType"
             :onConfirm="confirmDelete"
-            :onCancel="cancelDelete"
         />
     </AuthenticatedLayout>
 </template>

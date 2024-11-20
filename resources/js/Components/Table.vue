@@ -48,6 +48,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/Components/ui/select";
+import { ScrollArea } from "@/Components/ui/scroll-area";
 import { Icon } from "@iconify/vue";
 
 const props = withDefaults(
@@ -300,7 +301,9 @@ let columnsFilters = getFiltersForCols();
                         class="hidden w-40 bg-slate-200 transition focus:bg-slate-300/60 sm:inline-block"
                         @input="applySearchFilter"
                     />
-
+                    {{ props.data.length }}
+                    {{ table.data.original.length }}
+                    {{ table.data.paginated.length }}
                     <div
                         class="inline-flex h-10 items-center gap-2 rounded-md p-2"
                         v-if="props.showFilters"
@@ -329,44 +332,6 @@ let columnsFilters = getFiltersForCols();
                 </div>
 
                 <div class="inline-flex items-center gap-2">
-                    <!-- toggle columns visibility -->
-                    <DropdownMenu v-if="props.showColumnToggle">
-                        <DropdownMenuTrigger as-child>
-                            <Button variant="outline">
-                                <span>View</span>
-                                <Icon
-                                    icon="lucide:chevron-down"
-                                    class="size-4"
-                                />
-                            </Button>
-                        </DropdownMenuTrigger>
-
-                        <DropdownMenuContent
-                            :side-offset="10"
-                            align="start"
-                            class="w-[300px] md:w-[200px]"
-                        >
-                            <DropdownMenuLabel>
-                                Toggle Columns
-                            </DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-
-                            <DropdownMenuGroup>
-                                <DropdownMenuCheckboxItem
-                                    v-for="column in table.columns.toggleable"
-                                    :key="column.key"
-                                    :checked="column.hidden !== true"
-                                    @update:checked="
-                                        toggleColumnVisibility(column.key)
-                                    "
-                                >
-                                    <span class="text-sm capitalize">{{
-                                        column.header
-                                    }}</span>
-                                </DropdownMenuCheckboxItem>
-                            </DropdownMenuGroup>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
 
                     <Button
                         v-if="props.showDisplayOption"
@@ -541,7 +506,7 @@ let columnsFilters = getFiltersForCols();
                             </TableCell>
                         </TableRow>
 
-                        <TableEmpty
+                        <TableRow
                             v-if="table.data.paginated.length === 0"
                             :colspan="table.columns.visible.length"
                         >
@@ -556,7 +521,7 @@ let columnsFilters = getFiltersForCols();
                                     props.noDataMessage
                                 }}</span>
                             </div>
-                        </TableEmpty>
+                        </TableRow>
                     </TableBody>
                 </Table>
             </ScrollArea>

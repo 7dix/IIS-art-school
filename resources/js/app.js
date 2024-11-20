@@ -7,10 +7,12 @@ import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import { addCollection, Icon } from '@iconify/vue';
 import solarIcons from '@iconify-json/solar/icons.json';
+import lucideIcons from '@iconify-json/lucide/icons.json';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 addCollection(solarIcons);
+addCollection(lucideIcons);
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,

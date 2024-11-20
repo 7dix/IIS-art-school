@@ -3,6 +3,8 @@ import { ref, watch } from "vue";
 import { Button } from "@/Components/ui/button";
 import { forEachChild } from "typescript";
 import { VTFilter } from "@/types";
+import { statusClassColor } from "@/Composables/reservationUtils";
+
 
 const props = defineProps({
     statuses: {
@@ -11,6 +13,17 @@ const props = defineProps({
     },
 });
 const statuses = ref(props.statuses);
+
+
+const changeStatus = (status) => {
+    props.statuses.forEach((status_) => {
+        if (status === status_){
+            status_.operator = true;
+        } else {
+            status_.operator = '!==';
+        }
+    });
+}
 
 </script>
 
@@ -25,9 +38,9 @@ const statuses = ref(props.statuses);
                 variant="outline"
                 v-for="status in statuses"
                 :key="status"
-                @click="() => { status.operator == true ? status.operator = '!==' : status.operator = true }"
-                :class="status.operator == true ? 'bg-green-400 hover:bg-green-400' : 'bg-slate-300 hover:bg-slate-300'"
-                class="hover:shadow-md active:shadow-sm"
+                @click="changeStatus(status)"
+                :class="status.operator == true ? statusClassColor(status.value) : 'bg-slate-300 hover:bg-slate-300 hover:text-white'"
+                class="hover:shadow-md active:shadow-sm text-white"
             >
                 {{ status.value.charAt(0).toUpperCase() + status.value.slice(1) }}
             </Button>

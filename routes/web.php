@@ -10,8 +10,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ReservationController;
-
-
+use App\Http\Middleware\EnsureUserHasRole;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -42,6 +41,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('my-reservation', MyReservationController::class);
     Route::resource('reservation', ReservationController::class);
+    Route::resource('reservation/{id}', ReservationController::class);
 
     Route::resource('user', UserController::class);
     Route::resource('equipment', EquipmentController::class);
@@ -57,6 +57,7 @@ Route::middleware('auth')->group(function () {
     //php artisan route:clear
 
     Route::put('/api/user/{id}', [UserController::class, 'update']);
+    Route::put('/api/type/{id}', [TypeController::class, 'update']);
     Route::get('/api/getAteliersWithType/{id}', [AtelierController::class, 'getAteliersWithType']);
 });
 

@@ -32,14 +32,17 @@ const openEditDialog = (user) => {
 const saveUser = async (updatedUser) => {
   console.log(updatedUser.id);
   const response = await axios.put(`/api/user/${updatedUser.id}`, updatedUser);
-
-  for (let i = 0; i < props.users.data.length; i++) {
-    if (props.users.data[i].id === updatedUser.id) {
-      props.users.data[i] = updatedUser;
-      props.users.data[i];
-      break;
+  if (response.status === 200) {
+    for (let i = 0; i < props.users.data.length; i++) {
+        if (props.users.data[i].id === updatedUser.id) {
+        props.users.data[i] = updatedUser;
+        props.users.data[i];
+        break;
+        }
     }
-  }
+    } else {
+        console.error("Failed to update type:", response);
+    }
  
   showDialog.value = false;
 };

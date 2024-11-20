@@ -26,14 +26,7 @@ const props = defineProps({
     },
 });
 
-const deleteDialogRef = ref(null);
 const addDialogRef = ref(null);
-
-const openDeleteDialog = (item) => {
-    if (deleteDialogRef.value) {
-        deleteDialogRef.value.openDialog(item.id);
-    }
-};
 
 const openAddDialog = () => {
     if (addDialogRef.value) {
@@ -41,21 +34,25 @@ const openAddDialog = () => {
     }
 };
 
-const confirmDelete = async (id: number) => {
-    if (id) {
-        const response = await axios.delete(
-            `/ateliers/${props.atelierId}/users/${id}`
+const removeTeacherRole = async (user) => {
+    try {
+        const response = await axios.post(
+            `/ateliers/${props.atelierId}/remove-teacher-role`,
+            { user_id: user.id }
         );
         if (response.status === 200) {
+            // Remove the user from the teachers list and add to students list
             props.users.splice(
-                props.users.findIndex((item) => item.id === id),
+                props.users.findIndex((item) => item.id === user.id),
                 1
             );
+            // You might want to emit an event or call a method to update the students list
         } else {
             console.error(response);
         }
+    } catch (error) {
+        console.error("Failed to remove teacher role:", error);
     }
-    return { confirmDelete };
 };
 
 const addUser = async (selectedUsers) => {
@@ -102,10 +99,10 @@ const addUser = async (selectedUsers) => {
                 >
                     <span>{{ user.first_name }} {{ user.last_name }}</span>
                     <Button
-                        @click="openDeleteDialog(user)"
-                        class="bg-red-500 text-white hover:bg-red-700 w-10 h-10 flex items-center justify-center"
+                        @click="removeTeacherRole(user)"
+                        class="bg-yellow-500 text-white hover:bg-yellow-700 w-10 h-10 flex items-center justify-center"
                     >
-                        <Icon icon="material-symbols:delete" class="w-5 h-5" />
+                        <Icon icon="dashicons:remove" class="w-5 h-5" />
                     </Button>
                 </li>
             </ul>

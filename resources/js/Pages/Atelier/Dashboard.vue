@@ -2,6 +2,7 @@
 import { defineProps, onMounted } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import UsersCard from "@/Components/Atelier/UsersCard.vue";
+import TeachersCard from "@/Components/Atelier/TeachersCard.vue";
 
 const props = defineProps({
     atelier: {
@@ -42,15 +43,13 @@ onMounted(() => {
                         title="Students"
                         :users="students"
                         :atelierId="atelier.id"
-                        :onAddUser="addUser"
                     />
 
                     <!-- Users Card for Teachers -->
-                    <UsersCard
+                    <TeachersCard
                         title="Teachers"
                         :users="teachers"
                         :atelierId="atelier.id"
-                        :onAddUser="addUser"
                     />
                 </div>
             </div>

@@ -6,6 +6,7 @@ import Table from "@/Components/Table.vue";
 import { h, ref } from "vue";
 import { Button } from "@/Components/ui/button";
 import DeleteDialog from "@/Components/DeleteDialog.vue";
+import { Icon } from "@iconify/vue";
 import axios from "axios";
 
 const props = defineProps({
@@ -15,20 +16,22 @@ const props = defineProps({
     },
 });
 
-const isDeleteDialogOpen = ref(false);
+const deleteDialogRef = ref(null);
 const selectedType = ref(null);
 
 const openDeleteDialog = (item) => {
     selectedType.value = item;
-    isDeleteDialogOpen.value = true;
+    if (deleteDialogRef.value) {
+        deleteDialogRef.value.openDialog();
+    }
 };
 
 const confirmDelete = async (type) => {
+    console.log(type);
     if (type) {
         try {
-            await axios.delete(`/types/${type.id}`);
-            window.location.reload(); // Reload page after delete
-            isDeleteDialogOpen.value = false; // Close dialog after delete
+            const response = await axios.delete(`/types/${type.id}`);
+            window.location.reload();
         } catch (error) {
             console.error("Failed to delete type:", error);
         }
@@ -36,7 +39,7 @@ const confirmDelete = async (type) => {
 };
 
 const cancelDelete = () => {
-    isDeleteDialogOpen.value = false; // Close dialog on cancel
+    // Handle cancel action if needed
 };
 
 const columns = [
@@ -85,7 +88,10 @@ const columns = [
                         onClick: () => openDeleteDialog(item),
                         class: "bg-red-500 text-white hover:bg-red-700",
                     },
-                    "Delete"
+                    h(Icon, {
+                        icon: "material-symbols:delete",
+                        class: "w-5 h-5",
+                    })
                 ),
             ]);
         },
@@ -125,11 +131,10 @@ const columns = [
             </div>
         </div>
         <DeleteDialog
-            :isOpen="isDeleteDialogOpen"
+            ref="deleteDialogRef"
             :type="selectedType"
-            @onConfirm="confirmDelete"
-            @onCancel="cancelDelete"
-            @update:isOpen="isDeleteDialogOpen = $event"
+            :onConfirm="confirmDelete"
+            :onCancel="cancelDelete"
         />
     </AuthenticatedLayout>
 </template>

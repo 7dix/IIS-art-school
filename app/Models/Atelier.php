@@ -18,7 +18,12 @@ class Atelier extends Model
     public function manager()
     {
         return $this->belongsTo(User::class, 'manager_id');
-    }    
+    }
+
+    public function equipments()
+    {
+        return $this->hasMany(Equipment::class);
+    }
 
     public function types()
     {

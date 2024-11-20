@@ -6,6 +6,7 @@ import Table from "@/Components/Table.vue";
 import { h, ref } from "vue";
 import { Button } from "@/Components/ui/button";
 import DeleteDialog from "@/Components/DeleteDialog.vue";
+import { Icon } from "@iconify/vue";
 import axios from "axios";
 
 const props = defineProps({
@@ -87,7 +88,10 @@ const columns = [
                         onClick: () => openDeleteDialog(item),
                         class: "bg-red-500 text-white hover:bg-red-700",
                     },
-                    "Delete"
+                    h(Icon, {
+                        icon: "material-symbols:delete",
+                        class: "w-5 h-5",
+                    })
                 ),
             ]);
         },
@@ -103,7 +107,6 @@ const columns = [
                 Types
             </h2>
         </template>
-        {{ props.types }}
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">

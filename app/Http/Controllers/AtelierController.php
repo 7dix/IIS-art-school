@@ -55,4 +55,10 @@ class AtelierController extends Controller
         })->get();
         return AtelierResource::collection($ateliers);
     }
+
+    public function dashboard($id)
+    {
+        $atelier = Atelier::findOrFail($id);
+        return inertia('Atelier/Dashboard', ['atelier' => $atelier]);
+    }
 }

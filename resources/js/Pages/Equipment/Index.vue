@@ -3,8 +3,11 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import Table from '@/Components/Table.vue';
 import { VTColumn } from "@/types";
-import { h } from "vue";
+import { h, ref } from "vue";
 import { Button } from '@/Components/ui/button'
+import EditEquipmentDialog from '@/Components/Equipment/EquipmentEditDialog.vue';
+import axios from 'axios';
+
 
 
 const props = defineProps({
@@ -18,6 +21,45 @@ const props = defineProps({
     },
 })
 
+////////////////////
+////EDIT dialog/////
+////////////////////
+const showDialog = ref(false);
+const selectedEquipment = ref(null);
+
+const openEditDialog = (equipment) => {
+  selectedEquipment.value = { ...equipment };  // Clone equipment data to edit
+  showDialog.value = true;
+};
+
+const saveEquipment = async (updatedEquipment) => {
+  const response = await axios.put(`/api/equipment/${updatedEquipment.id}`, updatedEquipment);
+  if (response.status === 200) {
+    for (let i = 0; i < props.equipments.data.length; i++) {
+        if (props.equipments.data[i].id === updatedEquipment.id) {
+        props.equipments.data[i] = updatedEquipment;
+        props.equipments.data[i].type_name = updatedEquipment.type_name;
+        props.equipments.data[i].atelier_name = updatedEquipment.atelier_name;
+        break;
+        }
+    }
+    } else {
+        console.error("Failed to update Equipment:", response);
+    }
+ 
+  showDialog.value = false;
+};
+
+const closeDialog = () => {
+  showDialog.value = false;
+};
+
+
+
+
+////////////////////
+////TABLE/////
+////////////////////
 const columns: VTColumn[] = [
     {
         "key": "name",
@@ -27,7 +69,7 @@ const columns: VTColumn[] = [
         "key": "type",
         "header": "Type",
         renderAs: (item) => {
-            return h('span', item.type.name)
+            return h('span', item.type_name)
         }
     },
 
@@ -42,7 +84,7 @@ const columns: VTColumn[] = [
         "key": "atelier",
         "header": "Atelier",
         renderAs: (item) => {
-            return h('span', item.atelier.name)
+            return h('span', item.atelier_name)
         }
     }, 
     {
@@ -53,7 +95,7 @@ const columns: VTColumn[] = [
                 Button,
                 {
                     onClick: () => {
-                        console.log(item);
+                        openEditDialog(item);
                     },
                     class: 'bg-blue-500 text-white'
                 },
@@ -80,7 +122,7 @@ const columns: VTColumn[] = [
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
 
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                    <h1> Logged user: {{ $page.props.auth.user["first_name"] + " " + $page.props.auth.user["last_name"] }} </h1>
+                    <h1> Logged equipment: {{ $page.props.auth.user["first_name"] + " " + $page.props.auth.user["last_name"] }} </h1>
                     <div
                         class="mt-4 sm:mt-0 sm:ml-16 sm:flex sm:justify-end pr-6 pt-6">
                         <Link
@@ -98,4 +140,17 @@ const columns: VTColumn[] = [
             </div>
         </div>
     </AuthenticatedLayout>
+
+
+
+     <!-- Edit Dialog -->
+     <EditEquipmentDialog 
+          v-if="showDialog" 
+          :equipment="selectedEquipment" 
+          :isOpen="showDialog" 
+          :types="props.types"
+          @save="saveEquipment"
+          @close="closeDialog"
+        />
+
 </template>

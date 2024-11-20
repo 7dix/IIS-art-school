@@ -19,7 +19,7 @@ class EquipmentFactory extends Factory
         return [
             'name' => $this->faker->unique()->word(),
             'year_of_manufacture' => $this->faker->year(),
-            'date_of_purchase' => $this->faker->dateTimeBetween('-7 year', '-1 month'),
+            'date_of_purchase' => $this->faker->date(),
             'maximum_leasing_period' => $this->faker->numberBetween(1, 14),
             'allowed_leasing_hours' => json_encode($this->faker->randomElements(
                 range(0, 23), 

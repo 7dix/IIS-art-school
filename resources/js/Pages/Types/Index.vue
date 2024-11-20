@@ -57,14 +57,13 @@ const openEditDialog = (type) => {
   showDialog.value = true;
 };
 
-const saveUser = async (updatedType) => {
+const saveType = async (updatedType) => {
   console.log(updatedType.id);
     const response = await axios.put(`/api/type/${updatedType.id}`, updatedType);
     if (response.status === 200) {
-        const updatedTypeData = response.data;
         for (let i = 0; i < props.types.data.length; i++) {
-            if (props.types.data[i].id === updatedTypeData.id) {
-                props.types.data[i] = updatedTypeData;
+            if (props.types.data[i].id === updatedType.id) {
+                props.types.data[i] = updatedType;
                 break;
             }
         }
@@ -192,7 +191,7 @@ const columns = [
           v-if="showDialog" 
           :type="selectedType" 
           :isOpen="showDialog" 
-          @save="saveUser" 
+          @save="saveType" 
           @close="closeDialog"
         />
 

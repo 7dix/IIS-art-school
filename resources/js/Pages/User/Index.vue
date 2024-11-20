@@ -20,7 +20,9 @@ const props = defineProps({
 
 })
 
-
+////////////////////
+////EDIT dialog/////
+////////////////////
 const showDialog = ref(false);
 const selectedUser = ref(null);
 
@@ -51,7 +53,9 @@ const closeDialog = () => {
   showDialog.value = false;
 };
 
-
+////////////////////
+////TABLE/////
+////////////////////
 const columns: VTColumn[] = [
     {
         "key": "full_name",

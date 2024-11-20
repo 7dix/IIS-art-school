@@ -22,9 +22,10 @@ class AtelierController extends Controller
     }
 
     public function create() {
-        $users = UserResource::collection(
-            User::where('role_id', 3)->get() //id 3 is for managers
-        );
+        $users = UserResource::collection(User::whereHas('roles', function($query) {
+            $query->where('name', 'manager');
+        })->get());
+
         $types = TypeResource::collection(Type::all());
         return inertia('Atelier/Create', ['users' => $users, 'types' => $types]);
     }

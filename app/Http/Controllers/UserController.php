@@ -13,11 +13,8 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = UserResource::collection(
-            User::with('role')->get()
-        );
+        $users = UserResource::collection(User::all());
         $roles = RoleResource::collection(Role::all());
-
         return inertia('User/Index', ['users' => $users, 'roles' => $roles]);
     }
 
@@ -28,8 +25,12 @@ class UserController extends Controller
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
-            'role_id' => ['required', 'exists:roles,id'],
         ]));
+        
+        if ($user->getRoleNames()[0] != $request->role) {
+            $user->removeRole($user->getRoleNames()[0]);
+            $user->assignRole($request->role);
+        }
 
         return inertia('User/Index', ['users' => UserResource::collection(User::all()), 
             'roles' => RoleResource::collection(Role::all())]);

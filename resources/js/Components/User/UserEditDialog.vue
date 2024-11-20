@@ -54,9 +54,8 @@
   );
   const save = () => {
     
-    editableUser.value.role = props.roles.data.find((role) => role.id === editableUser.value.role_id);
-
-    console.log(editableUser.value.role.id +"=="+ editableUser.value.role_id);
+    const role = props.roles.data.find((role) => role.id === editableUser.value.role_id);
+    editableUser.value.role = role.name;
     emit('save', editableUser.value);
   };
   
@@ -75,7 +74,6 @@ const handleKeydown = (event: KeyboardEvent) => {
     onMounted(() => {
         if (props.isOpen) {
             document.addEventListener('keydown', handleKeydown);
-            editableUser.value.role_id = editableUser.value.role.id;
         }
     });
     

@@ -22,7 +22,8 @@ class UserResource extends JsonResource
             'email_verified_at' => $this->email_verified_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'role' => new RoleResource($this->whenLoaded('role')),
+            'role' => $this->getRoleNames()->first(),
+            'role_id' => $this->roles->first()->id,
         ];
     }
 }

@@ -17,6 +17,7 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+
 })
 
 
@@ -35,7 +36,6 @@ const saveUser = async (updatedUser) => {
   for (let i = 0; i < props.users.data.length; i++) {
     if (props.users.data[i].id === updatedUser.id) {
       props.users.data[i] = updatedUser;
-      
       props.users.data[i];
       break;
     }
@@ -65,7 +65,14 @@ const columns: VTColumn[] = [
         "key": "role",
         "header": "Role",
         renderAs: (item) => {
-            return h('span', item.role.name)
+            return h('span', item.role)
+        }
+    },
+    {
+        "key": "role_id",
+        "header": "Role id",
+        renderAs: (item) => {
+            return h('span', item.role_id)
         }
     },
     {

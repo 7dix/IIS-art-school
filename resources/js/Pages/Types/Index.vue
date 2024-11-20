@@ -41,6 +41,8 @@ const confirmDelete = async (id: number) => {
                 props.types.data.findIndex((item) => item.id === id),
                 1
             );
+        } else {
+            console.error(response);
         }
     }
     return { confirmDelete }

@@ -30,13 +30,13 @@ class UserSeeder extends Seeder
             ],
             [
                 'first_name' => 'manager',
-                'last_name' => 'lilbro',
+                'last_name' => 'midbro',
                 'email' => 'manager@IIS.com',
                 'password' => bcrypt('manager'),
             ],
             [
                 'first_name' => 'user',
-                'last_name' => 'lilbro',
+                'last_name' => 'lilpump',
                 'email' => 'user@IIS.com',
                 'password' => bcrypt('user'),
             ],

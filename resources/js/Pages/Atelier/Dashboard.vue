@@ -1,12 +1,27 @@
 <script setup>
-import { defineProps } from "vue";
+import { defineProps, onMounted } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import UsersCard from "@/Components/Atelier/UsersCard.vue";
 
 const props = defineProps({
     atelier: {
         type: Object,
         required: true,
     },
+    students: {
+        type: Array,
+        required: true,
+    },
+    teachers: {
+        type: Array,
+        required: true,
+    },
+});
+
+onMounted(() => {
+    console.log("Atelier:", props.atelier);
+    console.log("Students:", props.students);
+    console.log("Teachers:", props.teachers);
 });
 </script>
 
@@ -19,11 +34,24 @@ const props = defineProps({
         </template>
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900">
-                        <!-- Dashboard content goes here -->
-                        <p>Welcome to the dashboard of {{ atelier.name }}.</p>
-                    </div>
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                >
+                    <!-- Users Card for Students -->
+                    <UsersCard
+                        title="Students"
+                        :users="students"
+                        :onAddUser="addUser"
+                        :onRemoveUser="removeUser"
+                    />
+
+                    <!-- Users Card for Teachers -->
+                    <UsersCard
+                        title="Teachers"
+                        :users="teachers"
+                        :onAddUser="addUser"
+                        :onRemoveUser="removeUser"
+                    />
                 </div>
             </div>
         </div>

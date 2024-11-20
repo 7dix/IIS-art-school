@@ -58,7 +58,20 @@ class AtelierController extends Controller
 
     public function dashboard($id)
     {
-        $atelier = Atelier::findOrFail($id);
-        return inertia('Atelier/Dashboard', ['atelier' => $atelier]);
+        $atelier = Atelier::with(['users.roles'])->findOrFail($id);
+
+        $students = $atelier->users->filter(function ($user) {
+            return $user->roles->contains('name', 'user');
+        });
+
+        $teachers = $atelier->users->filter(function ($user) {
+            return $user->roles->contains('name', 'teacher');
+        });
+
+        return inertia('Atelier/Dashboard', [
+            'atelier' => $atelier,
+            'students' => $students->values(), // Ensure collection is re-indexed
+            'teachers' => $teachers->values(), // Ensure collection is re-indexed
+        ]);
     }
 }

@@ -15,34 +15,27 @@ const props = defineProps({
         type: Function,
         required: true,
     },
-    onCancel: {
-        type: Function,
-        required: true,
-    },
-    type: {
-        type: Object,
-        required: true,
-    },
 });
 
 const isDialogOpen = ref(false);
+const id = ref(null);
 
-const openDialog = () => {
+const openDialog = (id_) => {
     isDialogOpen.value = true;
+    console.log(id_);
+    id.value = id_;
 };
 
 const handleConfirm = () => {
-    console.log(props.type);
     if (typeof props.onConfirm === "function") {
-        props.onConfirm(props.type);
+        console.log(id.value);
+        props.onConfirm(id.value);
     }
+    id.value = null;
     isDialogOpen.value = false;
 };
 
 const handleCancel = () => {
-    if (typeof props.onCancel === "function") {
-        props.onCancel();
-    }
     isDialogOpen.value = false;
 };
 
@@ -51,22 +44,19 @@ defineExpose({ openDialog });
 
 <template>
     <AlertDialog :open="isDialogOpen">
-        <AlertDialogTrigger asChild>
-            <button class="hidden"></button>
-        </AlertDialogTrigger>
         <AlertDialogContent>
             <AlertDialogHeader>
                 <h2 class="text-lg font-semibold">Are you sure?</h2>
                 <p class="text-sm text-gray-500">
-                    Do you really want to delete this type? This action cannot
+                    Do you really want to delete this? This action cannot
                     be undone.
                 </p>
             </AlertDialogHeader>
             <AlertDialogFooter>
-                <AlertDialogCancel @click="handleCancel"
+                <AlertDialogCancel @click="handleCancel()"
                     >Cancel</AlertDialogCancel
                 >
-                <AlertDialogAction @click="handleConfirm"
+                <AlertDialogAction @click="handleConfirm()"
                     >Delete</AlertDialogAction
                 >
             </AlertDialogFooter>

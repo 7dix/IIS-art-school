@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function () {
     //php artisan route:clear
 
     Route::put('/api/user/{id}', [UserController::class, 'update']);
+    Route::put('/api/type/{id}', [TypeController::class, 'update']);
     Route::get('/api/getAteliersWithType/{id}', [AtelierController::class, 'getAteliersWithType']);
 });
 

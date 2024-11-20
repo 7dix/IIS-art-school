@@ -7,6 +7,7 @@ import { h, ref } from "vue";
 import { Button } from "@/Components/ui/button";
 import DeleteDialog from "@/Components/DeleteDialog.vue";
 import { Icon } from "@iconify/vue";
+import EditTypeDialog from '@/Components/Types/TypeEditDialog.vue';
 import axios from "axios";
 
 const props = defineProps({
@@ -16,6 +17,10 @@ const props = defineProps({
     },
 });
 
+
+////////////////////
+////DELETE DIALOG/////
+////////////////////
 const deleteDialogRef = ref(null);
 const selectedType = ref(null);
 
@@ -42,6 +47,42 @@ const cancelDelete = () => {
     // Handle cancel action if needed
 };
 
+
+////////////////////
+////EDIT DIALOG/////
+////////////////////
+const showDialog = ref(false);
+
+const openEditDialog = (type) => {
+  selectedType.value = { ...type };  // Clone user data to edit
+  showDialog.value = true;
+};
+
+const saveUser = async (updatedType) => {
+  console.log(updatedType.id);
+    const response = await axios.put(`/api/type/${updatedType.id}`, updatedType);
+    if (response.status === 200) {
+        const updatedTypeData = response.data;
+        for (let i = 0; i < props.types.data.length; i++) {
+            if (props.types.data[i].id === updatedTypeData.id) {
+                props.types.data[i] = updatedTypeData;
+                break;
+            }
+        }
+    } else {
+        console.error("Failed to update type:", response);
+    }
+ 
+  showDialog.value = false;
+};
+
+const closeDialog = () => {
+  showDialog.value = false;
+};
+
+////////////////////
+////TABLE/////
+////////////////////
 const columns = [
     {
         key: "name",
@@ -73,8 +114,9 @@ const columns = [
                         console.log(item);
                     },
                 },
-                item.ateliers.length
+                item.ateliers.length,
             );
+            
         },
     },
     {
@@ -92,6 +134,14 @@ const columns = [
                         icon: "material-symbols:delete",
                         class: "w-5 h-5",
                     })
+                ),
+                h(
+                    Button,
+                    {
+                        onClick: () => openEditDialog(item),
+                        class: 'bg-blue-500 text-white ml-2'
+                    },
+                    'Edit'
                 ),
             ]);
         },
@@ -137,4 +187,16 @@ const columns = [
             :onCancel="cancelDelete"
         />
     </AuthenticatedLayout>
+
+
+     <!-- Edit Dialog -->
+     <EditTypeDialog 
+          v-if="showDialog" 
+          :type="selectedType" 
+          :isOpen="showDialog" 
+          @save="saveUser" 
+          @close="closeDialog"
+        />
+
+
 </template>

@@ -52,6 +52,24 @@ class TypeController extends Controller
         return $this->index();
     }
 
+    public function update(Request $request, $id) {
+
+        /** @var \App\Models\User */
+        $user = Auth::user();
+
+        if (!$user->can('create_type')) {
+            return back();
+        }
+
+       $type = Type::find($id);
+       $type->update($request->validate([
+           'name' => ['required', 'string', 'max:255'],
+       ]));
+       
+
+       return $this->index();
+   }
+
     public function destroy(Type $type)
     {
         $type->delete();

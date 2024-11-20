@@ -6,8 +6,8 @@ use App\Http\Resources\ReservationResource;
 
 class ReservationController extends Controller
 {
-    public function index()
-    {
+    public function index() {
+
         $reservations = ReservationResource::collection(
             Reservation::with(['user', 'equipment'])->get()
         );

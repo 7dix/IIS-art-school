@@ -47,7 +47,6 @@ class UserController extends Controller
             $user->assignRole($request->role);
         }
 
-        return inertia('User/Index', ['users' => UserResource::collection(User::all()), 
-            'roles' => RoleResource::collection(Role::all())]);
+        return $this->index();
     }
 }

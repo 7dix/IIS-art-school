@@ -1,5 +1,5 @@
-<script setup>
-import { defineProps, onMounted } from "vue";
+<script setup lang="ts">
+import { defineProps, onMounted, ref } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import UsersCard from "@/Components/Atelier/UsersCard.vue";
 
@@ -41,6 +41,7 @@ onMounted(() => {
                     <UsersCard
                         title="Students"
                         :users="students"
+                        :atelierId="atelier.id"
                         :onAddUser="addUser"
                         :onRemoveUser="removeUser"
                     />

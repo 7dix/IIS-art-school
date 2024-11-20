@@ -74,4 +74,12 @@ class AtelierController extends Controller
             'teachers' => $teachers->values(), // Ensure collection is re-indexed
         ]);
     }
+
+    public function removeUser($atelierId, $userId)
+    {
+        $atelier = Atelier::findOrFail($atelierId);
+        $atelier->users()->detach($userId);
+    
+        return response()->json(['message' => 'User removed from atelier successfully.']);
+    }
 }

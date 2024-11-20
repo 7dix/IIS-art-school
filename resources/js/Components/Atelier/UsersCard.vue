@@ -1,8 +1,10 @@
-<script setup>
-import { defineProps } from "vue";
+<script setup lang="ts">
+import { defineProps, ref } from "vue";
 import { Card, CardHeader, CardTitle, CardContent } from "@/Components/ui/card";
 import { Button } from "@/Components/ui/button";
 import { Icon } from "@iconify/vue";
+import DeleteDialog from "@/Components/DeleteDialog.vue";
+import axios from "axios";
 
 const props = defineProps({
     title: {
@@ -10,7 +12,15 @@ const props = defineProps({
         required: true,
     },
     users: {
-        type: Array,
+        type: Array as () => {
+            id: number;
+            first_name: string;
+            last_name: string;
+        }[],
+        required: true,
+    },
+    atelierId: {
+        type: Object,
         required: true,
     },
     onAddUser: {
@@ -22,6 +32,31 @@ const props = defineProps({
         required: true,
     },
 });
+
+const deleteDialogRef = ref(null);
+
+const openDeleteDialog = (item) => {
+    if (deleteDialogRef.value) {
+        deleteDialogRef.value.openDialog(item.id);
+    }
+};
+
+const confirmDelete = async (id: number) => {
+    if (id) {
+        const response = await axios.delete(
+            `/ateliers/${props.atelierId}/users/${id}`
+        );
+        if (response.status === 200) {
+            props.users.splice(
+                props.users.findIndex((item) => item.id === id),
+                1
+            );
+        } else {
+            console.error(response);
+        }
+    }
+    return { confirmDelete };
+};
 
 const handleAddUser = () => {
     props.onAddUser();
@@ -59,7 +94,7 @@ const handleRemoveUser = (user) => {
                 >
                     <span>{{ user.first_name }} {{ user.last_name }}</span>
                     <Button
-                        @click="handleRemoveUser(user)"
+                        @click="openDeleteDialog(user)"
                         class="bg-red-500 text-white hover:bg-red-700 w-10 h-10 flex items-center justify-center"
                     >
                         <Icon icon="material-symbols:delete" class="w-5 h-5" />
@@ -67,5 +102,6 @@ const handleRemoveUser = (user) => {
                 </li>
             </ul>
         </CardContent>
+        <DeleteDialog ref="deleteDialogRef" :onConfirm="confirmDelete" />
     </Card>
 </template>

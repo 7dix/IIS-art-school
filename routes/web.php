@@ -52,7 +52,8 @@ Route::middleware('auth')->group(function () {
 
 
     //Api routes
-    //php artisan route:list
+    //php artisan route:list    Route::delete('/ateliers/{atelier}/users/{user}', [AtelierController::class, 'removeUser']);
+
     //php artisan route:cache
     //php artisan route:clear
 

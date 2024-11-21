@@ -42,6 +42,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
+    public function restrictions() {
+        return $this->belongsToMany(Equipment::class);
+    }
 
     // Manager thingy
     public function isManager()
@@ -61,7 +64,7 @@ class User extends Authenticatable
     }
 
 
-    
+
 
     protected $hidden = [
         'password',

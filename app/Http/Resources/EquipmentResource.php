@@ -30,6 +30,8 @@ class EquipmentResource extends JsonResource
             'type_name' => $this->type->name,
             'atelier_name' => $this->atelier->name,
             'atelier' => new AtelierResource($this->atelier),
+            'can_be_borrowed' => $this->can_be_borrowed,
+            'is_borrowed' => $this->is_borrowed,
         ];
     }
 }

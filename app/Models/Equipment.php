@@ -40,5 +40,13 @@ class Equipment extends Model
         return $this->belongsTo(Atelier::class);
     }
 
+    public function restrictions() {
+        return $this->belongsToMany(User::class);
+
+    }
+
+    public function reservation() {
+        return $this->hasMany(Reservation::class);
+    }
     
 }

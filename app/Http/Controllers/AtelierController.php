@@ -201,4 +201,11 @@ class AtelierController extends Controller
     
     }
 
+    public function getEquipment($atelierId)
+    {
+        $atelier = Atelier::findOrFail($atelierId);
+        $equipment = $atelier->equipment; 
+        return response()->json($equipment);
+    }
+
 }

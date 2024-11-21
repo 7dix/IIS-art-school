@@ -58,7 +58,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/types/create', [TypeController::class, 'create'])->name('types.create');
     Route::resource('types', TypeController::class);
     Route::get('/api/types/{type}/user-equipment', action: [EquipmentController::class, 'getUserEquipmentByType']);
-
+    Route::get('/api/ateliers/{atelier}/equipment', [AtelierController::class, 'getEquipment']);
 
     //Api routes
     //php artisan route:list    Route::delete('/ateliers/{atelier}/users/{user}', [AtelierController::class, 'removeUser']);

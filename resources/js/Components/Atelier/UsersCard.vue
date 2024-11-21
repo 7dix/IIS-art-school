@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/Components/ui/card";
 import { Button } from "@/Components/ui/button";
 import { Icon } from "@iconify/vue";
 import DeleteDialog from "@/Components/DeleteDialog.vue";
+import BlockDialog from "@/Components/Atelier/BlockDialog.vue";
 import AddDialog from "@/Components/Atelier/AddDialog.vue";
 import axios from "axios";
 
@@ -26,11 +27,18 @@ const props = defineProps({
 });
 
 const deleteDialogRef = ref(null);
+const blockDialogRef = ref(null);
 const addDialogRef = ref(null);
 
 const openDeleteDialog = (item) => {
     if (deleteDialogRef.value) {
         deleteDialogRef.value.openDialog(item.id);
+    }
+};
+
+const openBlockDialog = (item) => {
+    if (blockDialogRef.value) {
+        blockDialogRef.value.openDialog(item.id);
     }
 };
 
@@ -55,6 +63,23 @@ const confirmDelete = async (id: number) => {
         }
     }
     return { confirmDelete };
+};
+
+const confirmBlock = async (id: number) => {
+    // if (id) {
+    //     const response = await axios.put(
+    //         `/ateliers/${props.atelierId}/users/${id}/block`
+    //     );
+    //     if (response.status === 200) {
+    //         const user = props.users.find((item) => item.id === id);
+    //         if (user) {
+    //             user.blocked = true;
+    //         }
+    //     } else {
+    //         console.error(response);
+    //     }
+    // }
+    // return { confirmBlock };
 };
 
 const addUser = async (selectedUsers) => {
@@ -101,17 +126,27 @@ const addUser = async (selectedUsers) => {
                     class="flex justify-between items-center py-2 border-b border-gray-200"
                 >
                     <span>{{ user.name }}</span>
-                    <Button
-                        v-if="$page.props.auth.user.permissions.includes('assign_students')"
-                        @click="openDeleteDialog(user)"
-                        class="bg-red-500 text-white hover:bg-red-700 w-10 h-10 flex items-center justify-center"
-                    >
-                        <Icon icon="material-symbols:delete" class="w-5 h-5" />
-                    </Button>
+                    <div class="flex justify-end space-x-2">
+                        <Button
+                            v-if="$page.props.auth.user.permissions.includes('assign_students')"
+                            @click="openBlockDialog(user)"
+                            class="bg-yellow-500 text-white hover:bg-yellow-700 w-10 h-10 flex items-center justify-center"
+                        >
+                            <Icon icon="material-symbols:block" class="w-5 h-5" />
+                        </Button>
+                        <Button
+                            v-if="$page.props.auth.user.permissions.includes('assign_students')"
+                            @click="openDeleteDialog(user)"
+                            class="bg-red-500 text-white hover:bg-red-700 w-10 h-10 flex items-center justify-center"
+                        >
+                            <Icon icon="material-symbols:delete" class="w-5 h-5" />
+                        </Button>
+                    </div>
                 </li>
             </ul>
         </CardContent>
         <DeleteDialog ref="deleteDialogRef" :onConfirm="confirmDelete" />
+        <BlockDialog ref="blockDialogRef" :onConfirm="confirmBlock" />
         <AddDialog
             ref="addDialogRef"
             :onConfirm="addUser"

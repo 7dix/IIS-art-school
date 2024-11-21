@@ -218,6 +218,16 @@ class AtelierController extends Controller
         return response()->json(['message' => $equipmentIds]);
     }
 
+    public function removeRestrictions(Request $request, $atelierId) {
+        $equipmentIds = collect($request->input('equipments'))->pluck('id');
+        $userId = $request->input('user_id');
+        $user = User::find($userId);
+
+        $user->restrictions()->detach($equipmentIds);
+
+        return response()->json(['message' => $equipmentIds]);
+    }
+
     public function getRestrictedEquipment($atelierId, $userId)
     {
         try {

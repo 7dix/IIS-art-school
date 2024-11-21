@@ -45,6 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/ateliers/{atelier}/restrictions', action: [AtelierController::class, 'addRestrictions']);
     Route::post('/ateliers/{atelier}/remove-teacher-role', [AtelierController::class, 'removeTeacherRole']);
     Route::post('/ateliers/{atelier}/add-teachers', [AtelierController::class, 'addTeachers']);
+    Route::post('/ateliers/{atelier}/remove-restrictions', [AtelierController::class, 'removeRestrictions']);
 
     Route::get('/my-reservation/create', [MyReservationController::class, 'create'])->name('my-reservation.create');
     Route::post('/my-reservation/prepare', [MyReservationController::class, 'prepare'])->name('my-reservation.prepare');
@@ -61,6 +62,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/types/{type}/user-equipment', action: [EquipmentController::class, 'getUserEquipmentByType']);
     Route::get('/api/ateliers/{atelier}/equipment', [AtelierController::class, 'getEquipment']);
     Route::get('/api/ateliers/{atelier}/users/{user}/restricted-equipment', [AtelierController::class, 'getRestrictedEquipment']);    //Api routes
+    
     //php artisan route:list    Route::delete('/ateliers/{atelier}/users/{user}', [AtelierController::class, 'removeUser']);
 
     //php artisan route:cache

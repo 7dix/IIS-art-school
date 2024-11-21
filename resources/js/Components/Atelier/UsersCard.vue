@@ -38,7 +38,7 @@ const openDeleteDialog = (item) => {
 
 const openBlockDialog = (item) => {
     if (blockDialogRef.value) {
-        blockDialogRef.value.openDialog(item.id); //equipmentId
+        blockDialogRef.value.openDialog(item.id);
     }
 };
 
@@ -65,37 +65,25 @@ const confirmDelete = async (id: number) => {
     return { confirmDelete };
 };
 
-const confirmBlock = async (selectedEquipments, userId) => {
+const confirmBlock = async (selectedEquipments, removedEquipments, userId) => {
     try {
-        const response = await axios.post(
-            `/ateliers/${props.atelierId}/restrictions`,
-            { equipments: selectedEquipments.map((equipment) => ({ id: equipment.id })),
-                    user_id: userId }
-        );
-        console.log(selectedEquipments);
-        if (response.status === 200) {
-            console.log(response.data);
-        } else {
-            console.error(response);
+        // Add new restrictions
+        if (selectedEquipments.length > 0) {
+            await axios.post(`/ateliers/${props.atelierId}/restrictions`, {
+                equipments: selectedEquipments.map((equipment) => ({ id: equipment.id })),
+                user_id: userId,
+            });
         }
-    } catch (error) {
-        console.error("Failed to add users to atelier:", error);
-    }
-};
 
-const addUser = async (selectedUsers) => {
-    try {
-        const response = await axios.post(
-            `/ateliers/${props.atelierId}/users`,
-            { users: selectedUsers.map((user) => ({ id: user.id })) }
-        );
-        if (response.status === 200) {
-            props.users.push(...response.data.users);
-        } else {
-            console.error(response);
+        // Remove restrictions
+        if (removedEquipments.length > 0) {
+            await axios.post(`/ateliers/${props.atelierId}/remove-restrictions`, {
+                equipments: removedEquipments.map((equipment) => ({ id: equipment.id })),
+                user_id: userId,
+            });
         }
     } catch (error) {
-        console.error("Failed to add users to atelier:", error);
+        console.error("Failed to update equipment restrictions:", error);
     }
 };
 </script>

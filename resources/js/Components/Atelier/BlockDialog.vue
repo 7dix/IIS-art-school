@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import {
     AlertDialog,
     AlertDialogTrigger,
@@ -26,6 +26,7 @@ const props = defineProps({
 const isDialogOpen = ref(false);
 const availableEquipment = ref([]);
 const selectedEquipment = ref([]);
+const initialSelectedEquipment = ref([]);
 const userId = ref(null);
 
 const openDialog = (id_) => {
@@ -48,6 +49,7 @@ const fetchRestrictedEquipments = async (userId) => {
     try {
         const response = await axios.get(`/api/ateliers/${props.atelierId}/users/${userId}/restricted-equipment`);
         selectedEquipment.value = response.data.data;
+        initialSelectedEquipment.value = [...response.data.data]; // Clone the initial selected equipment
     } catch (error) {
         console.error("Failed to fetch restricted equipment:", error);
     }
@@ -55,7 +57,10 @@ const fetchRestrictedEquipments = async (userId) => {
 
 const handleConfirm = () => {
     if (typeof props.onConfirm === "function") {
-        props.onConfirm(selectedEquipment.value, userId.value); 
+        const removedEquipment = initialSelectedEquipment.value.filter(
+            (initial) => !selectedEquipment.value.some((selected) => selected.id === initial.id)
+        );
+        props.onConfirm(selectedEquipment.value, removedEquipment, userId.value); 
     }
     selectedEquipment.value = [];
     isDialogOpen.value = false;

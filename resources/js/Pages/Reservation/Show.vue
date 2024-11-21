@@ -24,6 +24,12 @@ const props = defineProps({
 
 const state = ref(props.reservation.status);
 
+const changeStatus = (status) => {
+    state.value = status;
+    // backend call to update status
+    
+}
+
 </script>
 
 <template>
@@ -56,28 +62,28 @@ const state = ref(props.reservation.status);
                             <Button v-if="state === 'pending'"
                                 variant="outline"
                                 class="btn-accept"
-                                @click="() => state = 'approved'"
+                                @click="changeStatus('approved')"
                             >
                                 Accept
                             </Button>
                             <Button v-if="state === 'pending'"
                                 variant="outline"
                                 class="btn-reject"
-                                @click="() => state = 'rejected'"
+                                @click="changeStatus('rejected')"
                                 >
                                 Reject
                             </Button>
                             <Button v-if="state === 'approved'"
                                 variant="outline"
                                 class="btn-accept"
-                                @click="() => state = 'approved'"
+                                @click="changeStatus('ongoing')"
                             >
                                 Confirm received equipment
                             </Button>
                             <Button v-if="state === 'ongoing'"
                                 variant="outline"
                                 class="btn-accept"
-                                @click="() => state = 'approved'"
+                                @click="changeStatus('completed')"
                             >
                                 Confirm returned equipment
                             </Button>
@@ -91,8 +97,8 @@ const state = ref(props.reservation.status);
                                 <div class="info-box">
                                     <div class="info-box-label">Status</div>
                                     <div class="info-box-value">
-                                        <Badge :class="statusClassColor(reservation.status)">
-                                            {{ reservation.status }}
+                                        <Badge :class="statusClassColor(state)">
+                                            {{ state }}
                                         </Badge>
                                     </div>
                                 </div>

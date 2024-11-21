@@ -102,10 +102,6 @@ class EquipmentController extends Controller
         /** @var \App\Models\User */
         $user = Auth::user();
 
-        if (!$user->can('create_equipment')) {
-            return back();
-        }
-
         Equipment::destroy($id);
 
         return $this->index();

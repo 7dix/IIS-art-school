@@ -97,6 +97,7 @@ const addTeacher = async (selectedTeachers) => {
             </CardTitle>
             <div class="flex justify-end">
                 <Button
+                    v-if="$page.props.auth.user.permissions.includes('assign_teacher')"
                     @click="openAddDialog"
                     class="bg-blue-500 text-white hover:bg-blue-700 w-10 h-10 flex items-center justify-center"
                 >
@@ -113,6 +114,7 @@ const addTeacher = async (selectedTeachers) => {
                 >
                     <span>{{ teacher.name }}</span>
                     <Button
+                        v-if="$page.props.auth.user.permissions.includes('assign_teacher')"
                         @click="removeTeacherRole(teacher)"
                         class="bg-yellow-500 text-white hover:bg-yellow-700 w-10 h-10 flex items-center justify-center"
                     >

@@ -14,10 +14,6 @@ class TypeController extends Controller
         /** @var \App\Models\User */
         $user = Auth::user();
 
-        if (!$user->can('create_type')) {
-            return back();
-        }
-
         $types = Type::with(['equipments'])->get();
         return inertia('Types/Index', ['types' => TypeResource::collection($types)]);
     }
@@ -26,20 +22,12 @@ class TypeController extends Controller
         /** @var \App\Models\User */
         $user = Auth::user();
 
-        if (!$user->can('create_type')) {
-            return back();
-        }
-
         return inertia('Types/Create');
     }
 
     public function store(Request $request) {
         /** @var \App\Models\User */
         $user = Auth::user();
-
-        if (!$user->can('create_type')) {
-            return back();
-        }
 
         $validatedData = $request->validate([
             'name' => ['required', 'string', 'max:255', 'unique:types,name'],
@@ -56,10 +44,6 @@ class TypeController extends Controller
 
         /** @var \App\Models\User */
         $user = Auth::user();
-
-        if (!$user->can('create_type')) {
-            return back();
-        }
 
        $type = Type::find($id);
        $type->update($request->validate([

@@ -18,20 +18,20 @@ class RoleSeeder extends Seeder
         $user = Role::create(['name' => 'user']);
         $admin = Role::create(['name' => 'admin']);
        
-        //Create permissions
-        $permissions = ['create_atelier', 'create_type', 'create_equipment'];
+        //Admin permissions
+        $permissions = ['manage_atelier'];
         foreach ($permissions as $permission) {
             Permission::create(['name' => $permission]);
         }
 
-        //edit permissions
-        $permissions = ['edit_atelier', 'edit_type', 'edit_equipment', 'assign_teacher', 'edit_user'];
+        //Teacher permissions
+        $permissions = ['manage_equipment', 'assign_students', 'manage_reservation'];
         foreach ($permissions as $permission) {
             Permission::create(['name' => $permission]);
         }
 
-        //manage permissions
-        $permissions = ['manage_atelier', 'manage_type', 'manage_equipment', 'manage_user'];
+        //Manager permissions
+        $permissions = ['manage_type', 'assign_teacher']; //'assign_students'
         foreach ($permissions as $permission) {
             Permission::create(['name' => $permission]);
         }

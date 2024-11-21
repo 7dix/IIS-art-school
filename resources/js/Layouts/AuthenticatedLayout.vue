@@ -52,7 +52,6 @@ const showingNavigationDropdown = ref(false);
                                     Manage Reservations
                                 </NavLink>
                                 <NavLink
-                                    v-if="$page.props.auth.user.permissions.includes('manage_atelier')"
                                     :href="route('atelier.index')"
                                     :active="route().current('atelier.index')"
                                 >
@@ -67,13 +66,13 @@ const showingNavigationDropdown = ref(false);
                                 </NavLink>
 
                                 <NavLink
-                                    v-if="$page.props.auth.user.permissions.includes('create_type')"
+                                    v-if="$page.props.auth.user.permissions.includes('manage_type')"
                                     :href="route('types.index')"
                                     :active="route().current('types.index')">
                                     Types
                                 </NavLink>
                                 <NavLink 
-                                    v-if="$page.props.auth.user.permissions.includes('create_equipment')"
+                                    v-if="$page.props.auth.user.permissions.includes('manage_equipment')"
                                     :href="route('equipment.index')" 
                                     :active="route().current('equipment.index')"
                                 >

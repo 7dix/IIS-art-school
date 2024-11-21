@@ -47,8 +47,9 @@ class Atelier extends Model
                 if ($originalManagerId) {
                     $originalManager = User::find($originalManagerId);
                     if ($originalManager) {
-                        $permissionName = "manage_atelier";
-                        $originalManager->revokePermissionTo($permissionName);
+                       
+                        $originalManager->revokePermissionTo('manage_type');
+                        $originalManager->revokePermissionTo('assign_teacher');
                     }
                 }
 
@@ -56,9 +57,10 @@ class Atelier extends Model
                 if ($newManagerId) {
                     $newManager = User::find($newManagerId);
                     if ($newManager) {
-                        $permissionName = "manage_atelier";
-                        Permission::firstOrCreate(['name' => $permissionName]); // Ensure the permission exists
-                        $newManager->givePermissionTo($permissionName);
+                        
+                      
+                        $newManager->givePermissionTo('manage_type');
+                        $newManager->givePermissionTo('assign_teacher');
                     }
                 }
             }
@@ -76,14 +78,13 @@ class AtelierUser extends \Illuminate\Database\Eloquent\Relations\Pivot
         static::updated(function ($pivot) {
             if ($pivot->isDirty('teacher')) {
                 $user = User::find($pivot->user_id);
-                $permissionName = "create_equipment";
 
                 if ($pivot->teacher) {
-                    Permission::firstOrCreate(['name' => $permissionName]); // Ensure the permission exists
-                    $user->givePermissionTo($permissionName);
-                } else {
-                    $user->revokePermissionTo($permissionName);
-                }
+                    
+                    $user->givePermissionTo('manage_equipment');
+                    $user->givePermissionTo('assign_students');
+                    $user->givePermissionTo('manage_reservation');
+                } 
             }
         });
     }

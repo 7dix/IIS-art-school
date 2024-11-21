@@ -85,6 +85,7 @@ const addUser = async (selectedUsers) => {
             </CardTitle>
             <div class="flex justify-end">
                 <Button
+                    v-if="$page.props.auth.user.permissions.includes('assign_students')"
                     @click="openAddDialog"
                     class="bg-blue-500 text-white hover:bg-blue-700 w-10 h-10 flex items-center justify-center"
                 >
@@ -101,6 +102,7 @@ const addUser = async (selectedUsers) => {
                 >
                     <span>{{ user.name }}</span>
                     <Button
+                        v-if="$page.props.auth.user.permissions.includes('assign_students')"
                         @click="openDeleteDialog(user)"
                         class="bg-red-500 text-white hover:bg-red-700 w-10 h-10 flex items-center justify-center"
                     >

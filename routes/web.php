@@ -45,7 +45,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/ateliers/{atelier}/remove-teacher-role', [AtelierController::class, 'removeTeacherRole']);
     Route::post('/ateliers/{atelier}/add-teachers', [AtelierController::class, 'addTeachers']);
 
+    Route::get('/my-reservation/create', [MyReservationController::class, 'create'])->name('my-reservation.create');
+    Route::post('/my-reservation/prepare', [MyReservationController::class, 'prepare'])->name('my-reservation.prepare');
     Route::resource('my-reservation', MyReservationController::class);
+    
     Route::resource('reservation', ReservationController::class);
     Route::post('/reservation/{reservation}/state-update', [ReservationController::class, 'reservationStateUpdate'])->name('reservation.state-update');
 

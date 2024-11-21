@@ -3,8 +3,6 @@ import { defineProps, ref } from "vue";
 import { Card, CardHeader, CardTitle, CardContent } from "@/Components/ui/card";
 import { Button } from "@/Components/ui/button";
 import { Icon } from "@iconify/vue";
-import DeleteDialog from "@/Components/DeleteDialog.vue";
-import AddTeacherDialog from "@/Components/Atelier/AddTeacherDialog.vue";
 import axios from "axios";
 
 const props = defineProps({
@@ -12,8 +10,7 @@ const props = defineProps({
         type: String,
         required: true,
     },
-   
-    equipments:  {
+    equipments: {
         type: Object,
         required: true,
     },
@@ -33,9 +30,8 @@ const openAddDialog = () => {
 
 const borrowEquipment = (equipment) => {
     console.log("Borrowing equipment:", equipment.name);
+    window.location.href = route('my-reservation.create', { type_id: equipment.type_id, equipment_id: equipment.id });
 };
-
-
 </script>
 
 <template>

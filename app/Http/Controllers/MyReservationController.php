@@ -10,12 +10,23 @@ use Illuminate\Support\Facades\Auth;
 
 class MyReservationController extends Controller
 {
+    public function transformForIndex(Reservation $reservation)
+    {
+        return [
+            'id' => $reservation->id,
+            'equipment' => $reservation->equipment->name,
+            'start_date' => $reservation->start_date,
+            'end_date' => $reservation->end_date,
+            'status' => $reservation->status,
+        ];
+    }
     public function index()
     {
         $userId = Auth::id(); // Get the authenticated user's ID
         $reservations = Reservation::with(['user', 'equipment'])
             ->where('user_id', $userId) // Filter by user ID
-            ->get();
+            ->get()
+            ->map(callback: fn (Reservation $reservation) => $this->transformForIndex($reservation));
         
         return inertia('MyReservation/Index', [
             'reservations' => $reservations

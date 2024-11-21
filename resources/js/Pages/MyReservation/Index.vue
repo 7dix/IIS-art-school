@@ -11,7 +11,7 @@ import { VTColumn, VTFilter } from "@/types";
 
 const props = defineProps({
     reservations: {
-        type: Array,
+        type: Object,
         required: true,
     },
 });

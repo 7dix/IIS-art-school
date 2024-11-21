@@ -108,16 +108,19 @@ class EquipmentController extends Controller
     }
 
     public function getUserEquipmentByType($typeId)
-{
-    $user = Auth::user();
-    $ateliers = $user->ateliers->pluck('id'); // Get the IDs of the user's ateliers
-
-    $equipment = Equipment::with(['atelier', 'owner']) // Include atelier and owner relationships
-        ->where('type_id', $typeId)
-        ->whereIn('atelier_id', $ateliers)
-        ->get();
-
-    return response()->json($equipment);
-}
+    {
+        $user = Auth::user();
+        $ateliers = $user->ateliers->pluck('id'); // Get the IDs of the user's ateliers
+    
+        $equipment = Equipment::with(['atelier', 'owner']) // Include atelier and owner relationships
+            ->where('type_id', $typeId)
+            ->whereIn('atelier_id', $ateliers)
+            ->whereDoesntHave('restrictions', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->get();
+    
+        return response()->json($equipment);
+    }
 
 }

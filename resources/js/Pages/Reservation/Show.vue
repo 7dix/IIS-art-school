@@ -12,7 +12,7 @@ import { statusClassColor, parseDateTime } from "@/Composables/reservationUtils"
 import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 import { ref } from 'vue';
-import { useToast } from '@/components/ui/toast/use-toast'
+import { useToast } from '@/Components/ui/toast/use-toast'
 
 
 

@@ -1,6 +1,9 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TypeResource;
+use App\Models\Type;
 use App\Models\Reservation;
 use App\Http\Resources\ReservationResource;
 use Illuminate\Support\Facades\Auth;
@@ -18,6 +21,15 @@ class MyReservationController extends Controller
         );
         return inertia('MyReservation/Index', [
             'reservations' => $reservations,
+        ]);
+    }
+
+    public function create()
+    {
+        $types = TypeResource::collection(Type::all())->resolve();
+    
+        return inertia('MyReservation/Create', [
+            'types' => $types,
         ]);
     }
 }

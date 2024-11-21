@@ -61,9 +61,7 @@ class AtelierController extends Controller
             return redirect()->route('dashboard')->with('error', 'You are not authorized to view this page');
         }
 
-        $users = UserResource::collection(User::whereHas('roles', function($query) {
-            $query->where('name', 'manager');
-        })->get());
+        $users = UserResource::collection(User::all());
 
         return inertia('Atelier/Create', ['users' => $users]);
     }
@@ -120,9 +118,9 @@ class AtelierController extends Controller
         $atelier = Atelier::findOrFail($atelierId);
         $usersInAtelier = $atelier->users->pluck('id');
         $availableUsers = User::whereNotIn('id', $usersInAtelier)
-        // ->whereHas('roles', function($query) {
-        //     $query->where('name', '!=', 'admin');
-        // })
+        ->whereHas('roles', function($query) {
+            $query->where('name', '!=', 'admin');
+        })
         ->where('id', '!=', $atelier->manager_id)
         ->get();
     

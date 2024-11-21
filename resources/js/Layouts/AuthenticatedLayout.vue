@@ -46,6 +46,7 @@ const showingNavigationDropdown = ref(false);
                                     My Reservations
                                 </NavLink>
                                 <NavLink
+                                    v-if="$page.props.auth.user.permissions.includes('manage_reservation')"
                                     :href="route('reservation.index')"
                                     :active="route().current('reservation.index')"
                                 >

@@ -1,35 +1,80 @@
-<script setup>
+<script setup lang="ts">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Table from '@/Components/Table.vue';
 import { Head, Link } from '@inertiajs/vue3';
-
-
+import { VTColumn } from "@/types";
 
 const props = defineProps({
     reservations: {
         type: Object,
         required: true,
     },
-})
+});
 
+const columns: VTColumn[] = [
+    {
+        key: "equipment",
+        header: "Equipment",
+        renderAs: (item) => item.equipment.name,
+    },
+    {
+        key: "created_at",
+        header: "Created at",
+        renderAs: (item) => new Date(item.created_at).toLocaleString(),
+    },
+    {
+        key: "start_date",
+        header: "Borrow date",
+        renderAs: (item) => new Date(item.start_date).toLocaleString(),
+    },
+    {
+        key: "end_date",
+        header: "Return date",
+        renderAs: (item) => new Date(item.end_date).toLocaleString(),
+    },
+    {
+        key: "status",
+        header: "Status",
+        renderAs: (item) => item.status,
+    },
+    {
+        key: "actions",
+        header: "Actions",
+        renderAs: (item) => {
+            return h(Link, 
+                {
+                    href: route('reservation.show', item.id),
+                    class: "inline-flex items-center px-4 py-2 bg-primary text-white font-semibold text-xs uppercase tracking-widest hover:bg-primary/90 focus:bg-primary/90 active:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 rounded-md"
+                },
+                'Show'
+            );
+        },
+    }
+];
 </script>
+
 <template>
-    <Head title="Atelier" />
+    <Head title="My Reservations" />
     <AuthenticatedLayout>
         <template #header>
-            <h2
-                class="text-xl font-semibold leading-tight text-gray-800"
-            >
-                My reservations
+            <h2 class="text-xl font-semibold leading-tight text-gray-800">
+                My Reservations
             </h2>
         </template>
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                    <div
+                        class="mt-4 sm:mt-0 sm:ml-16 sm:flex sm:justify-end pr-6 pt-6">
+                        <Link
+                            :href="route('my-reservation.create')"
+                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        >
+                            Create Reservation
+                        </Link>
+                    </div>
                     <div class="p-6 text-gray-900">
-                    <Table 
-                        :data="reservations.data" 
-                        noDataMessage="You dont have any reservations. Create one first." />
+                        <Table :data="reservations.data" :columns="columns" noDataMessage="You don't have any reservations. Create one first." />
                     </div>
                 </div>
             </div>

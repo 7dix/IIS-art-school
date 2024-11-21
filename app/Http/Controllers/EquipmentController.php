@@ -26,19 +26,9 @@ class EquipmentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-         /** @var \App\Models\User */
-         $user = Auth::user();
-
-         if (!$user->can('create_equipment')) {
-             return back();
-         }
-
         $equipments = EquipmentResource::collection(
             Equipment::with('type')->get()
         );
-
-        /** @var \App\Models\User */
-        $user = Auth::user();  
 
         $types = TypeResource::collection(Type::all());
         return inertia('Equipment/Index', ['equipments' => $equipments, 'types' => $types]);
@@ -48,12 +38,7 @@ class EquipmentController extends Controller
 
     public function create()
     {
-        /** @var \App\Models\User */
-        $user = Auth::user();
 
-        if (!$user->can('create_equipment')) {
-            return back();
-        }
         
         $types = TypeResource::collection(Type::all());
      
@@ -62,17 +47,18 @@ class EquipmentController extends Controller
 
     public function store(Request $request) {
 
-         /** @var \App\Models\User */
-         $user = Auth::user();
 
-         if (!$user->can('create_equipment')) {
-             return back();
-         }
+        $leasing_hours = $request->input('allowed_leasing_hours');
+        $leasing_hours_array = explode(',', $leasing_hours);
+        $leasing_hours_array = array_map('intval', $leasing_hours_array);
+        $leasing_hours_json = json_encode($leasing_hours_array);
+        $request->merge(['allowed_leasing_hours' => $leasing_hours_json]);
 
         $validatedData = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'maximum_leasing_period' => ['required', 'integer'],
             'year_of_manufacture' => ['integer', 'nullable'],
+            'allowed_leasing_hours' => ['required', 'json'],
             'date_of_purchase' => ['date', 'nullable'],
             'type_id' => ['required', 'exists:types,id'],
             'atelier_id' => ['required', 'exists:ateliers,id']
@@ -88,18 +74,19 @@ class EquipmentController extends Controller
 
     public function update(Request $request, $id) {
 
-        /** @var \App\Models\User */
-        $user = Auth::user();
+        $leasing_hours = $request->input('allowed_leasing_hours');
+        $leasing_hours_array = explode(',', $leasing_hours);
+        $leasing_hours_array = array_map('intval', $leasing_hours_array);
+        $leasing_hours_json = json_encode($leasing_hours_array);
+        $request->merge(['allowed_leasing_hours' => $leasing_hours_json]);
 
-        if (!$user->can('create_equipment')) {
-            return back();
-        }
 
         $equipment = Equipment::find($id);
         $equipment->update($request->validate([
             'name' => ['required', 'string', 'max:255'],
             'maximum_leasing_period' => ['required', 'integer'],
             'year_of_manufacture' => ['integer', 'nullable'],
+            'allowed_leasing_hours' => ['required', 'json'],
             'date_of_purchase' => ['date', 'nullable'],
             'type_id' => ['required', 'exists:types,id'],
             'atelier_id' => ['required', 'exists:ateliers,id']

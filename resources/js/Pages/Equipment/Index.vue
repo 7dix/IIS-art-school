@@ -3,7 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import Table from '@/Components/Table.vue';
 import { VTColumn } from "@/types";
-import { h, ref } from "vue";
+import { h, ref, toRaw, reactive } from "vue";
 import { Button } from '@/Components/ui/button'
 import EditEquipmentDialog from '@/Components/Equipment/EquipmentEditDialog.vue';
 import DeleteDialog from "@/Components/DeleteDialog.vue";
@@ -75,6 +75,12 @@ const saveEquipment = async (updatedEquipment) => {
         props.equipments.data[i] = updatedEquipment;
         props.equipments.data[i].type_name = updatedEquipment.type_name;
         props.equipments.data[i].atelier_name = updatedEquipment.atelier_name;
+
+        
+        props.equipments.data[i].allowed_leasing_hours = updatedEquipment.allowed_leasing_hours.split(",").map(Number);
+            
+        props.equipments.data[i].allowed_leasing_hours = reactive(updatedEquipment.allowed_leasing_hours);
+
         break;
         }
     }

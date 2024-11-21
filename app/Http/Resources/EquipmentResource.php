@@ -22,6 +22,7 @@ class EquipmentResource extends JsonResource
             'year_of_manufacture' => $this->year_of_manufacture,
             'date_of_purchase' => $this->date_of_purchase,
             'maximum_leasing_period' => $this->maximum_leasing_period,
+            'allowed_leasing_hours' => json_decode($this->allowed_leasing_hours),
             'owner' => new UserResource($this->owner),
             'type' => new TypeResource($this->type),
             'type_id' => $this->type_id,

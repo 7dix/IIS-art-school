@@ -25,6 +25,12 @@
         <label for="email" class="block text-sm font-medium text-gray-700">Maximum leasing period:</label>
         <input type="text" v-model="editableEquipment.maximum_leasing_period" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
         </div>
+
+        <div class="mb-4">
+        <label for="email" class="block text-sm font-medium text-gray-700">Leasing hours:</label>
+        <input type="text" v-model="editableEquipment.allowed_leasing_hours" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+        </div>
+
         <div class="mb-4">
         <label for="email" class="block text-sm font-medium text-gray-700">Year of manufacture:</label>
         <input type="text" v-model="editableEquipment.year_of_manufacture" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
@@ -46,7 +52,7 @@
 
 <script setup lang="ts">
     import axios from 'axios';
-    import { defineProps, defineEmits, ref, watch, onMounted, onUnmounted } from 'vue';
+    import { defineProps, defineEmits, ref, watch, onMounted, onUnmounted, toRaw } from 'vue';
 
     const props = defineProps<{
     equipment: any,
@@ -114,7 +120,11 @@
     if (props.isOpen) {
         document.addEventListener('keydown', handleKeydown);
         getAteliers(editableEquipment.value.type_id);
-    }
+        console.log(editableEquipment.value.allowed_leasing_hours);
+
+        editableEquipment.value.allowed_leasing_hours =  toRaw(editableEquipment.value.allowed_leasing_hours);
+        editableEquipment.value.allowed_leasing_hours = editableEquipment.value.allowed_leasing_hours.join(',');
+    }   
     });
 
     onUnmounted(() => {

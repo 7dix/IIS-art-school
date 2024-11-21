@@ -18,12 +18,14 @@ const form = useForm({
     name: '',
     maximum_leasing_period: '',
     year_of_manufacture: '',
+    allowed_leasing_hours: '',
     date_of_purchase: '',
     type_id: '',
     atelier_id: '',
 });
 
 const createEquipment = () => {    
+    console.log(form.allowed_leasing_hours);
     form.post(route('equipment.store'));
 };
 
@@ -84,9 +86,17 @@ const getAteliers = (type_id) => {
                                 </select>
                             </div>
                             <div class="mb-4">
-                                <label for="room" class="block text-sm font-medium text-gray-700">Maximum leasing period:</label>
+                                <label for="room" class="block text-sm font-medium text-gray-700">Maximum leasing period (in days):</label>
                                 <input type="text" id="room" v-model="form.maximum_leasing_period" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
                             </div>
+
+
+                            <div class="mb-4">
+                                <label for="room" class="block text-sm font-medium text-gray-700">Leasing hours (everyday):</label>
+                                <input type="text" id="room" v-model="form.allowed_leasing_hours" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                            </div>
+
+
                             <div class="mb-4">
                                 <label for="room" class="block text-sm font-medium text-gray-700">Year of manufacture:</label>
                                 <input type="text" id="room" v-model="form.year_of_manufacture" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">

@@ -18,7 +18,7 @@ class UserController extends Controller
 
         if (!$user->hasRole('admin')) {
             return back();
-        }
+        } 
 
         $users = UserResource::collection(User::all());
         $roles = RoleResource::collection(Role::all());

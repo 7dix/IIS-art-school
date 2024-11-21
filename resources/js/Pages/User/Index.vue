@@ -60,7 +60,7 @@ const columns: VTColumn[] = [
         "key": "full_name",
         "header": "Full Name",
         renderAs: (item) => {
-            return h('span', item.first_name + ' ' + item.last_name)
+            return h('span', item.name)
         }
     },
     {

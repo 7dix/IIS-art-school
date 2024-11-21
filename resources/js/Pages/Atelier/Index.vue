@@ -15,17 +15,28 @@ const props = defineProps({
         type: Object,
         required: true,
     },
-    managers: {
+    types: {
         type: Object,
         required: true,
     },
+    users: {
+        type: Object,
+        required: true,
+    },
+    role: {
+        type: String,
+        required: true,
+    }
 });
+
 
 ////////////////////
 ////EDIT dialog/////
 ////////////////////
 const showDialog = ref(false);
 const selectedAtelier = ref(null);
+
+
 
 const openEditDialog = (atelier) => {
   selectedAtelier.value = { ...atelier };  // Clone atelier data to edit
@@ -80,13 +91,13 @@ const columns: VTColumn[] = [
         renderAs: (item) => {
             return h(
                 "span",
-                item.manager.first_name + " " + item.manager.last_name
+                item.manager.name
             );
         },
     },
     {
         key: "ateliers",
-        header: "Students",
+        header: "Users",
         renderAs: (item) => {
             return h(
                 Button,
@@ -103,7 +114,9 @@ const columns: VTColumn[] = [
         key: "actions",
         header: "Actions",
         renderAs: (item) => {
-            return h("div", {}, [
+            return h("div", {
+                class: "flex items-center",
+            }, [
                 h(
                 Link,
                 {
@@ -114,17 +127,18 @@ const columns: VTColumn[] = [
                     icon: "majesticons:open",
                     class: "w-5 h-5",
                 })
-            ),
-            h(
-                    Button,
-                    {
-                        onClick: () => openEditDialog(item),
-                        class: 'bg-blue-500 text-white ml-2 py-4 px-4 rounded-md hover:bg-blue-600 ' 
-                    },
-                    'Edit'
                 ),
-            
-            ]);
+                props.role == 'admin' && h(
+                        Button,
+                        {
+                            onClick: () => openEditDialog(item),
+                            class: 'bg-blue-500 text-white ml-2 py-4 px-4 rounded-md hover:bg-blue-600 ',
+                        },
+                        'Edit'
+                    ),
+                
+                ]
+            );
         },
     },
 ];
@@ -141,6 +155,7 @@ const columns: VTColumn[] = [
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <div
+                        v-if="props.role == 'admin'"
                         class="mt-4 sm:mt-0 sm:ml-16 sm:flex sm:justify-end pr-6 pt-6"
                     >
                         <Link
@@ -165,7 +180,8 @@ const columns: VTColumn[] = [
           v-if="showDialog" 
           :atelier="selectedAtelier" 
           :isOpen="showDialog" 
-          :managers="props.managers"
+          :types="props.types"
+          :users="props.users"
           @save="saveAtelier" 
           @close="closeDialog"
         />

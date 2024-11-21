@@ -80,7 +80,7 @@ defineExpose({ openDialog });
                     label="name"
                     track-by="id"
                     :customLabel="
-                        (user) => `${user.first_name} ${user.last_name}`
+                        (user) => `${user.name}`
                     "
                 />
             </AlertDialogDescription>

@@ -162,7 +162,7 @@ const changeStatus = (status) => {
                                 </div>
                                 <div class="info-box">
                                     <div class="info-box-label">Owner</div>
-                                    <div class="info-box-value">{{ reservation.equipment.owner.first_name }} {{ reservation.equipment.owner.last_name }} | {{ reservation.equipment.owner.email }}</div>
+                                    <div class="info-box-value">{{ reservation.equipment.owner.name }} | {{ reservation.equipment.owner.email }}</div>
                                 </div>
                             </div>
                         </div>
@@ -173,7 +173,7 @@ const changeStatus = (status) => {
                             <div>
                                 <div class="info-box">
                                     <div class="info-box-label">Name</div>
-                                    <div class="info-box-value">{{reservation.user.first_name}} {{reservation.user.last_name}}</div>
+                                    <div class="info-box-value">{{reservation.user.name}} </div>
                                 </div>
                                 <div class="info-box">
                                     <div class="info-box-label">E-mail</div>

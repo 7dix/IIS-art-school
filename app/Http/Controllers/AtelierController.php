@@ -15,18 +15,40 @@ class AtelierController extends Controller
 {
     public function index()
     {
-        $ateliers = AtelierResource::collection(
-            Atelier::with(['manager', 'users'])->get()
-        );
+        $user = auth()->user();
 
-        $managers = UserResource::collection(User::whereHas('roles', function($query) {
-            $query->where('name', 'manager');
+        if (!$user->hasRole('admin') && !$user->isManager()) {
+            return redirect()->route('dashboard')->with('error', 'You are not authorized to view this page');
+        }
+
+        // Not dependant on user role
+        $types = TypeResource::collection(Type::all());
+        $users = UserResource::collection(User::whereHas('roles', function($query) {
+            $query->where('name', 'user');
         })->get());
 
-        return inertia('Atelier/Index', ['ateliers' => $ateliers, 'managers' => $managers]);
+        // Admin view
+        if ($user->hasRole('admin')) {
+            $ateliers = AtelierResource::collection(
+                Atelier::with(['manager', 'users'])->get()
+            );    
+            return inertia('Atelier/Index', ['ateliers' => $ateliers, 'users' => $users, 'role' => 'admin']);
+
+        // Manager view
+        } else {
+            $ateliers = AtelierResource::collection(
+                Atelier::where('manager_id', $user->id)->with(['manager', 'users'])->get()
+            );
+            return inertia('Atelier/Index', ['ateliers' => $ateliers, 'users' => $users, 'role' => 'manager']);
+        }
     }
 
     public function create() {
+        $user = auth()->user();
+        if (!$user->hasRole('admin')) {
+            return redirect()->route('dashboard')->with('error', 'You are not authorized to view this page');
+        }
+
         $users = UserResource::collection(User::whereHas('roles', function($query) {
             $query->where('name', 'manager');
         })->get());
@@ -35,6 +57,10 @@ class AtelierController extends Controller
     }
 
     public function store(Request $request) {
+        $user = auth()->user();
+        if (!$user->hasRole('admin')) {
+            return redirect()->route('dashboard')->with('error', 'You are not authorized to view this page');
+        }
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -45,14 +71,6 @@ class AtelierController extends Controller
         $atelier = Atelier::create($validated);
        
         return $this->index();
-    }
-
-
-    public function getAteliersWithType(Request $request, $type_id) {
-        $ateliers = Atelier::whereHas('types', function($query) use ($type_id) {
-            $query->where('types.id', $type_id);
-        })->get();
-        return AtelierResource::collection($ateliers);
     }
 
     public function dashboard($id)
@@ -97,7 +115,7 @@ class AtelierController extends Controller
             ->whereDoesntHave('roles', function($query) {
                 $query->where('name', 'teacher');
             })
-            ->select('users.id', 'first_name', 'last_name')
+            ->select('users.id', 'name')
             ->get();
         
         return response()->json($usersInAtelier);

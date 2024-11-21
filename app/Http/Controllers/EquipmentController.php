@@ -114,4 +114,16 @@ class EquipmentController extends Controller
         return $this->index();
     }
 
+    public function getUserEquipmentByType($typeId)
+    {
+        $user = Auth::user();
+        $ateliers = $user->ateliers->pluck('id'); // Get the IDs of the user's ateliers
+
+        $equipment = Equipment::where('type_id', $typeId)
+            ->whereIn('atelier_id', $ateliers)
+            ->get();
+
+        return response()->json($equipment);
+    }
+
 }

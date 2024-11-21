@@ -26,7 +26,7 @@ class MyReservationController extends Controller
 
     public function create()
     {
-        $types = TypeResource::collection(Type::all())->resolve();
+        $types = Type::all(); // Fetch all types
     
         return inertia('MyReservation/Create', [
             'types' => $types,

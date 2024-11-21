@@ -23,9 +23,12 @@ const filteredEquipment = ref([]);
 
 watch(() => form.type_id, (newTypeId) => {
     if (newTypeId) {
-        // Fetch equipment based on the selected type
-        axios.get(`/api/types/${newTypeId}/equipment`).then(response => {
+        // Fetch equipment based on the selected type and user's ateliers
+        axios.get(`/api/types/${newTypeId}/user-equipment`).then(response => {
             filteredEquipment.value = response.data;
+        }).catch(error => {
+            console.error("Failed to fetch equipment:", error);
+            filteredEquipment.value = [];
         });
     } else {
         filteredEquipment.value = [];
@@ -66,6 +69,7 @@ const createReservation = () => {
                                 <select id="equipment_id" name="equipment_id" v-model="form.equipment_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
                                     <option value="" disabled>Select Equipment</option>
                                     <option v-for="equipment in filteredEquipment" :key="equipment.id" :value="equipment.id">{{ equipment.name }}</option>
+                                    <option v-if="filteredEquipment.length === 0" disabled>No equipment of this type available</option>
                                 </select>
                             </div>
                             <div class="mb-4">

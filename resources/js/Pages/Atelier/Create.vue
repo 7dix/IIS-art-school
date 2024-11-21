@@ -60,7 +60,7 @@ const createAtelier = () => {
                             <div class="mb-4">
                                 <label for="role" class="block text-sm font-medium text-gray-700">Manager:</label>
                                 <select v-model="form.manager_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                                    <option v-for="user in props.users.data" :key="user.id" :value="user.id">{{ user.first_name + " " + user.last_name }}</option>
+                                    <option v-for="user in props.users.data" :key="user.id" :value="user.id">{{ user.name }}</option>
                                 </select> 
                             </div>
                             <div class="flex items-center justify-end mt-4">

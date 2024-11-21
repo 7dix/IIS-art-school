@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
@@ -17,8 +18,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'first_name',
-        'last_name',
+        'name',
         'email',
         'password',
     ];
@@ -33,19 +33,31 @@ class User extends Authenticatable
         return $this->hasMany(Reservation::class);
     }
 
-    public function loans()
-    {
-        return $this->hasMany(Loan::class);
-    }
-
     public function ateliers()
     {
-        return $this->belongsToMany(Atelier::class);
+        return $this->belongsToMany(Atelier::class, 'atelier_user')->withPivot('teacher');
     }
 
     public function role()
     {
-        return $this->hasMany(Role::class);
+        return $this->belongsTo(Role::class);
+    }
+
+    // Manager thingy
+    public function isManager()
+    {
+        return Atelier::where('manager_id', $this->id)->exists();
+    }
+    public function isManagerOfAtelier($atelierId)
+    {
+        return Atelier::where('id', $atelierId)
+            ->where('manager_id', $this->id)
+            ->exists();
+    }
+
+    public function managedAteliers()
+    {
+        return Atelier::where('manager_id', $this->id)->get();
     }
 
     protected $hidden = [

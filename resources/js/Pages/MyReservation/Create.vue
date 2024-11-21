@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
@@ -7,6 +7,10 @@ import axios from 'axios';
 const props = defineProps({
     types: {
         type: Array,
+        required: true,
+    },
+    userId: {
+        type: Number,
         required: true,
     },
 });

@@ -12,6 +12,7 @@ import { statusClassColor, parseDateTime } from "@/Composables/reservationUtils"
 import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
 import { ref } from 'vue';
+import { useToast } from '@/components/ui/toast/use-toast'
 
 
 
@@ -22,13 +23,30 @@ const props = defineProps({
     },
 })
 
+const { toast } = useToast()
 const state = ref(props.reservation.status);
 
 const changeStatus = (status) => {
-    state.value = status;
-    // backend call to update status
-    
+    axios.post(route('reservation.state-update', props.reservation.id), {
+        status: status
+    }).then(response => {
+        state.value = status;
+        toast({
+            title: 'Success',
+            description: response.data.message
+        });
+        console.log(response);
+    }).catch(error => {
+        toast({
+            title: 'Error',
+            variant: "destructive",
+            description: error.response.data.message
+        });
+        console.error(error);
+    });
 }
+
+
 
 </script>
 
@@ -78,14 +96,14 @@ const changeStatus = (status) => {
                                 class="btn-accept"
                                 @click="changeStatus('ongoing')"
                             >
-                                Confirm received equipment
+                                Hand Over Equipment
                             </Button>
                             <Button v-if="state === 'ongoing'"
                                 variant="outline"
                                 class="btn-accept"
                                 @click="changeStatus('completed')"
                             >
-                                Confirm returned equipment
+                                Return Equipment
                             </Button>
                         </div>
                     </div>
@@ -133,7 +151,7 @@ const changeStatus = (status) => {
                                 <div class="info-box">
                                     <div class="info-box-label">Atelier</div>
                                     <a 
-                                        :href="route('atelier.dashboard', reservation.equipment.atelier.id)" 
+                                        :href="route('ateliers.dashboard', reservation.equipment.atelier.id)" 
                                         class="font-semibold info-box-value bg-blue-100 px-4 rounded">
                                         {{ reservation.equipment.atelier.name }}
                                     </a>
@@ -167,7 +185,6 @@ const changeStatus = (status) => {
                 </div>
             </div>
         </div>
-        <pre>{{ reservation }}</pre>
         
     </AuthenticatedLayout>
 </template>

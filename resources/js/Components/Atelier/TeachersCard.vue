@@ -4,7 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/Components/ui/card";
 import { Button } from "@/Components/ui/button";
 import { Icon } from "@iconify/vue";
 import DeleteDialog from "@/Components/DeleteDialog.vue";
-import AddDialog from "@/Components/Atelier/AddDialog.vue";
+import AddTeacherDialog from "@/Components/Atelier/AddTeacherDialog.vue";
 import axios from "axios";
 
 const props = defineProps({
@@ -55,19 +55,21 @@ const removeTeacherRole = async (user) => {
     }
 };
 
-const addUser = async (selectedUsers) => {
+const addTeacher = async (selectedTeachers) => {
     try {
         const response = await axios.post(
-            `/ateliers/${props.atelierId}/users`,
-            { users: selectedUsers.map((user) => ({ id: user.id })) }
+            `/ateliers/${props.atelierId}/add-teachers`,
+            { users: selectedTeachers.map((user) => user.id) }
         );
         if (response.status === 200) {
+
+            // Add the new teachers to the list
             props.users.push(...response.data.users);
         } else {
             console.error(response);
         }
     } catch (error) {
-        console.error("Failed to add users to atelier:", error);
+        console.error("Failed to add teachers to atelier:", error);
     }
 };
 </script>
@@ -108,9 +110,9 @@ const addUser = async (selectedUsers) => {
             </ul>
         </CardContent>
         <DeleteDialog ref="deleteDialogRef" :onConfirm="confirmDelete" />
-        <AddDialog
+        <AddTeacherDialog
             ref="addDialogRef"
-            :onConfirm="addUser"
+            :onConfirm="addTeacher"
             :atelierId="props.atelierId"
         />
     </Card>

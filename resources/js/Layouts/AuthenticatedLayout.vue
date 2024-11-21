@@ -1,17 +1,19 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
+import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import NavLink from "@/Components/NavLink.vue";
-import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import { Link } from "@inertiajs/vue3";
+import Toaster from "@/Components/ui/toast/Toaster.vue";
 
 const showingNavigationDropdown = ref(false);
 </script>
 
 <template>
     <div>
+        <Toaster />
         <div class="min-h-screen bg-gray-100">
             <nav class="border-b border-gray-100 bg-white">
                 <!-- Primary Navigation Menu -->

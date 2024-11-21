@@ -64,18 +64,18 @@ class AtelierController extends Controller
     public function dashboard($id)
     {
         $atelier = Atelier::with(['users.roles'])->findOrFail($id);
-
-        $students = $atelier->users->filter(function ($user) {
-            return $user->roles->contains('name', 'user');
-        });
-
+    
         $teachers = $atelier->users->filter(function ($user) {
-            return $user->roles->contains('name', 'teacher');
+            return $user->hasRole('teacher');
         });
-
+    
+        $users = $atelier->users->filter(function ($user) {
+            return $user->hasRole('user') && !$user->hasRole('teacher');
+        });
+    
         return inertia('Atelier/Dashboard', [
             'atelier' => $atelier,
-            'students' => $students->values(), // Ensure collection is re-indexed
+            'users' => $users->values(), // Ensure collection is re-indexed
             'teachers' => $teachers->values(), // Ensure collection is re-indexed
         ]);
     }
@@ -99,8 +99,13 @@ class AtelierController extends Controller
 
     public function usersInAtelier($atelierId){
         $atelier = Atelier::findOrFail($atelierId);
-        $usersInAtelier = $atelier->users->pluck('id');
-
+        $usersInAtelier = $atelier->users()
+            ->whereDoesntHave('roles', function($query) {
+                $query->where('name', 'teacher');
+            })
+            ->select('users.id', 'first_name', 'last_name')
+            ->get();
+        
         return response()->json($usersInAtelier);
     }
 
@@ -155,4 +160,27 @@ class AtelierController extends Controller
 
         return $this->index();
     }
+    public function addTeachers(Request $request, $atelierId) {
+        try {
+            $atelier = Atelier::findOrFail($atelierId);
+            $userIds = $request->input('users');
+    
+            foreach ($userIds as $userId) {
+                $user = User::findOrFail($userId);
+                // Check if the user is already attached to avoid duplicates
+                if (!$atelier->users()->where('users.id', $userId)->exists()) {
+                    $atelier->users()->attach($userId);
+                }
+                $user->assignRole('teacher');
+            }
+    
+            $newTeachers = $atelier->users()->whereIn('users.id', $userIds)->get();
+    
+            return response()->json(['message' => 'Teachers added successfully.', 'users' => $newTeachers]);
+        } catch (\Exception $e) {
+            \Log::error('Failed to add teachers to atelier: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to add teachers to atelier'], 500);
+        }
+    }
+
 }

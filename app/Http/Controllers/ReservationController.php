@@ -3,7 +3,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Reservation;
 use App\Http\Resources\ReservationResource;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 
 class ReservationController extends Controller
 {
@@ -38,5 +41,33 @@ class ReservationController extends Controller
         return inertia('Reservation/Show', [
             'reservation' => $reservation->load(['user', 'equipment', 'equipment.atelier', 'equipment.type','equipment.owner']),
         ]);
+    }
+
+    public function reservationStateUpdate(Request $request, Reservation $reservation)
+    {
+
+        // Validate the request
+        $status = $request->input('status');
+        if ($status === 'approved' || $status === 'rejected') {
+            if ($reservation->status !== 'pending') {
+                return response()->json(['message' => 'Invalid status change'], 400);
+            }
+        } else if ($status === 'ongoing') {
+            if ($reservation->status !== 'approved') {
+                return response()->json(['message' => 'Invalid status change'], 400);
+            }
+        } else if ($status === 'completed') {
+            if ($reservation->status !== 'ongoing') {
+                return response()->json(['message' => 'Invalid status change'], 400);
+            }
+        } else {
+            return response()->json(['message' => 'Invalid status'], 400);
+        }
+
+        // Update the reservation status
+        $reservation->status = $status;
+        $reservation->save();
+
+        return response()->json(['message' => 'Reservation status updated']);
     }
 }

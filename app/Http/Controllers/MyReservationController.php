@@ -16,6 +16,7 @@ class MyReservationController extends Controller
         $reservations = Reservation::with(['user', 'equipment'])
             ->where('user_id', $userId) // Filter by user ID
             ->get();
+        
         return inertia('MyReservation/Index', [
             'reservations' => $reservations
         ]);

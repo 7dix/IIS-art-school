@@ -2,40 +2,56 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Table from '@/Components/Table.vue';
 import { Head, Link } from '@inertiajs/vue3';
-import { VTColumn } from "@/types";
+import { Badge } from '@/Components/ui/badge'
+import StatusFilter from '@/Components/Reservation/StatusFilter.vue';
+import { statusClassColor, parseDateTime } from "@/Composables/reservationUtils";
+import { defineProps, h, ref } from 'vue';
+import { VTColumn, VTFilter } from "@/types";
+
 
 const props = defineProps({
     reservations: {
-        type: Object,
+        type: Array,
         required: true,
     },
 });
 
 const columns: VTColumn[] = [
     {
-        key: "equipment",
-        header: "Equipment",
-        renderAs: (item) => item.equipment.name,
+        "key": "equipment",
+        "header": "Equipment",
     },
     {
-        key: "created_at",
-        header: "Created at",
-        renderAs: (item) => new Date(item.created_at).toLocaleString(),
+        "key": "created_at",
+        "header": "Created at",  
+
     },
     {
-        key: "start_date",
-        header: "Borrow date",
-        renderAs: (item) => new Date(item.start_date).toLocaleString(),
+        "key": "start_date",
+        "header": "Borrow date",
+        renderAs: (item) => {
+            return h('span', `${parseDateTime(item.created_at)}`);
+        }
     },
     {
-        key: "end_date",
-        header: "Return date",
-        renderAs: (item) => new Date(item.end_date).toLocaleString(),
+        "key": "end_date",
+        "header": "Return date",
+        renderAs: (item) => {
+            return h('span', `${parseDateTime(item.created_at)}`);
+        }
     },
     {
-        key: "status",
-        header: "Status",
-        renderAs: (item) => item.status,
+        "key": "status",
+        "header": "Status",
+        renderAs: (item) => {
+            return h(
+                Badge,
+                {
+                    class: statusClassColor(item.status)
+                },
+                item.status
+            );
+        }
     },
     {
         key: "actions",
@@ -51,6 +67,14 @@ const columns: VTColumn[] = [
         },
     }
 ];
+const statuses = ref<VTFilter[]>([
+    { column: 'status', operator: true, value: 'pending' },
+    { column: 'status', operator: true, value: 'approved' },
+    { column: 'status', operator: true, value: 'rejected' },
+    { column: 'status', operator: true, value: 'ongoing' },
+    { column: 'status', operator: true, value: 'completed' },
+    { column: 'status', operator: true, value: 'cancelled' },
+]);
 </script>
 
 <template>
@@ -73,7 +97,8 @@ const columns: VTColumn[] = [
                         </Link>
                     </div>
                     <div class="p-6 text-gray-900">
-                        <Table :data="reservations.data" :columns="columns" noDataMessage="You don't have any reservations. Create one first." />
+                        <StatusFilter :statuses="statuses" />
+                        <Table :data="reservations" :columns="columns" :filter="statuses" noDataMessage="You don't have any reservations. Create one first." />
                     </div>
                 </div>
             </div>

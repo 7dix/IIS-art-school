@@ -9,7 +9,7 @@ const props = defineProps({
         type: Object,
         required: true,
     },
-    students: {
+    users: {
         type: Array,
         required: true,
     },
@@ -21,7 +21,7 @@ const props = defineProps({
 
 onMounted(() => {
     console.log("Atelier:", props.atelier);
-    console.log("Students:", props.students);
+    console.log("Users:", props.users);
     console.log("Teachers:", props.teachers);
 });
 </script>
@@ -38,10 +38,10 @@ onMounted(() => {
                 <div
                     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
                 >
-                    <!-- Users Card for Students -->
+                    <!-- Users Card for Users -->
                     <UsersCard
-                        title="Students"
-                        :users="students"
+                        title="Users"
+                        :users="users"
                         :atelierId="atelier.id"
                     />
 

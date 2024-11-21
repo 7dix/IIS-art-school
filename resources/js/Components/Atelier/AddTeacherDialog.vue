@@ -24,31 +24,31 @@ const props = defineProps({
 });
 
 const isDialogOpen = ref(false);
-const availableUsers = ref([]); // Initialize availableUsers array
-const selectedUsers = ref([]); // Initialize selectedUsers array
+const availableTeachers = ref([]);
+const selectedTeachers = ref([]);
 
 const openDialog = () => {
     isDialogOpen.value = true;
-    fetchAvailableUsers(); // Fetch available users when dialog is opened
-};
+        fetchAvailableTeachers();
+    };
 
-const fetchAvailableUsers = async () => {
+const fetchAvailableTeachers = async () => {
     try {
         const response = await axios.get(
             `/api/ateliers/${props.atelierId}/users-in-atelier`
         );
-        console.log("Fetched users:", response.data); // Log the fetched users
-        availableUsers.value = response.data;
+        console.log("Fetched teachers:", response.data); 
+        availableTeachers.value = response.data;
     } catch (error) {
-        console.error("Failed to fetch available users:", error);
+        console.error("Failed to fetch available teachers:", error);
     }
 };
 
 const handleConfirm = () => {
     if (typeof props.onConfirm === "function") {
-        props.onConfirm(selectedUsers.value); // Pass selected users to the onConfirm function
+        props.onConfirm(selectedTeachers.value); 
     }
-    selectedUsers.value = []; // Clear selected users
+    selectedTeachers.value = [];
     isDialogOpen.value = false;
 };
 
@@ -66,22 +66,20 @@ defineExpose({ openDialog });
         </AlertDialogTrigger>
         <AlertDialogContent>
             <AlertDialogHeader>
-                <AlertDialogTitle>Add users</AlertDialogTitle>
+                <AlertDialogTitle>Add teachers</AlertDialogTitle>
             </AlertDialogHeader>
             <AlertDialogDescription>
                 <Multiselect
-                    v-model="selectedUsers"
-                    :options="availableUsers"
+                    v-model="selectedTeachers"
+                    :options="availableTeachers"
                     :multiple="true"
                     :close-on-select="false"
                     :clear-on-select="false"
                     :preserve-search="true"
-                    placeholder="Select users"
+                    placeholder="Select Teachers"
                     label="name"
                     track-by="id"
-                    :customLabel="
-                        (user) => `${user.first_name} ${user.last_name}`
-                    "
+                    :customLabel="(user) => `${user.first_name} ${user.last_name}`"
                 />
             </AlertDialogDescription>
             <AlertDialogFooter>

@@ -1,34 +1,66 @@
 <?php
+// File: app/Http/Controllers/MyReservationController.php
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\TypeResource;
 use App\Models\Type;
 use App\Models\Reservation;
-use App\Http\Resources\ReservationResource;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Laravel\Pail\ValueObjects\Origin\Console;
 
 class MyReservationController extends Controller
 {
+    public function transformForIndex(Reservation $reservation)
+    {
+        return [
+            'id' => $reservation->id,
+            'equipment' => $reservation->equipment->name,
+            'created_at' => $reservation->created_at,
+            'start_date' => $reservation->start_date,
+            'end_date' => $reservation->end_date,
+            'status' => $reservation->status,
+        ];
+    }
     public function index()
     {
         $userId = Auth::id(); // Get the authenticated user's ID
-        $reservations = ReservationResource::collection(
-            Reservation::with(['user', 'equipment'])
-                ->where('user_id', $userId) // Filter by user ID
-                ->get()
-        );
+        $reservations = Reservation::with(['user', 'equipment'])
+            ->where('user_id', $userId) // Filter by user ID
+            ->get()
+            ->map(callback: fn (Reservation $reservation) => $this->transformForIndex($reservation));
+        
         return inertia('MyReservation/Index', [
-            'reservations' => $reservations,
+            'reservations' => $reservations
         ]);
     }
 
     public function create()
     {
         $types = Type::all(); // Fetch all types
+        $userId = Auth::id(); 
         return inertia('MyReservation/Create', [
-            'types' => $types
+            'types' => $types, 'userId' => $userId
         ]);
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'type_id' => 'required|exists:types,id',
+            'equipment_id' => 'required|exists:equipments,id',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
+            'status' => 'required|string',
+        ]);
+
+        $reservation = Reservation::create([
+            'user_id' => Auth::id(),
+            'equipment_id' => $request->equipment_id,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'status' => $request->status,
+        ]);
+
+        return redirect()->route('my-reservation.index')->with('success', 'Reservation created successfully.');
     }
 }

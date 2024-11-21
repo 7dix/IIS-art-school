@@ -24,6 +24,9 @@ const columns: VTColumn[] = [
     {
         "key": "created_at",
         "header": "Created at",  
+        renderAs: (item) => {
+            return h('span', `${parseDateTime(item.created_at)}`);
+        }
 
     },
     {

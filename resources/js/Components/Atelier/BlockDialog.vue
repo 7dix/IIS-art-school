@@ -28,20 +28,28 @@ const availableEquipment = ref([]);
 const selectedEquipment = ref([]);
 const userId = ref(null);
 
-
 const openDialog = (id_) => {
     isDialogOpen.value = true;
     userId.value = id_;
     fetchEquipments();
+    fetchRestrictedEquipments(id_);
 };
 
 const fetchEquipments = async () => {
     try {
         const response = await axios.get(`/api/ateliers/${props.atelierId}/equipment`);
-        console.log(response.data.data)
         availableEquipment.value = response.data.data;
     } catch (error) {
         console.error("Failed to fetch equipment:", error);
+    }
+};
+
+const fetchRestrictedEquipments = async (userId) => {
+    try {
+        const response = await axios.get(`/api/ateliers/${props.atelierId}/users/${userId}/restricted-equipment`);
+        selectedEquipment.value = response.data.data;
+    } catch (error) {
+        console.error("Failed to fetch restricted equipment:", error);
     }
 };
 

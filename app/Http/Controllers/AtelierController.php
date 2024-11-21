@@ -218,4 +218,21 @@ class AtelierController extends Controller
         return response()->json(['message' => $equipmentIds]);
     }
 
+    public function getRestrictedEquipment($atelierId, $userId)
+    {
+        try {
+            $atelier = Atelier::findOrFail($atelierId);
+            $restrictedEquipment = $atelier->equipments()->whereHas('restrictions', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })->get();
+    
+            return response()->json(['data' => $restrictedEquipment]);
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            \Log::error('Failed to fetch restricted equipment', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Failed to fetch restricted equipment'], 500);
+        }
+    }
+
+
 }

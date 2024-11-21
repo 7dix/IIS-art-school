@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { defineProps, onMounted } from "vue";
+import { usePage } from '@inertiajs/vue3';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import UsersCard from "@/Components/Atelier/UsersCard.vue";
 import TeachersCard from "@/Components/Atelier/TeachersCard.vue";
@@ -18,16 +19,20 @@ const props = defineProps({
         type: Array,
         required: true,
     },
-    equipments : {
+    equipments: {
         type: Array,
         required: true,
     }
 });
 
+const { props: pageProps } = usePage();
+const userId = pageProps.auth.user.id;
+
 onMounted(() => {
     console.log("Atelier:", props.atelier);
     console.log("Users:", props.users);
     console.log("Teachers:", props.teachers);
+    console.log("User ID:", userId);
 });
 </script>
 
@@ -57,11 +62,12 @@ onMounted(() => {
                         :users="users"
                         :atelierId="atelier.id"
                     />
-                     <!-- Users Card for Teachers -->
+                     <!-- Equipments Card -->
                      <EquipmentsCard
                         title="Equipments"
                         :equipments="equipments"
                         :atelierId="atelier.id"
+                        :userId="userId"
                     />
                 </div>
             </div>

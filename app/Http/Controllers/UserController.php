@@ -37,8 +37,7 @@ class UserController extends Controller
 
         $user = User::find($id);
         $user->update($request->validate([
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
         ]));
         

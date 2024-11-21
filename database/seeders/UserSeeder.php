@@ -17,26 +17,22 @@ class UserSeeder extends Seeder
     {
         $users = [
             [
-                'first_name' => 'admin',
-                'last_name' => 'bigboss',
+                'name' => 'admin',
                 'email' => 'admin@IIS.com',
                 'password' => bcrypt('admin'),
             ],
             [
-                'first_name' => 'teacher',
-                'last_name' => 'lilbro',
+                'name' => 'teacher',
                 'email' => 'teacher@IIS.com',
                 'password' => bcrypt('teacher'),
             ],
             [
-                'first_name' => 'manager',
-                'last_name' => 'midbro',
+                'name' => 'manager',
                 'email' => 'manager@IIS.com',
                 'password' => bcrypt('manager'),
             ],
             [
-                'first_name' => 'user',
-                'last_name' => 'lilpump',
+                'name' => 'user',
                 'email' => 'user@IIS.com',
                 'password' => bcrypt('user'),
             ],
@@ -49,9 +45,9 @@ class UserSeeder extends Seeder
         $user = User::find(1);
         $user->assignRole('admin');
         $user = User::find(2);
-        $user->assignRole('teacher');
+        $user->assignRole('user');
         $user = User::find(3);
-        $user->assignRole('manager');
+        $user->assignRole('user');
         $user = User::find(4);
         $user->assignRole('user');
 

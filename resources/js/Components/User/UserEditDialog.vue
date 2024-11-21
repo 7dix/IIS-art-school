@@ -5,12 +5,8 @@
       <hr class="mb-4" />
       <form @submit.prevent="save">
         <div class="mb-4">
-          <label for="first_name" class="block text-sm font-medium text-gray-700">First Name:</label>
-          <input type="text" v-model="editableUser.first_name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-        </div>
-        <div class="mb-4">
-          <label for="last_name" class="block text-sm font-medium text-gray-700">Last Name:</label>
-          <input type="text" v-model="editableUser.last_name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+          <label for="name" class="block text-sm font-medium text-gray-700">First Name:</label>
+          <input type="text" v-model="editableUser.name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
         </div>
         <div class="mb-4">
           <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>

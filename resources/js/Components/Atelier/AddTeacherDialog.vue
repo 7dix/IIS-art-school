@@ -79,7 +79,7 @@ defineExpose({ openDialog });
                     placeholder="Select Teachers"
                     label="name"
                     track-by="id"
-                    :customLabel="(user) => `${user.first_name} ${user.last_name}`"
+                    :customLabel="(user) => `${user.name}`"
                 />
             </AlertDialogDescription>
             <AlertDialogFooter>

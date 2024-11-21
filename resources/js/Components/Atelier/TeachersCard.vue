@@ -15,8 +15,7 @@ const props = defineProps({
     users: {
         type: Array as () => {
             id: number;
-            first_name: string;
-            last_name: string;
+            name: string;
         }[],
         required: true,
     },
@@ -99,7 +98,7 @@ const addTeacher = async (selectedTeachers) => {
                     :key="user.id"
                     class="flex justify-between items-center py-2 border-b border-gray-200"
                 >
-                    <span>{{ user.first_name }} {{ user.last_name }}</span>
+                    <span>{{ user.name }}</span>
                     <Button
                         @click="removeTeacherRole(user)"
                         class="bg-yellow-500 text-white hover:bg-yellow-700 w-10 h-10 flex items-center justify-center"

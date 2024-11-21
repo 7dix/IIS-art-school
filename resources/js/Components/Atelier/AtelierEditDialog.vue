@@ -15,8 +15,8 @@
           <div class="mb-4">
             <label for="manager" class="block text-sm font-medium text-gray-700">Manager:</label>
             <select id="manager" v-model="editableAtelier.manager_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-              <option v-for="user in props.managers.data" :key="user.id" :value="user.id">
-                {{ user.first_name + " " + user.last_name }}
+              <option v-for="user in props.users.data" :key="user.id" :value="user.id">
+                {{ user.name }}
               </option>
             </select>
           </div>
@@ -41,7 +41,8 @@
     atelier: any,
     managers: any[] | any,
     isOpen: boolean;
-   
+    types: { data: Array<{ id: number; name: string }> };
+    users: { data: Array<{ id: number; name: string; }> };
   }>();
   
   const emit = defineEmits(['save', 'close']);

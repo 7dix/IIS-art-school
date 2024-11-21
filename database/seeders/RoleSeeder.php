@@ -17,8 +17,6 @@ class RoleSeeder extends Seeder
         //Role
         $user = Role::create(['name' => 'user']);
         $admin = Role::create(['name' => 'admin']);
-        $teacher = Role::create(['name' => 'teacher']);
-        $manager = Role::create(['name' => 'manager']);
        
         //Create permissions
         $permissions = ['create_atelier', 'create_type', 'create_equipment'];
@@ -26,17 +24,20 @@ class RoleSeeder extends Seeder
             Permission::create(['name' => $permission]);
         }
 
-         //edit permissions
-         $permissions = ['edit_atelier', 'edit_type', 'edit_equipment', 'assign_teacher', 'edit_user'];
-         foreach ($permissions as $permission) {
-             Permission::create(['name' => $permission]);
-         }
+        //edit permissions
+        $permissions = ['edit_atelier', 'edit_type', 'edit_equipment', 'assign_teacher', 'edit_user'];
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission]);
+        }
+
+        //manage permissions
+        $permissions = ['manage_atelier', 'manage_type', 'manage_equipment', 'manage_user'];
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission]);
+        }
 
         $admin->givePermissionTo(Permission::all());
-        $manager->givePermissionTo(['create_type', 'edit_type']);
-        $teacher->givePermissionTo(['create_equipment', 'edit_equipment']);
-        // $user->givePermissionTo(['']);
-
+        $user->givePermissionTo(['']);
 
     }
 }

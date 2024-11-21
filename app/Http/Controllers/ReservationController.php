@@ -15,7 +15,7 @@ class ReservationController extends Controller
         return [
             'id' => $reservation->id,
             'equipment' => $reservation->equipment->name,
-            'user' => $reservation->user->first_name . ' ' . $reservation->user->last_name,
+            'user' => $reservation->user->name,
             'created_at' => $reservation->created_at,
             'start_date' => $reservation->start_date,
             'end_date' => $reservation->end_date,

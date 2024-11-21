@@ -52,7 +52,7 @@ const showingNavigationDropdown = ref(false);
                                     Manage Reservations
                                 </NavLink>
                                 <NavLink
-                                    
+                                    v-if="$page.props.auth.user.permissions.includes('manage_atelier')"
                                     :href="route('atelier.index')"
                                     :active="route().current('atelier.index')"
                                 >

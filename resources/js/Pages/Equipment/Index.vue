@@ -6,6 +6,8 @@ import { VTColumn } from "@/types";
 import { h, ref } from "vue";
 import { Button } from '@/Components/ui/button'
 import EditEquipmentDialog from '@/Components/Equipment/EquipmentEditDialog.vue';
+import DeleteDialog from "@/Components/DeleteDialog.vue";
+import { Icon } from "@iconify/vue";
 import axios from 'axios';
 
 
@@ -21,11 +23,43 @@ const props = defineProps({
     },
 })
 
+
+////////////////////
+////DELETE DIALOG/////
+////////////////////
+const deleteDialogRef = ref(null);
+const selectedEquipment = ref(null);
+
+const openDeleteDialog = (item) => {
+    selectedEquipment.value = item;
+    if (deleteDialogRef.value) {
+        deleteDialogRef.value.openDialog(item.id);
+    }
+};
+
+const confirmDelete = async (id: number) => {
+    if (id) {
+        const response = await axios.delete(route("equipment.destroy", id));
+        if (response.status === 200) {
+            props.equipments.data.splice(
+                props.equipments.data.findIndex((item) => item.id === id),
+                1
+            );
+        } else {
+            console.error(response);
+        }
+    }
+    return { confirmDelete };
+};
+
+
+
+
+
 ////////////////////
 ////EDIT dialog/////
 ////////////////////
 const showDialog = ref(false);
-const selectedEquipment = ref(null);
 
 const openEditDialog = (equipment) => {
   selectedEquipment.value = { ...equipment };  // Clone equipment data to edit
@@ -92,7 +126,8 @@ const columns: VTColumn[] = [
         "key": "actions",
         "header": "Actions",
         renderAs: (item) => {
-            return h(
+            return h("div", {}, [
+            h(
                 Button,
                 {
                     onClick: () => {
@@ -101,7 +136,22 @@ const columns: VTColumn[] = [
                     class: 'bg-blue-500 text-white'
                 },
                 'Edit'
-            );
+            ),
+            h(
+                    Button,
+                    {
+                        onClick: () => {
+                            openDeleteDialog(item);
+                        },
+                        class: "bg-red-500 text-white hover:bg-red-700 ml-2",
+
+                    },
+                    h(Icon, {
+                        icon: "material-symbols:delete",
+                        class: "w-5 h-5",
+                    })
+                ),
+            ])
         },
     }
 ]
@@ -140,18 +190,20 @@ const columns: VTColumn[] = [
                 </div>
             </div>
         </div>
-    </AuthenticatedLayout>
 
 
-
-     <!-- Edit Dialog -->
-     <EditEquipmentDialog 
+        <DeleteDialog ref="deleteDialogRef" :onConfirm="confirmDelete" />
+       
+        <EditEquipmentDialog 
           v-if="showDialog" 
           :equipment="selectedEquipment" 
           :isOpen="showDialog" 
           :types="props.types"
           @save="saveEquipment"
-          @close="closeDialog"
-        />
+          @close="closeDialog" />
+
+
+    </AuthenticatedLayout>
+
 
 </template>

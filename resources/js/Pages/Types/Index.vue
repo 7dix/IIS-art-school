@@ -149,9 +149,6 @@ const columns = [
     },
 ];
 
-function route(arg0: string, id: number): string {
-    throw new Error("Function not implemented.");
-}
 </script>
 
 <template>

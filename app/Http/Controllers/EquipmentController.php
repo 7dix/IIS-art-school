@@ -108,4 +108,18 @@ class EquipmentController extends Controller
         return $this->index();
     }
 
+
+    public function destroy($id) {
+        /** @var \App\Models\User */
+        $user = Auth::user();
+
+        if (!$user->can('create_equipment')) {
+            return back();
+        }
+
+        Equipment::destroy($id);
+
+        return $this->index();
+    }
+
 }

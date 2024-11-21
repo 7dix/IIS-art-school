@@ -17,8 +17,7 @@
         <div class="mb-4">
         <label for="email" class="block text-sm font-medium text-gray-700">Atelier</label>
         <select v-model="editableEquipment.atelier_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-            <option v-for="atelier in ateliers.data" :key="atelier.id" :value="atelier.id">{{ atelier.name }}</option>
-            <option v-if="editableEquipment.type_id == ''"> -- Select Type of equipment first -- </option>
+            <option v-for="atelier in props.ateliers.data" :key="atelier.id" :value="atelier.id">{{ atelier.name }}</option>
         </select>
         </div>
         <div class="mb-4">
@@ -58,12 +57,11 @@
     equipment: any,
     isOpen: boolean,
     types: any[] | any,
+    ateliers: any[] | any,
     }>();
     const emit = defineEmits(['save', 'close']);
     const editableEquipment = ref({ ...props.equipment });
-    let ateliers = ref<{ id: number; name: string }[]>([]);
 
-    let ateliers_: any[] | any;
 
     watch(
     () => props.equipment,
@@ -71,36 +69,11 @@
         editableEquipment.value = { ...newEquipment };
     }
     );
-
-    watch(
-    () => editableEquipment.value.type_id,
-    (newValue) => {
-        getAteliers(newValue);
-        editableEquipment.value.atelier_id = '';
-    }
-    );
-
     
 
 
-    const getAteliers = (type_id) => {
-    axios.get(`/api/getAteliersWithType/${type_id}`)
-    .then(response => {
-        ateliers.value = response.data;
-        ateliers_ = response.data.data;
-    })
-    .catch(error => {
-        ateliers.value = [];
-        console.log(error);
-    });
-
-    }
-
-
     const save = () => {
-        console.log(ateliers_);
-
-        editableEquipment.value.atelier_name = ateliers_.find((atelier) => atelier.id === editableEquipment.value.atelier_id).name;
+        editableEquipment.value.atelier_name = props.ateliers.data.find((atelier) => atelier.id === editableEquipment.value.atelier_id).name;
         editableEquipment.value.type_name = props.types.data.find((type) => type.id === editableEquipment.value.type_id).name;
         emit('save', editableEquipment.value);
     };
@@ -119,9 +92,6 @@
     onMounted(() => {
     if (props.isOpen) {
         document.addEventListener('keydown', handleKeydown);
-        getAteliers(editableEquipment.value.type_id);
-        console.log(editableEquipment.value.allowed_leasing_hours);
-
         editableEquipment.value.allowed_leasing_hours =  toRaw(editableEquipment.value.allowed_leasing_hours);
         editableEquipment.value.allowed_leasing_hours = editableEquipment.value.allowed_leasing_hours.join(',');
     }   

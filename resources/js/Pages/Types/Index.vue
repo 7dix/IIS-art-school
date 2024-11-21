@@ -188,7 +188,7 @@ const columns = [
             v-if="showDialog"
             :type="selectedType"
             :isOpen="showDialog"
-            @save="saveUser"
+            @save="saveType"
             @close="closeDialog"
         />
     </AuthenticatedLayout>

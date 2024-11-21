@@ -10,9 +10,12 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    ateliers: {
+        type: Object,
+        required: true,
+    },
 })
 
-let ateliers = ref({});
 
 const form = useForm({
     name: '',
@@ -26,26 +29,26 @@ const form = useForm({
 
 const createEquipment = () => {    
     console.log(form.allowed_leasing_hours);
-    form.post(route('equipment.store'));
+    form.post(route('equipment.store'), {
+        onError: (errors) => {
+            // Handle validation errors
+            console.log(errors);
+        },
+    });
+
 };
 
-watch(
-    () => form.type_id, //kdyz se zmeni typ vybaveni -> v atelierech jen ty ateliery co maji ten typ
-    (newValue) => {
-        getAteliers(newValue);
-    }
-)
 
-const getAteliers = (type_id) => {
-    axios.get(`/api/getAteliersWithType/${type_id}`)
-    .then(response => {
-        console.log(response.data);
-        ateliers.value = response.data;
-    })
-    .catch(error => {
-        console.log(error);
-    });
-}
+// const getAteliers = (type_id) => {
+//     axios.get(`/api/getAteliersWithType/${type_id}`)
+//     .then(response => {
+//         console.log(response.data);
+//         ateliers.value = response.data;
+//     })
+//     .catch(error => {
+//         console.log(error);
+//     });
+// }
 
 
 </script>
@@ -69,42 +72,57 @@ const getAteliers = (type_id) => {
                     <form @submit.prevent="createEquipment">
                         <div class="p-6 bg-white border-b border-gray-200">
                             <div class="mb-4">
-                                <label for="name" class="block text-sm font-medium text-gray-700">Name:</label>
-                                <input type="text" id="name" v-model="form.name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                                <label for="name" class="block text-sm font-medium text-gray-700">*Name:</label>
+                                <input type="text" id="name" v-model="form.name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                <div v-if="form.errors.name" class="mt-2 text-sm text-red-600"> {{ form.errors.name }} </div>    
                             </div>
                             <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700" for="role">Type:</label>
+                                <label class="block text-sm font-medium text-gray-700" for="role">*Type:</label>
                                 <select v-model="form.type_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                                     <option v-for="type in props.types.data" :key="type.id" :value="type.id">{{ type.name }}</option>
                                 </select>
+                                <div v-if="form.errors.name" class="mt-2 text-sm text-red-600"> {{ form.errors.name }} </div>    
+
                             </div>
                             <div class="mb-4">    
-                                <label class="block text-sm font-medium text-gray-700" for="role">Atelier:</label>
+                                <label class="block text-sm font-medium text-gray-700" for="role">*Atelier:</label>
                                 <select v-model="form.atelier_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                                    <option v-for="atelier in ateliers.data" :key="atelier.id" :value="atelier.id">{{ atelier.name }}</option>
-                                    <option v-if="form.type_id == ''"> -- Select Type of equipment first -- </option>
+                                    <option v-for="atelier in props.ateliers.data" :key="atelier.id" :value="atelier.id">{{ atelier.name }}</option>
                                 </select>
+                                <div v-if="form.errors.atelier_id" class="mt-2 text-sm text-red-600"> {{ form.errors.atelier_id }} </div>    
+
                             </div>
                             <div class="mb-4">
-                                <label for="room" class="block text-sm font-medium text-gray-700">Maximum leasing period (in days):</label>
-                                <input type="text" id="room" v-model="form.maximum_leasing_period" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                                <label for="room" class="block text-sm font-medium text-gray-700">*Maximum leasing period (in days):</label>
+                                <input type="text" id="room" v-model="form.maximum_leasing_period" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                <div v-if="form.errors.maximum_leasing_period" class="mt-2 text-sm text-red-600"> {{ form.errors.maximum_leasing_period }} </div>    
+
                             </div>
 
 
                             <div class="mb-4">
-                                <label for="room" class="block text-sm font-medium text-gray-700">Leasing hours (everyday):</label>
-                                <input type="text" id="room" v-model="form.allowed_leasing_hours" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                                <label for="room" class="block text-sm font-medium text-gray-700">*Leasing hours (everyday):</label>
+                                <input type="text" id="room" v-model="form.allowed_leasing_hours" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                
+                                <div class="text-gray-600 text-xs">Correct Format: hours from 8 - 18, separated by commas.</div>
+                                <div v-if="form.errors.allowed_leasing_hours" class="mt-2 text-sm text-red-600"> {{ form.errors.allowed_leasing_hours }} </div>    
+
                             </div>
 
 
                             <div class="mb-4">
                                 <label for="room" class="block text-sm font-medium text-gray-700">Year of manufacture:</label>
                                 <input type="text" id="room" v-model="form.year_of_manufacture" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                <div v-if="form.errors.year_of_manufacture" class="mt-2 text-sm text-red-600"> {{ form.errors.year_of_manufacture }} </div>    
+
                             </div>
 
                             <div class="mb-4">
                                 <label for="room" class="block text-sm font-medium text-gray-700">Date of purchase:</label>
                                 <input type="date" id="room" v-model="form.date_of_purchase" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                <div v-if="form.errors.date_of_purchase" class="mt-2 text-sm text-red-600"> {{ form.errors.date_of_purchase }} </div>    
+                                <div class="text-gray-600 text-xs">Correct Format: DayDay, MonthMonth, YearYearYearYear.</div>
+
                             </div>
                             
 

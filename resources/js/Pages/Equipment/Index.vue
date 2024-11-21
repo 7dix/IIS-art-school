@@ -21,6 +21,10 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    ateliers : {
+        type: Object,
+        required: true,
+    }
 })
 
 
@@ -204,6 +208,7 @@ const columns: VTColumn[] = [
           :equipment="selectedEquipment" 
           :isOpen="showDialog" 
           :types="props.types"
+          :ateliers="props.ateliers"
           @save="saveEquipment"
           @close="closeDialog" />
 

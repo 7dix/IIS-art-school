@@ -30,38 +30,44 @@ class EquipmentController extends Controller
             Equipment::with('type')->get()
         );
 
+        $ateliers = AtelierResource::collection(Atelier::all());
+
         $types = TypeResource::collection(Type::all());
-        return inertia('Equipment/Index', ['equipments' => $equipments, 'types' => $types]);
+        return inertia('Equipment/Index', ['equipments' => $equipments, 'types' => $types, 'ateliers' => $ateliers]);
 
     }
 
 
     public function create()
     {
+        $ateliers = AtelierResource::collection(Atelier::all());
 
         
         $types = TypeResource::collection(Type::all());
      
-        return inertia('Equipment/Create', ['types' => $types]);
+        return inertia('Equipment/Create', ['types' => $types, 'ateliers' => $ateliers]);
     }
 
     public function store(Request $request) {
+
+    
+
+        $validatedData = $request->validate([
+            'name' => ['required', 'string', 'max:255', 'unique:equipments,name'],
+            'maximum_leasing_period' => ['required', 'integer','min:1', 'max:90'],
+            'year_of_manufacture' => ['integer', 'nullable', 'min:1980', 'max:'.date('Y')],
+            'allowed_leasing_hours' => ['required','string', 'regex:/^([8-9]|1[0-8])(,([8-9]|1[0-8]))*$/'],
+            'date_of_purchase' => ['date', 'nullable', 'min:1970-1-1' ,'max:'.date('Y-m-d')],
+            'type_id' => ['required', 'exists:types,id'],
+            'atelier_id' => ['required', 'exists:ateliers,id']
+        ]);
 
         $leasing_hours = $request->input('allowed_leasing_hours');
         $leasing_hours_array = explode(',', $leasing_hours);
         $leasing_hours_array = array_map('intval', $leasing_hours_array);
         $leasing_hours_json = json_encode($leasing_hours_array);
-        $request->merge(['allowed_leasing_hours' => $leasing_hours_json]);
+        $validatedData['allowed_leasing_hours'] = $leasing_hours_json;
 
-        $validatedData = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'maximum_leasing_period' => ['required', 'integer'],
-            'year_of_manufacture' => ['integer', 'nullable'],
-            'allowed_leasing_hours' => ['required', 'json'],
-            'date_of_purchase' => ['date', 'nullable'],
-            'type_id' => ['required', 'exists:types,id'],
-            'atelier_id' => ['required', 'exists:ateliers,id']
-        ])  ;
         $user = Auth::user();
         $validatedData['owner_id'] = $user->id;
 

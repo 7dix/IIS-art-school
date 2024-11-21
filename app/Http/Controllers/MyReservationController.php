@@ -7,6 +7,8 @@ use App\Models\Type;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+
 
 class MyReservationController extends Controller
 {
@@ -34,12 +36,31 @@ class MyReservationController extends Controller
         ]);
     }
 
-    public function create()
+    public function prepare(Request $request)
+    {
+        $request->validate([
+            'type_id' => 'required|exists:types,id',
+            'equipment_id' => 'required|exists:equipments,id',
+        ]);
+
+        Session::put('reservation.type_id', $request->type_id);
+        Session::put('reservation.equipment_id', $request->equipment_id);
+
+        return response()->json(['message' => 'Reservation prepared successfully.']);
+    }
+
+    public function create(Request $request)
     {
         $types = Type::all(); // Fetch all types
         $userId = Auth::id(); 
+        $typeId = (int) $request->query('type_id', 0);
+        $equipmentId = (int) $request->query('equipment_id', 0);
+    
         return inertia('MyReservation/Create', [
-            'types' => $types, 'userId' => $userId
+            'types' => $types,
+            'userId' => $userId,
+            'typeId' => $typeId,
+            'equipmentId' => $equipmentId,
         ]);
     }
 

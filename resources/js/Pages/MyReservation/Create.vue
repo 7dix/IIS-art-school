@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, useForm, Link } from '@inertiajs/vue3';
+import { Head, useForm, Link, usePage } from '@inertiajs/vue3';
 import { ref, watch, computed } from 'vue';
 import axios from 'axios';
 
@@ -36,11 +36,19 @@ const props = defineProps({
         type: Number,
         required: true,
     },
+    typeId: {
+        type: Number,
+        default: 0,
+    },
+    equipmentId: {
+        type: Number,
+        default: 0,
+    },
 });
 
 const form = useForm({
-    type_id: '',
-    equipment_id: '',
+    type_id: props.typeId || '',
+    equipment_id: props.equipmentId || '',
     start_date: getCurrentDate(), // Set the default value to today's date
     end_date: '',
     status: 'pending',
@@ -53,6 +61,10 @@ watch(() => form.type_id, (newTypeId) => {
         // Fetch equipment based on the selected type and user's ateliers
         axios.get(`/api/types/${newTypeId}/user-equipment`).then(response => {
             filteredEquipment.value = response.data;
+            // Set the equipment_id if it is provided
+            if (props.equipmentId) {
+                form.equipment_id = props.equipmentId;
+            }
         }).catch(error => {
             console.error("Failed to fetch equipment:", error);
             filteredEquipment.value = [];
@@ -61,6 +73,20 @@ watch(() => form.type_id, (newTypeId) => {
         filteredEquipment.value = [];
     }
 });
+
+// Ensure the equipment list is fetched when the component is mounted
+if (form.type_id) {
+    axios.get(`/api/types/${form.type_id}/user-equipment`).then(response => {
+        filteredEquipment.value = response.data;
+        // Set the equipment_id if it is provided
+        if (props.equipmentId) {
+            form.equipment_id = props.equipmentId;
+        }
+    }).catch(error => {
+        console.error("Failed to fetch equipment:", error);
+        filteredEquipment.value = [];
+    });
+}
 
 const selectedEquipment = computed(() => {
     return filteredEquipment.value.find(equipment => equipment.id === form.equipment_id) || null;

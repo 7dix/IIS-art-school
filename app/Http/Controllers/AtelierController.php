@@ -111,9 +111,9 @@ class AtelierController extends Controller
         $atelier = Atelier::findOrFail($atelierId);
         $usersInAtelier = $atelier->users->pluck('id');
         $availableUsers = User::whereNotIn('id', $usersInAtelier)
-        ->whereHas('roles', function($query) {
-            $query->where('name', '!=', 'admin');
-        })
+        // ->whereHas('roles', function($query) {
+        //     $query->where('name', '!=', 'admin');
+        // })
         ->where('id', '!=', $atelier->manager_id)
         ->get();
     

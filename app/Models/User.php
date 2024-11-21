@@ -43,7 +43,7 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
     public function restrictions() {
-        return $this->belongsToMany(Equipment::class);
+        return $this->belongsToMany(Equipment::class, 'user_equipment_restriction');
     }
 
     // Manager thingy

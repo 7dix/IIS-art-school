@@ -38,7 +38,7 @@ const openDeleteDialog = (item) => {
 
 const openBlockDialog = (item) => {
     if (blockDialogRef.value) {
-        blockDialogRef.value.openDialog(item.id);
+        blockDialogRef.value.openDialog(item.id); //equipmentId
     }
 };
 
@@ -65,21 +65,22 @@ const confirmDelete = async (id: number) => {
     return { confirmDelete };
 };
 
-const confirmBlock = async (id: number) => {
-    // if (id) {
-    //     const response = await axios.put(
-    //         `/ateliers/${props.atelierId}/users/${id}/block`
-    //     );
-    //     if (response.status === 200) {
-    //         const user = props.users.find((item) => item.id === id);
-    //         if (user) {
-    //             user.blocked = true;
-    //         }
-    //     } else {
-    //         console.error(response);
-    //     }
-    // }
-    // return { confirmBlock };
+const confirmBlock = async (selectedEquipments, userId) => {
+    try {
+        const response = await axios.post(
+            `/ateliers/${props.atelierId}/restrictions`,
+            { equipments: selectedEquipments.map((equipment) => ({ id: equipment.id })),
+                    user_id: userId }
+        );
+        console.log(selectedEquipments);
+        if (response.status === 200) {
+            console.log(response.data);
+        } else {
+            console.error(response);
+        }
+    } catch (error) {
+        console.error("Failed to add users to atelier:", error);
+    }
 };
 
 const addUser = async (selectedUsers) => {
@@ -128,7 +129,7 @@ const addUser = async (selectedUsers) => {
                     <span>{{ user.name }}</span>
                     <div class="flex justify-end space-x-2">
                         <Button
-                            v-if="$page.props.auth.user.permissions.includes('assign_students')"
+                            v-if="$page.props.auth.user.permissions.includes('restrict_equipment')"
                             @click="openBlockDialog(user)"
                             class="bg-yellow-500 text-white hover:bg-yellow-700 w-10 h-10 flex items-center justify-center"
                         >
@@ -146,7 +147,7 @@ const addUser = async (selectedUsers) => {
             </ul>
         </CardContent>
         <DeleteDialog ref="deleteDialogRef" :onConfirm="confirmDelete" />
-        <BlockDialog ref="blockDialogRef" :onConfirm="confirmBlock" />
+        <BlockDialog ref="blockDialogRef" :onConfirm="confirmBlock" :atelierId="props.atelierId"/>
         <AddDialog
             ref="addDialogRef"
             :onConfirm="addUser"

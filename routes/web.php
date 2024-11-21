@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/ateliers/{atelier}/available-users', [AtelierController::class, 'availableUsers']);    
     Route::resource('atelier', AtelierController::class);
     Route::post('/ateliers/{atelier}/users', action: [AtelierController::class, 'addUsers']);
+    Route::post('/ateliers/{atelier}/restrictions', action: [AtelierController::class, 'addRestrictions']);
     Route::post('/ateliers/{atelier}/remove-teacher-role', [AtelierController::class, 'removeTeacherRole']);
     Route::post('/ateliers/{atelier}/add-teachers', [AtelierController::class, 'addTeachers']);
 

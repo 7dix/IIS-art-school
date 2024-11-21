@@ -95,7 +95,7 @@ class AtelierController extends Controller
             return $user->pivot->teacher == false;
         });
 
-        $equipments = EquipmentResource::collection($atelier->equipments);
+        $equipments = EquipmentResource::collection($atelier->equipments);  
     
         return inertia('Atelier/Dashboard', [
             'atelier' => $atelier,
@@ -204,8 +204,18 @@ class AtelierController extends Controller
     public function getEquipment($atelierId)
     {
         $atelier = Atelier::findOrFail($atelierId);
-        $equipment = $atelier->equipment; 
-        return response()->json($equipment);
+        $equipments = EquipmentResource::collection($atelier->equipments);
+        return $equipments;
+    }
+
+    public function addRestrictions(Request $request, $atelierId) {
+        $equipmentIds = collect($request->input('equipments'))->pluck('id');
+        $userId = $request->input('user_id');
+        $user = User::find($userId);
+
+        $user->restrictions()->attach($equipmentIds);
+
+        return response()->json(['message' => $equipmentIds]);
     }
 
 }

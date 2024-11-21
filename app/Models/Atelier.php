@@ -51,6 +51,7 @@ class Atelier extends Model
                         $originalManager->revokePermissionTo('manage_type');
                         $originalManager->revokePermissionTo('assign_teacher');
                         $originalManager->revokePermissionTo('assign_students');
+                        $originalManager->revokePermissionTo('restrict_equipment');
                     }
                 }
 
@@ -62,6 +63,8 @@ class Atelier extends Model
                         $newManager->givePermissionTo('assign_students');
                         $newManager->givePermissionTo('manage_type');
                         $newManager->givePermissionTo('assign_teacher');
+                        $newManager->givePermissionTo('restrict_equipment');
+
                     }
                 }
             }
@@ -80,6 +83,8 @@ class Atelier extends Model
                         $newManager->givePermissionTo('manage_type');
                         $newManager->givePermissionTo('assign_teacher');
                         $newManager->givePermissionTo('assign_students');
+                        $newManager->givePermissionTo('restrict_equipment');
+
                     }
                 }
             }
@@ -103,6 +108,7 @@ class AtelierUser extends \Illuminate\Database\Eloquent\Relations\Pivot
                 if ($pivot->teacher) {
                     
                     $user->givePermissionTo('manage_equipment');
+                    $user->givePermissionTo('restrict_equipment');
                     $user->givePermissionTo('assign_students');
                     $user->givePermissionTo('manage_reservation');
                 } 

@@ -26,16 +26,20 @@ const props = defineProps({
 const isDialogOpen = ref(false);
 const availableEquipment = ref([]);
 const selectedEquipment = ref([]);
+const userId = ref(null);
 
-const openDialog = () => {
+
+const openDialog = (id_) => {
     isDialogOpen.value = true;
+    userId.value = id_;
     fetchEquipments();
 };
 
 const fetchEquipments = async () => {
     try {
         const response = await axios.get(`/api/ateliers/${props.atelierId}/equipment`);
-        availableEquipment.value = response.data;
+        console.log(response.data.data)
+        availableEquipment.value = response.data.data;
     } catch (error) {
         console.error("Failed to fetch equipment:", error);
     }
@@ -43,7 +47,7 @@ const fetchEquipments = async () => {
 
 const handleConfirm = () => {
     if (typeof props.onConfirm === "function") {
-        props.onConfirm(selectedEquipment.value); 
+        props.onConfirm(selectedEquipment.value, userId.value); 
     }
     selectedEquipment.value = [];
     isDialogOpen.value = false;

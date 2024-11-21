@@ -41,7 +41,7 @@ class Equipment extends Model
     }
 
     public function restrictions() {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class, 'user_equipment_restriction');
 
     }
 

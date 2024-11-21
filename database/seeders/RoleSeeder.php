@@ -25,7 +25,7 @@ class RoleSeeder extends Seeder
         }
 
         //Teacher permissions
-        $permissions = ['manage_equipment', 'assign_students', 'manage_reservation'];
+        $permissions = ['manage_equipment', 'assign_students', 'manage_reservation', 'restrict_equipment'];
         foreach ($permissions as $permission) {
             Permission::create(['name' => $permission]);
         }

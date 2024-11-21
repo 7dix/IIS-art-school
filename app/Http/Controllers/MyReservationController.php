@@ -15,6 +15,7 @@ class MyReservationController extends Controller
         return [
             'id' => $reservation->id,
             'equipment' => $reservation->equipment->name,
+            'created_at' => $reservation->created_at,
             'start_date' => $reservation->start_date,
             'end_date' => $reservation->end_date,
             'status' => $reservation->status,

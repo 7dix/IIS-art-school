@@ -30,16 +30,16 @@ class AtelierController extends Controller
         // Admin view
         if ($user->hasRole('admin')) {
             $ateliers = AtelierResource::collection(
-                Atelier::with(['types', 'manager', 'users'])->get()
+                Atelier::with(['manager', 'users'])->get()
             );    
-            return inertia('Atelier/Index', ['ateliers' => $ateliers, 'types' => $types, 'users' => $users, 'role' => 'admin']);
+            return inertia('Atelier/Index', ['ateliers' => $ateliers, 'users' => $users, 'role' => 'admin']);
 
         // Manager view
         } else {
             $ateliers = AtelierResource::collection(
-                Atelier::where('manager_id', $user->id)->with(['types', 'manager', 'users'])->get()
+                Atelier::where('manager_id', $user->id)->with(['manager', 'users'])->get()
             );
-            return inertia('Atelier/Index', ['ateliers' => $ateliers, 'types' => $types, 'users' => $users, 'role' => 'manager']);
+            return inertia('Atelier/Index', ['ateliers' => $ateliers, 'users' => $users, 'role' => 'manager']);
         }
     }
 
@@ -71,14 +71,6 @@ class AtelierController extends Controller
         $atelier = Atelier::create($validated);
        
         return $this->index();
-    }
-
-
-    public function getAteliersWithType(Request $request, $type_id) {
-        $ateliers = Atelier::whereHas('types', function($query) use ($type_id) {
-            $query->where('types.id', $type_id);
-        })->get();
-        return AtelierResource::collection($ateliers);
     }
 
     public function dashboard($id)

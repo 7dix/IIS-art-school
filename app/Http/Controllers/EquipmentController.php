@@ -112,15 +112,16 @@ class EquipmentController extends Controller
     }
 
     public function getUserEquipmentByType($typeId)
-    {
-        $user = Auth::user();
-        $ateliers = $user->ateliers->pluck('id'); // Get the IDs of the user's ateliers
+{
+    $user = Auth::user();
+    $ateliers = $user->ateliers->pluck('id'); // Get the IDs of the user's ateliers
 
-        $equipment = Equipment::where('type_id', $typeId)
-            ->whereIn('atelier_id', $ateliers)
-            ->get();
+    $equipment = Equipment::with(['atelier', 'owner']) // Include atelier and owner relationships
+        ->where('type_id', $typeId)
+        ->whereIn('atelier_id', $ateliers)
+        ->get();
 
-        return response()->json($equipment);
-    }
+    return response()->json($equipment);
+}
 
 }

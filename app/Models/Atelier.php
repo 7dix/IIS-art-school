@@ -30,7 +30,7 @@ class Atelier extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'atelier_user')->withPivot('teacher');
+        return $this->belongsToMany(User::class, 'atelier_user')->using(AtelierUser::class)->withPivot('teacher');
     }
 
     protected static function boot()
@@ -60,6 +60,29 @@ class Atelier extends Model
                         Permission::firstOrCreate(['name' => $permissionName]); // Ensure the permission exists
                         $newManager->givePermissionTo($permissionName);
                     }
+                }
+            }
+        });
+    }
+
+}
+
+class AtelierUser extends \Illuminate\Database\Eloquent\Relations\Pivot
+{
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::updated(function ($pivot) {
+            if ($pivot->isDirty('teacher')) {
+                $user = User::find($pivot->user_id);
+                $permissionName = "create_equipment";
+
+                if ($pivot->teacher) {
+                    Permission::firstOrCreate(['name' => $permissionName]); // Ensure the permission exists
+                    $user->givePermissionTo($permissionName);
+                } else {
+                    $user->revokePermissionTo($permissionName);
                 }
             }
         });

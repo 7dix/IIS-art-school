@@ -3,6 +3,7 @@ import { defineProps, onMounted } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import UsersCard from "@/Components/Atelier/UsersCard.vue";
 import TeachersCard from "@/Components/Atelier/TeachersCard.vue";
+import EquipmentsCard from "@/Components/Atelier/EquipmentCard.vue";
 
 const props = defineProps({
     atelier: {
@@ -17,6 +18,10 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    equipments : {
+        type: Array,
+        required: true,
+    }
 });
 
 onMounted(() => {
@@ -50,6 +55,12 @@ onMounted(() => {
                         title="Teachers"
                         :teachers="teachers"
                         :users="users"
+                        :atelierId="atelier.id"
+                    />
+                     <!-- Users Card for Teachers -->
+                     <EquipmentsCard
+                        title="Equipments"
+                        :equipments="equipments"
                         :atelierId="atelier.id"
                     />
                 </div>

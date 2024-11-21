@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\AtelierResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\TypeResource;
+use App\Http\Resources\EquipmentResource;
 use App\Models\Atelier;
 use App\Models\User;
 use App\Models\Type;
@@ -86,11 +87,14 @@ class AtelierController extends Controller
         $users = $atelier->users->filter(function ($user) {
             return $user->pivot->teacher == false;
         });
+
+        $equipments = EquipmentResource::collection($atelier->equipments);
     
         return inertia('Atelier/Dashboard', [
             'atelier' => $atelier,
             'users' => $users->values(), // Ensure collection is re-indexed
             'teachers' => $teachers->values(), // Ensure collection is re-indexed
+            'equipments' => $equipments,
         ]);
     }
 

@@ -115,6 +115,10 @@ const createReservation = () => {
         },
     });
 };
+
+const goBack = () => {
+    window.history.back();
+};
 </script>
 
 <template>
@@ -180,9 +184,9 @@ const createReservation = () => {
                                 <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-700">
                                     Create
                                 </button>
-                                <Link :href="route('my-reservation.index')" class="ml-4 px-4 py-2 bg-gray-500 text-white rounded-md shadow-sm hover:bg-gray-700">
-                                    Back
-                                </Link>
+                                <a @click="goBack" class="ml-4 px-4 py-2 bg-gray-500 text-white rounded-md shadow-sm hover:bg-gray-700">
+                                    back
+                                </a>
                             </div>
                         </div>
                     </form>

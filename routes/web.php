@@ -59,6 +59,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/api/user/{id}', [UserController::class, 'update']);
     Route::put('/api/type/{id}', [TypeController::class, 'update']);
     Route::put('/api/equipment/{id}', [EquipmentController::class, 'update']);
+    Route::put('/api/atelier/{id}', [AtelierController::class, 'update']);
     Route::get('/api/getAteliersWithType/{id}', [AtelierController::class, 'getAteliersWithType']);
 });
 

@@ -18,7 +18,13 @@ class AtelierController extends Controller
         $ateliers = AtelierResource::collection(
             Atelier::with(['types', 'manager', 'users'])->get()
         );
-        return inertia('Atelier/Index', ['ateliers' => $ateliers]);
+        $types = TypeResource::collection(Type::all());
+
+        $managers = UserResource::collection(User::whereHas('roles', function($query) {
+            $query->where('name', 'manager');
+        })->get());
+
+        return inertia('Atelier/Index', ['ateliers' => $ateliers, 'types' => $types, 'managers' => $managers]);
     }
 
     public function create() {
@@ -32,7 +38,6 @@ class AtelierController extends Controller
 
     public function store(Request $request) {
 
-
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'room' => ['required', 'string', 'max:255'],
@@ -44,7 +49,6 @@ class AtelierController extends Controller
         $atelier = Atelier::create($validated);
 
         $atelier->types()->attach($request->types);
-
        
         return $this->index();
     }
@@ -74,5 +78,23 @@ class AtelierController extends Controller
             'students' => $students->values(), // Ensure collection is re-indexed
             'teachers' => $teachers->values(), // Ensure collection is re-indexed
         ]);
+    }
+
+    public function update(Request $request, $id) {
+        $atelier = Atelier::find($id);
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'room' => ['required', 'string', 'max:255'],
+            'manager_id' => ['required', 'exists:users,id'],
+            'types' => 'required|array',
+            'types.*' => 'integer|exists:types,id',
+        ]);
+
+        $atelier->update($validated);
+
+        $atelier->types()->sync($request->types);
+
+        return $this->index();
     }
 }

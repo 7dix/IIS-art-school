@@ -3,17 +3,73 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Table from "@/Components/Table.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import { VTColumn } from "@/types";
-import { h, ref } from "vue";
+import { h, ref, toRaw, reactive } from "vue";
 import { Button } from "@/Components/ui/button";
 import { Icon } from "@iconify/vue";
+import EditAtelierDialog from '@/Components/Atelier/AtelierEditDialog.vue';
+import axios from 'axios';
+
 
 const props = defineProps({
     ateliers: {
         type: Object,
         required: true,
     },
+    types: {
+        type: Object,
+        required: true,
+    },
+    managers: {
+        type: Object,
+        required: true,
+    },
 });
 
+////////////////////
+////EDIT dialog/////
+////////////////////
+const showDialog = ref(false);
+const selectedAtelier = ref(null);
+
+const openEditDialog = (atelier) => {
+  selectedAtelier.value = { ...atelier };  // Clone atelier data to edit
+  showDialog.value = true;
+};
+
+const saveAtelier = async (updatedAtelier) => {
+  updatedAtelier = JSON.parse(JSON.stringify(updatedAtelier));
+
+
+  const response = await axios.put(`/api/atelier/${updatedAtelier.id}`, updatedAtelier);
+  if (response.status === 200) {
+    for (let i = 0; i < props.ateliers.data.length; i++) {
+        if (props.ateliers.data[i].id === updatedAtelier.id) {
+       
+        const newTypes = toRaw(props.types.data).filter((type) => {
+            return updatedAtelier.types.includes(type.id);
+        });
+
+        props.ateliers.data[i] = updatedAtelier;
+        props.ateliers.data[i].types = reactive(newTypes); //update the data in the table
+
+        break;
+        }
+    }
+    } else {
+        console.error("Failed to update type:", response);
+    }
+ 
+  showDialog.value = false;
+};
+
+const closeDialog = () => {
+  showDialog.value = false;
+};
+
+
+////////////////////
+////TABLE/////
+////////////////////
 const columns: VTColumn[] = [
     {
         key: "name",
@@ -34,7 +90,7 @@ const columns: VTColumn[] = [
         },
     },
     {
-        key: "users",
+        key: "ateliers",
         header: "Students",
         renderAs: (item) => {
             return h(
@@ -67,7 +123,8 @@ const columns: VTColumn[] = [
         key: "actions",
         header: "Actions",
         renderAs: (item) => {
-            return h(
+            return h("div", {}, [
+                h(
                 Link,
                 {
                     href: `/atelier/${item.id}/dashboard`,
@@ -77,7 +134,17 @@ const columns: VTColumn[] = [
                     icon: "majesticons:open",
                     class: "w-5 h-5",
                 })
-            );
+            ),
+            h(
+                    Button,
+                    {
+                        onClick: () => openEditDialog(item),
+                        class: 'bg-blue-500 text-white ml-2 py-4 px-4 rounded-md hover:bg-blue-600 ' 
+                    },
+                    'Edit'
+                ),
+            
+            ]);
         },
     },
 ];
@@ -113,5 +180,15 @@ const columns: VTColumn[] = [
                 </div>
             </div>
         </div>
+         <!-- Edit Dialog -->
+     <EditAtelierDialog 
+          v-if="showDialog" 
+          :atelier="selectedAtelier" 
+          :isOpen="showDialog" 
+          :types="props.types"
+          :managers="props.managers"
+          @save="saveAtelier" 
+          @close="closeDialog"
+        />
     </AuthenticatedLayout>
 </template>

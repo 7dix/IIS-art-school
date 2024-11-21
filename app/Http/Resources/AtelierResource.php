@@ -18,7 +18,6 @@ class AtelierResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'room' => $this->room,
-            'types' => TypeResource::collection($this->whenLoaded('types')),  
             'equipments' => EquipmentResource::collection($this->whenLoaded('equipments')),
             'manager' => new UserResource($this->whenLoaded('manager')),
             'manager_id' => $this->manager_id,

@@ -14,17 +14,12 @@ const props = defineProps({
         type: Object,
         required: true,
     },
-    types : {
-        type: Object,
-        required: true,
-    }
 })
 
 const form = useForm({
     name: '',
     room: '',
     manager_id: "",
-    types: [],
 });
 
 const createAtelier = () => {
@@ -68,14 +63,6 @@ const createAtelier = () => {
                                     <option v-for="user in props.users.data" :key="user.id" :value="user.id">{{ user.first_name + " " + user.last_name }}</option>
                                 </select> 
                             </div>
-                            <div class="mb-4">
-                                <label for="types" class="block text-sm font-medium text-gray-700">Types</label>
-                                <select id="types" v-model="form.types" multiple class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                                    <option v-for="type in props.types.data" :key="type.id" :value="type.id">{{ type.name }}</option>
-                                </select>
-                            </div>
-
-
                             <div class="flex items-center justify-end mt-4">
                                 <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-700">
                                     Create

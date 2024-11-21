@@ -16,15 +16,14 @@ class AtelierController extends Controller
     public function index()
     {
         $ateliers = AtelierResource::collection(
-            Atelier::with(['types', 'manager', 'users'])->get()
+            Atelier::with(['manager', 'users'])->get()
         );
-        $types = TypeResource::collection(Type::all());
 
         $managers = UserResource::collection(User::whereHas('roles', function($query) {
             $query->where('name', 'manager');
         })->get());
 
-        return inertia('Atelier/Index', ['ateliers' => $ateliers, 'types' => $types, 'managers' => $managers]);
+        return inertia('Atelier/Index', ['ateliers' => $ateliers, 'managers' => $managers]);
     }
 
     public function create() {
@@ -32,8 +31,7 @@ class AtelierController extends Controller
             $query->where('name', 'manager');
         })->get());
 
-        $types = TypeResource::collection(Type::all());
-        return inertia('Atelier/Create', ['users' => $users, 'types' => $types]);
+        return inertia('Atelier/Create', ['users' => $users]);
     }
 
     public function store(Request $request) {
@@ -42,13 +40,9 @@ class AtelierController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'room' => ['required', 'string', 'max:255'],
             'manager_id' => ['required', 'exists:users,id'],
-            'types' => 'required|array',
-            'types.*' => 'integer|exists:types,id',
         ]);
 
         $atelier = Atelier::create($validated);
-
-        $atelier->types()->attach($request->types);
        
         return $this->index();
     }
@@ -150,13 +144,10 @@ class AtelierController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'room' => ['required', 'string', 'max:255'],
             'manager_id' => ['required', 'exists:users,id'],
-            'types' => 'required|array',
-            'types.*' => 'integer|exists:types,id',
         ]);
 
         $atelier->update($validated);
 
-        $atelier->types()->sync($request->types);
 
         return $this->index();
     }

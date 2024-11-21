@@ -43,9 +43,7 @@ const createType = () => {
                                     required
                                 />
                                 <div
-                                    v-if="form.errors.name"
-                                    class="mt-2 text-sm text-red-600"
-                                >
+                                    v-if="form.errors.name" class="mt-2 text-sm text-red-600">
                                     {{ form.errors.name }}
                                 </div>
                             </div>

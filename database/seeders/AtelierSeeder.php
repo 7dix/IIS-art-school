@@ -41,8 +41,6 @@ class AtelierSeeder extends Seeder
                 // Attach users and types
                 $atelier->users()->attach($assignedUsers);
                 $assignedTypes = $types->random(3);
-                $atelier->types()->attach($assignedTypes);
-
                 // Create equipment for this atelier with allowed types
                 foreach ($assignedTypes as $type) {
                     $equipments = Equipment::factory()

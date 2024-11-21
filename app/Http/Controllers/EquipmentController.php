@@ -47,7 +47,6 @@ class EquipmentController extends Controller
 
     public function store(Request $request) {
 
-
         $leasing_hours = $request->input('allowed_leasing_hours');
         $leasing_hours_array = explode(',', $leasing_hours);
         $leasing_hours_array = array_map('intval', $leasing_hours_array);
@@ -62,7 +61,7 @@ class EquipmentController extends Controller
             'date_of_purchase' => ['date', 'nullable'],
             'type_id' => ['required', 'exists:types,id'],
             'atelier_id' => ['required', 'exists:ateliers,id']
-        ]);
+        ])  ;
         $user = Auth::user();
         $validatedData['owner_id'] = $user->id;
 

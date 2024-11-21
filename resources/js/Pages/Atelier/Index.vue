@@ -15,10 +15,6 @@ const props = defineProps({
         type: Object,
         required: true,
     },
-    types: {
-        type: Object,
-        required: true,
-    },
     managers: {
         type: Object,
         required: true,
@@ -39,19 +35,18 @@ const openEditDialog = (atelier) => {
 const saveAtelier = async (updatedAtelier) => {
   updatedAtelier = JSON.parse(JSON.stringify(updatedAtelier));
 
-
   const response = await axios.put(`/api/atelier/${updatedAtelier.id}`, updatedAtelier);
   if (response.status === 200) {
     for (let i = 0; i < props.ateliers.data.length; i++) {
         if (props.ateliers.data[i].id === updatedAtelier.id) {
-       
-        const newTypes = toRaw(props.types.data).filter((type) => {
-            return updatedAtelier.types.includes(type.id);
-        });
-
         props.ateliers.data[i] = updatedAtelier;
-        props.ateliers.data[i].types = reactive(newTypes); //update the data in the table
 
+        for (let manager of props.managers.data) {
+            if (manager.id === updatedAtelier.manager_id) {
+                updatedAtelier.manager = manager;
+                break;
+            }
+        }
         break;
         }
     }
@@ -101,21 +96,6 @@ const columns: VTColumn[] = [
                     },
                 },
                 item.users.length
-            );
-        },
-    },
-    {
-        key: "types",
-        header: "Types",
-        renderAs: (item) => {
-            return h(
-                Button,
-                {
-                    onClick: () => {
-                        console.log(item);
-                    },
-                },
-                item.types.length
             );
         },
     },
@@ -185,7 +165,6 @@ const columns: VTColumn[] = [
           v-if="showDialog" 
           :atelier="selectedAtelier" 
           :isOpen="showDialog" 
-          :types="props.types"
           :managers="props.managers"
           @save="saveAtelier" 
           @close="closeDialog"

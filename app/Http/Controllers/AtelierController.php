@@ -10,12 +10,14 @@ use App\Models\User;
 use App\Models\Type;
 use Illuminate\Container\Attributes\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AtelierController extends Controller
 {
     public function index()
     {
-        $user = auth()->user();
+        /** @var \App\Models\User */
+        $user = Auth::user();
 
         if (!$user->hasRole('admin') && !$user->isManager()) {
             return redirect()->route('dashboard')->with('error', 'You are not authorized to view this page');
@@ -78,11 +80,11 @@ class AtelierController extends Controller
         $atelier = Atelier::with(['users.roles'])->findOrFail($id);
     
         $teachers = $atelier->users->filter(function ($user) {
-            return $user->hasRole('teacher');
+            return $user->pivot->teacher == true;
         });
     
         $users = $atelier->users->filter(function ($user) {
-            return $user->hasRole('user') && !$user->hasRole('teacher');
+            return $user->pivot->teacher == false;
         });
     
         return inertia('Atelier/Dashboard', [
@@ -104,19 +106,19 @@ class AtelierController extends Controller
     {
         $atelier = Atelier::findOrFail($atelierId);
         $usersInAtelier = $atelier->users->pluck('id');
-        $availableUsers = User::whereNotIn('id', $usersInAtelier)->get();
+        $availableUsers = User::whereNotIn('id', $usersInAtelier)
+        ->whereHas('roles', function($query) {
+            $query->where('name', '!=', 'admin');
+        })
+        ->where('id', '!=', $atelier->manager_id)
+        ->get();
     
         return response()->json($availableUsers);
     }
 
     public function usersInAtelier($atelierId){
         $atelier = Atelier::findOrFail($atelierId);
-        $usersInAtelier = $atelier->users()
-            ->whereDoesntHave('roles', function($query) {
-                $query->where('name', 'teacher');
-            })
-            ->select('users.id', 'name')
-            ->get();
+        $usersInAtelier = $atelier->users()->wherePivot('teacher', 0)->select('users.id', 'name')->get();
         
         return response()->json($usersInAtelier);
     }
@@ -148,10 +150,9 @@ class AtelierController extends Controller
     
         // Find the user and remove the teacher role
         $user = $atelier->users()->findOrFail($userId);
-        $user->removeRole('teacher');
-        $user->assignRole('student');
+        $atelier->users()->updateExistingPivot($userId, ['teacher' => false]);
     
-        return response()->json(['message' => 'Teacher role removed successfully.']);
+        return response()->json(['message' => 'Teacher role removed successfully.', 'user' => $user]);
     }
 
 
@@ -170,26 +171,23 @@ class AtelierController extends Controller
         return $this->index();
     }
     public function addTeachers(Request $request, $atelierId) {
-        try {
-            $atelier = Atelier::findOrFail($atelierId);
-            $userIds = $request->input('users');
-    
-            foreach ($userIds as $userId) {
-                $user = User::findOrFail($userId);
-                // Check if the user is already attached to avoid duplicates
-                if (!$atelier->users()->where('users.id', $userId)->exists()) {
-                    $atelier->users()->attach($userId);
-                }
-                $user->assignRole('teacher');
+        
+        $atelier = Atelier::findOrFail($atelierId);
+        $userIds = $request->input('users');
+
+        foreach ($userIds as $userId) {
+            
+            // Check if the user is already attached to avoid duplicates
+            if (!$atelier->users()->where('users.id', $userId)->exists()) {
+                $atelier->users()->attach($userId);
             }
-    
-            $newTeachers = $atelier->users()->whereIn('users.id', $userIds)->get();
-    
-            return response()->json(['message' => 'Teachers added successfully.', 'users' => $newTeachers]);
-        } catch (\Exception $e) {
-            \Log::error('Failed to add teachers to atelier: ' . $e->getMessage());
-            return response()->json(['error' => 'Failed to add teachers to atelier'], 500);
+            $atelier->users()->updateExistingPivot($userId, ['teacher' => true]);
         }
+
+        $newTeachers = $atelier->users()->whereIn('users.id', $userIds)->wherePivot('teacher', true)->get();
+
+        return response()->json(['message' => 'Teachers added successfully.', 'teachers' => $newTeachers]);
+    
     }
 
 }

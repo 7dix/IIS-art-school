@@ -45,19 +45,13 @@ const openEditDialog = (atelier) => {
 
 const saveAtelier = async (updatedAtelier) => {
   updatedAtelier = JSON.parse(JSON.stringify(updatedAtelier));
-
   const response = await axios.put(`/api/atelier/${updatedAtelier.id}`, updatedAtelier);
   if (response.status === 200) {
     for (let i = 0; i < props.ateliers.data.length; i++) {
         if (props.ateliers.data[i].id === updatedAtelier.id) {
         props.ateliers.data[i] = updatedAtelier;
+        props.ateliers.data[i].manager = props.users.data.find(user => user.id === updatedAtelier.manager_id);
 
-        for (let manager of props.managers.data) {
-            if (manager.id === updatedAtelier.manager_id) {
-                updatedAtelier.manager = manager;
-                break;
-            }
-        }
         break;
         }
     }

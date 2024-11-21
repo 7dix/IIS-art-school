@@ -19,6 +19,13 @@ const props = defineProps({
         }[],
         required: true,
     },
+    teachers: {
+        type: Array as () => {
+            id: number;
+            name: string;
+        }[],
+        required: true,
+    },
     atelierId: {
         type: Number,
         required: true,
@@ -41,10 +48,11 @@ const removeTeacherRole = async (user) => {
         );
         if (response.status === 200) {
             // Remove the user from the teachers list and add to students list
-            props.users.splice(
-                props.users.findIndex((item) => item.id === user.id),
+            props.teachers.splice(
+                props.teachers.findIndex((item) => item.id === user.id),
                 1
             );
+            props.users.push(response.data.user);
             // You might want to emit an event or call a method to update the students list
         } else {
             console.error(response);
@@ -61,9 +69,14 @@ const addTeacher = async (selectedTeachers) => {
             { users: selectedTeachers.map((user) => user.id) }
         );
         if (response.status === 200) {
-
             // Add the new teachers to the list
-            props.users.push(...response.data.users);
+            props.teachers.push(...response.data.teachers);
+            response.data.teachers.forEach((newTeacher) => {
+                const index = props.users.findIndex((user) => user.id === newTeacher.id);
+                if (index !== -1) {
+                    props.users.splice(index, 1);
+                }
+            });
         } else {
             console.error(response);
         }
@@ -94,13 +107,13 @@ const addTeacher = async (selectedTeachers) => {
         <CardContent class="mt-4">
             <ul class="list-none">
                 <li
-                    v-for="user in users"
-                    :key="user.id"
+                    v-for="teacher in teachers"
+                    :key="teacher.id"
                     class="flex justify-between items-center py-2 border-b border-gray-200"
                 >
-                    <span>{{ user.name }}</span>
+                    <span>{{ teacher.name }}</span>
                     <Button
-                        @click="removeTeacherRole(user)"
+                        @click="removeTeacherRole(teacher)"
                         class="bg-yellow-500 text-white hover:bg-yellow-700 w-10 h-10 flex items-center justify-center"
                     >
                         <Icon icon="dashicons:remove" class="w-5 h-5" />

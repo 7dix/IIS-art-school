@@ -106,21 +106,6 @@ const columns = [
         },
     },
     {
-        key: "ateliers",
-        header: "Ateliers",
-        renderAs: (item: any) => {
-            return h(
-                Button,
-                {
-                    onClick: () => {
-                        console.log(item);
-                    },
-                },
-                item.ateliers.length
-            );
-        },
-    },
-    {
         key: "actions",
         header: "Actions",
         renderAs: (item: any) => {

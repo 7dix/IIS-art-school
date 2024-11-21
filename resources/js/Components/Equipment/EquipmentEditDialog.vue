@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
     import axios from 'axios';
-    import { defineProps, defineEmits, ref, watch, onMounted, onUnmounted } from 'vue';
+    import { defineProps, defineEmits, ref, watch, onMounted, onUnmounted, toRaw } from 'vue';
 
     const props = defineProps<{
     equipment: any,

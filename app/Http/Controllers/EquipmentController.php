@@ -49,9 +49,6 @@ class EquipmentController extends Controller
     }
 
     public function store(Request $request) {
-
-    
-
         $validatedData = $request->validate([
             'name' => ['required', 'string', 'max:255', 'unique:equipments,name'],
             'maximum_leasing_period' => ['required', 'integer','min:1', 'max:90'],

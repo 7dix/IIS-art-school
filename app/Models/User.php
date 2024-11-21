@@ -60,6 +60,9 @@ class User extends Authenticatable
         return Atelier::where('manager_id', $this->id)->get();
     }
 
+
+    
+
     protected $hidden = [
         'password',
     ];

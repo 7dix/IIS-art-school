@@ -18,7 +18,7 @@ class TypeController extends Controller
             return back();
         }
 
-        $types = Type::with(['equipments', 'ateliers'])->get();
+        $types = Type::with(['equipments'])->get();
         return inertia('Types/Index', ['types' => TypeResource::collection($types)]);
     }
 

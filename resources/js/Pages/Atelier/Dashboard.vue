@@ -48,7 +48,8 @@ onMounted(() => {
                     <!-- Users Card for Teachers -->
                     <TeachersCard
                         title="Teachers"
-                        :users="teachers"
+                        :teachers="teachers"
+                        :users="users"
                         :atelierId="atelier.id"
                     />
                 </div>

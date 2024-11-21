@@ -7,24 +7,22 @@ import { h, ref, watch } from "vue";
 import { Button } from "@/Components/ui/button";
 import DeleteDialog from "@/Components/DeleteDialog.vue";
 import { Icon } from "@iconify/vue";
-import EditTypeDialog from '@/Components/Types/TypeEditDialog.vue';
+import EditTypeDialog from "@/Components/Types/TypeEditDialog.vue";
 import axios from "axios";
 
 const props = defineProps({
     types: {
         type: Object,
         required: true,
-        default: () => ({data: []}),
+        default: () => ({ data: [] }),
     },
 });
-
 
 ////////////////////
 ////DELETE DIALOG/////
 ////////////////////
 const deleteDialogRef = ref(null);
 const selectedType = ref(null);
-
 
 const openDeleteDialog = (item) => {
     selectedType.value = item;
@@ -45,9 +43,8 @@ const confirmDelete = async (id: number) => {
             console.error(response);
         }
     }
-    return { confirmDelete }
+    return { confirmDelete };
 };
-
 
 ////////////////////
 ////EDIT DIALOG/////
@@ -55,15 +52,18 @@ const confirmDelete = async (id: number) => {
 const showDialog = ref(false);
 
 const openEditDialog = (type) => {
-  selectedType.value = { ...type };  // Clone user data to edit
-  showDialog.value = true;
+    selectedType.value = { ...type }; // Clone user data to edit
+    showDialog.value = true;
 };
 
 const saveType = async (updatedType) => {
-  console.log(updatedType.id);
-  updatedType = JSON.parse(JSON.stringify(updatedType));
+    console.log(updatedType.id);
+    updatedType = JSON.parse(JSON.stringify(updatedType));
 
-    const response = await axios.put(`/api/type/${updatedType.id}`, updatedType);
+    const response = await axios.put(
+        `/api/type/${updatedType.id}`,
+        updatedType
+    );
     if (response.status === 200) {
         for (let i = 0; i < props.types.data.length; i++) {
             if (props.types.data[i].id === updatedType.id) {
@@ -74,12 +74,12 @@ const saveType = async (updatedType) => {
     } else {
         console.error("Failed to update type:", response);
     }
- 
-  showDialog.value = false;
+
+    showDialog.value = false;
 };
 
 const closeDialog = () => {
-  showDialog.value = false;
+    showDialog.value = false;
 };
 
 ////////////////////
@@ -116,9 +116,8 @@ const columns = [
                         console.log(item);
                     },
                 },
-                item.ateliers.length,
+                item.ateliers.length
             );
-            
         },
     },
     {
@@ -141,14 +140,18 @@ const columns = [
                     Button,
                     {
                         onClick: () => openEditDialog(item),
-                        class: 'bg-blue-500 text-white ml-2'
+                        class: "bg-blue-500 text-white ml-2",
                     },
-                    'Edit'
+                    "Edit"
                 ),
             ]);
         },
     },
 ];
+
+function route(arg0: string, id: number): string {
+    throw new Error("Function not implemented.");
+}
 </script>
 
 <template>
@@ -183,21 +186,13 @@ const columns = [
                 </div>
             </div>
         </div>
-        <DeleteDialog
-            ref="deleteDialogRef"
-            :onConfirm="confirmDelete"
+        <DeleteDialog ref="deleteDialogRef" :onConfirm="confirmDelete" />
+        <EditTypeDialog
+            v-if="showDialog"
+            :type="selectedType"
+            :isOpen="showDialog"
+            @save="saveUser"
+            @close="closeDialog"
         />
     </AuthenticatedLayout>
-
-
-     <!-- Edit Dialog -->
-     <EditTypeDialog 
-          v-if="showDialog" 
-          :type="selectedType" 
-          :isOpen="showDialog" 
-          @save="saveType" 
-          @close="closeDialog"
-        />
-
-
 </template>

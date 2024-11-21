@@ -80,6 +80,64 @@ class AtelierController extends Controller
         ]);
     }
 
+    public function removeUser($atelierId, $userId)
+    {
+        $atelier = Atelier::findOrFail($atelierId);
+        $atelier->users()->detach($userId);
+    
+        return response()->json(['message' => 'User removed from atelier successfully.']);
+    }
+
+    public function availableUsers($atelierId)
+    {
+        $atelier = Atelier::findOrFail($atelierId);
+        $usersInAtelier = $atelier->users->pluck('id');
+        $availableUsers = User::whereNotIn('id', $usersInAtelier)->get();
+    
+        return response()->json($availableUsers);
+    }
+
+    public function usersInAtelier($atelierId){
+        $atelier = Atelier::findOrFail($atelierId);
+        $usersInAtelier = $atelier->users->pluck('id');
+
+        return response()->json($usersInAtelier);
+    }
+
+    public function addUsers(Request $request, $atelierId)
+    {
+        $atelier = Atelier::findOrFail($atelierId);
+    
+        // Validate the request
+        $request->validate([
+            'users' => 'required|array',
+            'users.*.id' => 'required|exists:users,id',
+        ]);
+    
+        // Attach users to the atelier
+        $userIds = collect($request->input('users'))->pluck('id');
+        $atelier->users()->attach($userIds);
+    
+        // Fetch the newly added users with the correct table alias
+        $newUsers = $atelier->users()->whereIn('users.id', $userIds)->get();
+    
+        return response()->json(['message' => 'Users added successfully.', 'users' => $newUsers]);
+    }
+
+    public function removeTeacherRole(Request $request, $atelierId)
+    {
+        $atelier = Atelier::findOrFail($atelierId);
+        $userId = $request->input('user_id');
+    
+        // Find the user and remove the teacher role
+        $user = $atelier->users()->findOrFail($userId);
+        $user->removeRole('teacher');
+        $user->assignRole('student');
+    
+        return response()->json(['message' => 'Teacher role removed successfully.']);
+    }
+
+
     public function update(Request $request, $id) {
         $atelier = Atelier::find($id);
 

@@ -1,7 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import { defineProps, onMounted } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import UsersCard from "@/Components/Atelier/UsersCard.vue";
+import TeachersCard from "@/Components/Atelier/TeachersCard.vue";
 
 const props = defineProps({
     atelier: {
@@ -41,16 +42,14 @@ onMounted(() => {
                     <UsersCard
                         title="Students"
                         :users="students"
-                        :onAddUser="addUser"
-                        :onRemoveUser="removeUser"
+                        :atelierId="atelier.id"
                     />
 
                     <!-- Users Card for Teachers -->
-                    <UsersCard
+                    <TeachersCard
                         title="Teachers"
                         :users="teachers"
-                        :onAddUser="addUser"
-                        :onRemoveUser="removeUser"
+                        :atelierId="atelier.id"
                     />
                 </div>
             </div>

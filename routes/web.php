@@ -36,8 +36,13 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/atelier/{id}/dashboard', [AtelierController::class, 'dashboard'])->name('atelier.dashboard');
+    Route::get('/api/ateliers/{atelier}/users-in-atelier', [AtelierController::class, 'usersInAtelier']);    
+    Route::delete('/ateliers/{atelier}/users/{user}', [AtelierController::class, 'removeUser']);    
+    Route::get('/atelier/{id}/dashboard', [AtelierController::class, 'dashboard'])->name('ateliers.dashboard');
+    Route::get('/api/ateliers/{atelier}/available-users', [AtelierController::class, 'availableUsers']);    
     Route::resource('atelier', AtelierController::class);
+    Route::post('/ateliers/{atelier}/users', [AtelierController::class, 'addUsers']);
+    Route::post('/ateliers/{atelier}/remove-teacher-role', [AtelierController::class, 'removeTeacherRole']);
 
     Route::resource('my-reservation', MyReservationController::class);
     Route::resource('reservation', ReservationController::class);
@@ -52,7 +57,8 @@ Route::middleware('auth')->group(function () {
 
 
     //Api routes
-    //php artisan route:list
+    //php artisan route:list    Route::delete('/ateliers/{atelier}/users/{user}', [AtelierController::class, 'removeUser']);
+
     //php artisan route:cache
     //php artisan route:clear
 

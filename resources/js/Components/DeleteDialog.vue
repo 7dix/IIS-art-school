@@ -22,7 +22,6 @@ const id = ref(null);
 
 const openDialog = (id_) => {
     isDialogOpen.value = true;
-    console.log(id_);
     id.value = id_;
 };
 
@@ -44,12 +43,15 @@ defineExpose({ openDialog });
 
 <template>
     <AlertDialog :open="isDialogOpen">
+        <AlertDialogTrigger asChild>
+            <button class="hidden"></button>
+        </AlertDialogTrigger>
         <AlertDialogContent>
             <AlertDialogHeader>
                 <h2 class="text-lg font-semibold">Are you sure?</h2>
                 <p class="text-sm text-gray-500">
-                    Do you really want to delete this? This action cannot
-                    be undone.
+                    Do you really want to delete this? This action cannot be
+                    undone.
                 </p>
             </AlertDialogHeader>
             <AlertDialogFooter>

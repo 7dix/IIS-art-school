@@ -41,13 +41,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/atelier/{id}/dashboard', [AtelierController::class, 'dashboard'])->name('ateliers.dashboard');
     Route::get('/api/ateliers/{atelier}/available-users', [AtelierController::class, 'availableUsers']);    
     Route::resource('atelier', AtelierController::class);
-    Route::post('/ateliers/{atelier}/users', [AtelierController::class, 'addUsers']);
+    Route::post('/ateliers/{atelier}/users', action: [AtelierController::class, 'addUsers']);
     Route::post('/ateliers/{atelier}/remove-teacher-role', [AtelierController::class, 'removeTeacherRole']);
     Route::post('/ateliers/{atelier}/add-teachers', [AtelierController::class, 'addTeachers']);
 
     Route::resource('my-reservation', MyReservationController::class);
     Route::resource('reservation', ReservationController::class);
-    // Route::resource('reservation/{id}', ReservationController::class);
+    Route::post('/reservation/{reservation}/state-update', [ReservationController::class, 'reservationStateUpdate'])->name('reservation.state-update');
 
     Route::resource('user', UserController::class);
     Route::resource('equipment', EquipmentController::class);

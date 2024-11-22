@@ -12,14 +12,23 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    public function __construct() {
+        parent::__construct();
+
+        $this->middleware(function ($request, $next) {
+            if (!$this->user || !$this->user->can('manage_user')) {
+                return redirect()->route('dashboard'); // Unauthorized access
+            }
+
+            return $next($request);
+        });
+
+    }
+
+
+
     public function index() {
-        /** @var \App\Models\User */
-        $user = Auth::user();
-
-        if (!$user->hasRole('admin')) {
-            return back();
-        } 
-
+       
         $users = UserResource::collection(User::all());
         $roles = RoleResource::collection(Role::all());
         return inertia('User/Index', ['users' => $users, 'roles' => $roles]);
@@ -27,13 +36,6 @@ class UserController extends Controller
 
 
     public function update(Request $request, $id) {
-
-         /** @var \App\Models\User */
-         $user = Auth::user();
-
-         if (!$user->hasRole('admin')) {
-             return back();
-         }
 
         $user = User::find($id);
         $user->update($request->validate([

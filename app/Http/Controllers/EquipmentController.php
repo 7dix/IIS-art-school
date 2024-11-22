@@ -26,7 +26,22 @@ class EquipmentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct() {
+        parent::__construct();
+
+        $this->middleware(function ($request, $next) {
+            if (!$this->user || !$this->user->can('manage_equipment')) {
+                return redirect()->route('dashboard'); // Unauthorized access
+            }
+
+            return $next($request);
+        });
+
+    }
+    
     public function index() {
+
         $equipments = EquipmentResource::collection(
             Equipment::with('type')->get()
         );

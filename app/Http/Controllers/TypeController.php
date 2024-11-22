@@ -10,6 +10,19 @@ use Illuminate\Validation\Rule;
 
 class TypeController extends Controller
 {
+    public function __construct() {
+        parent::__construct();
+
+        $this->middleware(function ($request, $next) {
+            if (!$this->user || !$this->user->can('manage_type')) {
+                return redirect()->route('dashboard'); // Unauthorized access
+            }
+
+            return $next($request);
+        });
+
+    }
+
     public function index()
     {
         /** @var \App\Models\User */

@@ -19,7 +19,7 @@ class RoleSeeder extends Seeder
         $admin = Role::create(['name' => 'admin']);
        
         //Admin permissions
-        $permissions = ['manage_atelier'];
+        $permissions = ['manage_atelier', 'manage_user'];
         foreach ($permissions as $permission) {
             Permission::create(['name' => $permission]);
         }

@@ -18,13 +18,7 @@ class AtelierController extends Controller
 {
     public function index()
     {
-        /** @var \App\Models\User */
-        $user = Auth::user();
-
-        // if (!$user->hasRole('admin') && !$user->isManager()) {
-        //     return redirect()->route('dashboard')->with('error', 'You are not authorized to view this page');
-        // }
-
+        $user = $this->user;
         // Not dependant on user role
         $types = TypeResource::collection(Type::all());
         $users = UserResource::collection(User::whereHas('roles', function($query) {
@@ -34,14 +28,14 @@ class AtelierController extends Controller
         // Admin view
         if ($user->hasRole('admin')) {
             $ateliers = AtelierResource::collection(
-                Atelier::with(['manager', 'users'])->get()
+                Atelier::with(['manager', 'users', 'equipments'])->get()
             );    
             return inertia('Atelier/Index', ['ateliers' => $ateliers, 'users' => $users, 'role' => 'admin']);
 
         // Manager view
         } else if ($user->isManager()) {
             $ateliers = AtelierResource::collection(
-                Atelier::where('manager_id', $user->id)->with(['manager', 'users'])->get()
+                Atelier::where('manager_id', $user->id)->with(['manager', 'users', 'equipments'])->get()
             );
             return inertia('Atelier/Index', ['ateliers' => $ateliers, 'users' => $users, 'role' => 'manager']);
         }
@@ -50,7 +44,7 @@ class AtelierController extends Controller
             $ateliers = AtelierResource::collection(
                 Atelier::whereHas('users', function($query) use ($user) {
                     $query->where('user_id', $user->id);
-                })->with(['manager', 'users'])->get()
+                })->with(['manager', 'users', 'equipments'])->get()
             );
             return inertia('Atelier/Index', ['ateliers' => $ateliers, 'users' => $users, 'role' => 'manager']);
         }

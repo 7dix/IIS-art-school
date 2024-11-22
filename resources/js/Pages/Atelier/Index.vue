@@ -108,6 +108,21 @@ const columns: VTColumn[] = [
         },
     },
     {
+        key: "equipments",
+        header: "Equipments",
+        renderAs: (item) => {
+            return h(
+                Button,
+                {
+                    onClick: () => {
+                        console.log(item);
+                    },
+                },
+                item.equipments.length
+            );
+        },
+    },
+    {
         key: "actions",
         header: "Actions",
         renderAs: (item) => {

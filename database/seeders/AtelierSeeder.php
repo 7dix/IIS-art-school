@@ -16,14 +16,14 @@ class AtelierSeeder extends Seeder
      */
     public function run(): void
     {
-        $types = Type::factory()->count(12)->create();
-        $users = User::factory()->count(50)->create();
+        $types = Type::factory()->count(3)->create();
+        $users = User::factory()->count(5)->create();
         $users->each(function ($user) {
             $user->assignRole('user');
         });
 
         Atelier::factory()
-            ->count(20)
+            ->count(3)
             ->sequence(fn($sequence) => ['name' => sprintf("Atelier %02d", $sequence->index)])
             ->create()
             ->each(function ($atelier) use ($types, $users) {
@@ -32,7 +32,7 @@ class AtelierSeeder extends Seeder
                 $teacher = User::where('email', 'teacher@IIS.com')->first();
 
                 // Ensure the manager is not one of the users that will be assigned
-                $assignedUsers = $users->where('id', '!=', $manager->id)->random(5);
+                $assignedUsers = $users->where('id', '!=', $manager->id)->random(2);
 
                 // Assign the manager to the atelier
                 $atelier->manager_id = $manager->id;
@@ -40,11 +40,11 @@ class AtelierSeeder extends Seeder
 
                 // Attach users and types
                 $atelier->users()->attach($assignedUsers);
-                $assignedTypes = $types->random(3);
+                $assignedTypes = $types->random(1);
                 // Create equipment for this atelier with allowed types
                 foreach ($assignedTypes as $type) {
                     $equipments = Equipment::factory()
-                        ->count(fake()->numberBetween(0, 3))
+                        ->count(fake()->numberBetween(0, 2))
                         ->create([
                             'type_id' => $type->id,
                             'owner_id' => $teacher->id,
@@ -61,7 +61,7 @@ class AtelierSeeder extends Seeder
                 // Create reservations for this atelier
                 $atelier->equipments->each(function ($equipment) use ($assignedUsers) {
                     Reservation::factory()
-                        ->count(5)
+                        ->count(1)
                         ->create([
                             'equipment_id' => $equipment->id,
                             'user_id' => $assignedUsers->random()->id,

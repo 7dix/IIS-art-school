@@ -21,7 +21,6 @@ class AtelierResource extends JsonResource
             'equipments' => EquipmentResource::collection($this->whenLoaded('equipments')),
             'manager' => new UserResource($this->whenLoaded('manager')),
             'manager_id' => $this->manager_id,
-            'users' => UserResource::collection($this->whenLoaded('users')),
-        ];
+            'users' => UserResource::collection($this->whenLoaded('users')),        ];
     }
 }

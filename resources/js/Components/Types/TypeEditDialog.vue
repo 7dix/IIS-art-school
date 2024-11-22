@@ -5,8 +5,9 @@
         <hr class="mb-4" />
         <form @submit.prevent="save">
           <div class="mb-4">
-            <label for="name" class="block text-sm font-medium text-gray-700">Name:</label>
+            <label for="name" class="block text-sm font-medium text-gray-700">*Name:</label>
             <input type="text" v-model="editableType.name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+            <div v-if="errors.name" class="mt-2 text-sm text-red-600"> {{ errors.name }} </div>    
           </div>
         
           <div class="flex justify-between">
@@ -24,6 +25,7 @@
   
   const props = defineProps<{
     type: any,
+    errors: any,
     isOpen: boolean,
   }>();
   const emit = defineEmits(['save', 'close']);

@@ -50,6 +50,7 @@ const confirmDelete = async (id: number) => {
 ////EDIT DIALOG/////
 ////////////////////
 const showDialog = ref(false);
+const errors = ref({});
 
 const openEditDialog = (type) => {
     selectedType.value = { ...type }; // Clone user data to edit
@@ -57,24 +58,25 @@ const openEditDialog = (type) => {
 };
 
 const saveType = async (updatedType) => {
+    errors.value = {};  
     console.log(updatedType.id);
     updatedType = JSON.parse(JSON.stringify(updatedType));
 
-    const response = await axios.put(
-        `/api/type/${updatedType.id}`,
-        updatedType
-    );
-    if (response.status === 200) {
+    try {
+        await axios.put(`/api/type/${updatedType.id}`, updatedType);
         for (let i = 0; i < props.types.data.length; i++) {
             if (props.types.data[i].id === updatedType.id) {
                 props.types.data[i] = updatedType;
                 break;
             }
         }
-    } else {
-        console.error("Failed to update type:", response);
+    } catch (error) {
+        if (error.response && error.response.status === 422) {
+            errors.value = error.response.data.errors;
+            return {errors, updatedType};
+        }
+        
     }
-
     showDialog.value = false;
 };
 
@@ -173,6 +175,7 @@ const columns = [
             v-if="showDialog"
             :type="selectedType"
             :isOpen="showDialog"
+            :errors="errors"
             @save="saveType"
             @close="closeDialog"
         />

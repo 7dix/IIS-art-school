@@ -6,6 +6,7 @@ use App\Http\Resources\TypeResource;
 use App\Models\Type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class TypeController extends Controller
 {
@@ -47,8 +48,8 @@ class TypeController extends Controller
 
        $type = Type::find($id);
        $type->update($request->validate([
-           'name' => ['required', 'string', 'max:255'],
-       ]));
+        'name' => ['required', 'string', 'max:255', Rule::unique('types', 'name')->ignore($type->id),],
+    ]));
        
 
        return $this->index();

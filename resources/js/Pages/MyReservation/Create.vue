@@ -3,28 +3,24 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm, Link, usePage } from '@inertiajs/vue3';
 import { ref, watch, computed } from 'vue';
 import axios from 'axios';
+import { Button } from '@/Components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/Components/ui/popover';
+import { Calendar } from '@/Components/ui/v-calendar';
+import { CalendarIcon } from '@radix-icons/vue';
+import { addDays, format } from 'date-fns';
+import '@vuepic/vue-datepicker/dist/main.css';
 
 // Get the current date in the required format
 const getCurrentDate = () => {
     const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
+    return format(now, "yyyy-MM-dd'T'HH:mm:ss");
 };
 
 // Calculate the end date based on the start date and leasing period
 const calculateEndDate = (startDate, leasingPeriod) => {
     const start = new Date(startDate);
     start.setDate(start.getDate() + leasingPeriod);
-    const year = start.getFullYear();
-    const month = String(start.getMonth() + 1).padStart(2, '0');
-    const day = String(start.getDate()).padStart(2, '0');
-    const hours = String(start.getHours()).padStart(2, '0');
-    const minutes = String(start.getMinutes()).padStart(2, '0');
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
+    return format(start, "yyyy-MM-dd'T'HH:mm:ss");
 };
 
 const props = defineProps({
@@ -95,20 +91,27 @@ const selectedEquipment = computed(() => {
 // Watch for changes to selectedEquipment and update end_date accordingly
 watch(selectedEquipment, (newEquipment) => {
     if (newEquipment && newEquipment.maximum_leasing_period) {
-        form.end_date = calculateEndDate(form.start_date, newEquipment.maximum_leasing_period);
+        const endDate = calculateEndDate(form.start_date, newEquipment.maximum_leasing_period);
+        form.end_date = endDate;
+        date.value.end = new Date(endDate);
     } else {
         form.end_date = '';
+        date.value.end = null;
     }
 });
 
 // Watch for changes to start_date and update end_date accordingly
 watch(() => form.start_date, (newStartDate) => {
     if (selectedEquipment.value && selectedEquipment.value.maximum_leasing_period) {
-        form.end_date = calculateEndDate(newStartDate, selectedEquipment.value.maximum_leasing_period);
+        const endDate = calculateEndDate(newStartDate, selectedEquipment.value.maximum_leasing_period);
+        form.end_date = endDate;
+        date.value.end = new Date(endDate);
     }
 });
 
 const createReservation = () => {
+    form.start_date = format(new Date(form.start_date), "yyyy-MM-dd HH:mm:ss");
+    form.end_date = format(new Date(form.end_date), "yyyy-MM-dd HH:mm:ss");
     form.post(route('my-reservation.store'), {
         onError: (errors) => {
             console.log(errors);
@@ -119,6 +122,25 @@ const createReservation = () => {
 const goBack = () => {
     window.history.back();
 };
+
+const date = ref({
+    start: new Date(form.start_date),
+    end: form.end_date ? new Date(form.end_date) : addDays(new Date(), 20),
+});
+
+// Watch for changes to the date range and update form.start_date and form.end_date accordingly
+watch(date, (newDate) => {
+    form.start_date = format(newDate.start, "yyyy-MM-dd'T'HH:mm:ss");
+    form.end_date = newDate.end ? format(newDate.end, "yyyy-MM-dd'T'HH:mm:ss") : '';
+});
+
+// Calculate the maximum end date based on the selected equipment's maximum leasing period
+const maxEndDate = computed(() => {
+    if (selectedEquipment.value && selectedEquipment.value.maximum_leasing_period) {
+        return addDays(new Date(date.value.start), selectedEquipment.value.maximum_leasing_period);
+    }
+    return null;
+});
 </script>
 
 <template>
@@ -173,12 +195,33 @@ const goBack = () => {
                             </div>
 
                             <div class="mb-4">
-                                <label for="start_date" class="block text-sm font-medium text-gray-700">Start Date</label>
-                                <input type="datetime-local" id="start_date" name="start_date" v-model="form.start_date" :min="getCurrentDate()" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
-                            </div>
-                            <div class="mb-4">
-                                <label for="end_date" class="block text-sm font-medium text-gray-700">End Date</label>
-                                <input type="datetime-local" id="end_date" name="end_date" v-model="form.end_date" :min="form.start_date" :max="calculateEndDate(form.start_date, selectedEquipment?.maximum_leasing_period || 0)" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                                <label for="date_range" class="block text-sm font-medium text-gray-700">Date Range</label>
+                                <Popover>
+                                    <PopoverTrigger as-child>
+                                        <Button
+                                            id="date"
+                                            variant="outline"
+                                            class="w-[280px] justify-start text-left font-normal"
+                                        >
+                                            <CalendarIcon class="mr-2 h-4 w-4" />
+                                            <span>
+                                                {{ date.start ? (
+                                                    date.end ? `${format(date.start, 'LLL dd, y')} - ${format(date.end, 'LLL dd, y')}`
+                                                    : format(date.start, 'LLL dd, y')
+                                                ) : 'Pick a date' }}
+                                            </span>
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent class="w-auto p-0" align="start">
+                                        <Calendar
+                                            v-model.range="date"
+                                            :columns="2"
+                                            :min-date="new Date()"
+                                            :show-months="2"
+                                            :show-years="true"
+                                        />
+                                    </PopoverContent>
+                                </Popover>
                             </div>
                             <div class="flex items-center justify-end mt-4">
                                 <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md shadow-sm hover:bg-blue-700">

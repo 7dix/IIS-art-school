@@ -92,9 +92,10 @@ const confirmBlock = async (selectedEquipment) => {
                 <li
                     v-for="equipment in equipments.data"
                     :key="equipment.id"
-                    class="flex justify-between items-center py-2 border-b border-gray-200"
+                    class="flex justify-between space-x-2 items-center py-2 border-b border-gray-200"
                 >
                     <span>{{ equipment.name + " (" + equipment.type_name + ")" }}</span>
+                    <div class="flex space-x-2">
                     <Button
                         @click="borrowEquipment(equipment)"
                         :disabled="restrictedEquipmentIds.includes(equipment.id) || !equipment.can_be_borrowed"
@@ -110,6 +111,7 @@ const confirmBlock = async (selectedEquipment) => {
                         >
                             <Icon icon="material-symbols:block" class="w-5 h-5" />
                     </Button>
+                </div>
                 </li>
             </ul>
         </CardContent>

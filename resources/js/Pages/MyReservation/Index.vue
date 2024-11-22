@@ -33,14 +33,14 @@ const columns: VTColumn[] = [
         "key": "start_date",
         "header": "Borrow date",
         renderAs: (item) => {
-            return h('span', `${parseDateTime(item.created_at)}`);
+            return h('span', `${parseDateTime(item.start_date)}`);
         }
     },
     {
         "key": "end_date",
         "header": "Return date",
         renderAs: (item) => {
-            return h('span', `${parseDateTime(item.created_at)}`);
+            return h('span', `${parseDateTime(item.end_date)}`);
         }
     },
     {

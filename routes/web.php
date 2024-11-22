@@ -13,13 +13,9 @@ use App\Http\Controllers\ReservationController;
 use App\Http\Middleware\EnsureUserHasRole;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::get('/test', function () {
     return Inertia::render('Test');

@@ -76,7 +76,9 @@ const changeStatus = (status) => {
                         >
                             Reservation detail
                         </h2>
-                        <div class="flex items-end justify-end space-x-4">
+                        <div class="flex items-end justify-end space-x-4"
+                        v-if="$page.props.auth.user.permissions.includes('manage_reservation')"
+                        >
                             <Button v-if="state === 'pending'"
                                 variant="outline"
                                 class="btn-accept"

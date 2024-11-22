@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/my-reservation/create', [MyReservationController::class, 'create'])->name('my-reservation.create');
     Route::post('/my-reservation/prepare', [MyReservationController::class, 'prepare'])->name('my-reservation.prepare');
     Route::resource('my-reservation', MyReservationController::class);
+    Route::get('my-reservation', [MyReservationController::class, 'index'])->name('my-reservation.index');
     
     Route::resource('reservation', ReservationController::class);
     Route::post('/reservation/{reservation}/state-update', [ReservationController::class, 'reservationStateUpdate'])->name('reservation.state-update');

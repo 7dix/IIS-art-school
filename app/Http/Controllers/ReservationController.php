@@ -10,19 +10,6 @@ use Illuminate\Support\Facades\Log;
 
 class ReservationController extends Controller
 {
-    public function __construct() {
-        parent::__construct();
-
-        $this->middleware(function ($request, $next) {
-            if (!$this->user || !$this->user->can('manage_reservation')) {
-                return redirect()->route('dashboard'); // Unauthorized access
-            }
-
-            return $next($request);
-        });
-
-    }
-    
     private function transformForIndex($reservation)
     {
         return [
@@ -37,6 +24,9 @@ class ReservationController extends Controller
     }
     public function index() {
 
+        if (!$this->user->can('manage_reservation')) {
+            return redirect()->route('my-reservation.index');
+        }
         $reservations = Reservation::with(['user', 'equipment'])
             ->whereHas('equipment', function ($query) {
                 $query->where('owner_id', Auth::user()->id);

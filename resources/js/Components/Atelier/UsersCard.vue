@@ -86,6 +86,28 @@ const confirmBlock = async (selectedEquipments, removedEquipments, userId) => {
         console.error("Failed to update equipment restrictions:", error);
     }
 };
+
+
+const addUser = async (selectedUsers) => {
+    try {
+        const response = await axios.post(
+            `/ateliers/${props.atelierId}/users`,
+            { users: selectedUsers.map((user) => ({ id: user.id })) }
+        );
+        if (response.status === 200) {
+            props.users.push(...response.data.users);
+        } else {
+            console.error(response);
+        }
+    } catch (error) {
+        console.error("Failed to add users to atelier:", error);
+        console.error("Failed to update equipment restrictions:", error);
+    }
+};
+
+
+
+
 </script>
 
 <template>

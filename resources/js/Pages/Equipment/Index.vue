@@ -9,6 +9,7 @@ import EditEquipmentDialog from '@/Components/Equipment/EquipmentEditDialog.vue'
 import DeleteDialog from "@/Components/DeleteDialog.vue";
 import { Icon } from "@iconify/vue";
 import axios from 'axios';
+import { isPropertySignature } from 'typescript';
 
 
 
@@ -64,6 +65,8 @@ const confirmDelete = async (id: number) => {
 ////EDIT dialog/////
 ////////////////////
 const showDialog = ref(false);
+const errors = ref({});
+
 
 const openEditDialog = (equipment) => {
   selectedEquipment.value = { ...equipment };  // Clone equipment data to edit
@@ -71,9 +74,11 @@ const openEditDialog = (equipment) => {
 };
 
 const saveEquipment = async (updatedEquipment) => {
+  errors.value = {};  
   updatedEquipment = JSON.parse(JSON.stringify(updatedEquipment));
-  const response = await axios.put(`/api/equipment/${updatedEquipment.id}`, updatedEquipment);
-  if (response.status === 200) {
+
+  try {
+    await axios.put(`/api/equipment/${updatedEquipment.id}`, updatedEquipment);
     for (let i = 0; i < props.equipments.data.length; i++) {
         if (props.equipments.data[i].id === updatedEquipment.id) {
         props.equipments.data[i] = updatedEquipment;
@@ -88,8 +93,13 @@ const saveEquipment = async (updatedEquipment) => {
         break;
         }
     }
-    } else {
-        console.error("Failed to update Equipment:", response);
+  }
+  
+    catch (error) {
+        if (error.response && error.response.status === 422) {
+            errors.value = error.response.data.errors;
+            return {errors, updatedEquipment};
+        }
     }
  
   showDialog.value = false;
@@ -209,6 +219,7 @@ const columns: VTColumn[] = [
           :isOpen="showDialog" 
           :types="props.types"
           :ateliers="props.ateliers"
+          :errors="errors"
           @save="saveEquipment"
           @close="closeDialog" />
 

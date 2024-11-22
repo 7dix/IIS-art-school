@@ -16,6 +16,7 @@ use App\Http\Requests\UpdateUserRequest;
 // use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 
 class EquipmentController extends Controller
@@ -76,24 +77,26 @@ class EquipmentController extends Controller
 
     public function update(Request $request, $id) {
 
+
+        $equipment = Equipment::find($id);
+        $validatedData = $request->validate([
+            'name' => ['required', 'string', 'max:255', Rule::unique('equipments', 'name')->ignore($equipment->id),],
+            'maximum_leasing_period' => ['required', 'integer','min:1', 'max:90'],
+            'year_of_manufacture' => ['integer', 'nullable'],
+            'allowed_leasing_hours' => ['required','string', 'regex:/^([8-9]|1[0-8])(,([8-9]|1[0-8]))*$/'],
+            'date_of_purchase' => ['date', 'nullable'],
+            'type_id' => ['required', 'exists:types,id'],
+            'atelier_id' => ['required', 'exists:ateliers,id']
+        ]);
+
+
         $leasing_hours = $request->input('allowed_leasing_hours');
         $leasing_hours_array = explode(',', $leasing_hours);
         $leasing_hours_array = array_map('intval', $leasing_hours_array);
         $leasing_hours_json = json_encode($leasing_hours_array);
-        $request->merge(['allowed_leasing_hours' => $leasing_hours_json]);
+        $validatedData['allowed_leasing_hours'] = $leasing_hours_json;
 
-
-        $equipment = Equipment::find($id);
-        $equipment->update($request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'maximum_leasing_period' => ['required', 'integer'],
-            'year_of_manufacture' => ['integer', 'nullable'],
-            'allowed_leasing_hours' => ['required', 'json'],
-            'date_of_purchase' => ['date', 'nullable'],
-            'type_id' => ['required', 'exists:types,id'],
-            'atelier_id' => ['required', 'exists:ateliers,id']
-        ]));
-
+        $equipment->update($validatedData);
         return $this->index();
     }
 

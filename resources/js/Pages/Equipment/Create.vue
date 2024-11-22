@@ -120,8 +120,8 @@ const createEquipment = () => {
                             <div class="mb-4">
                                 <label for="room" class="block text-sm font-medium text-gray-700">Date of purchase:</label>
                                 <input type="date" id="room" v-model="form.date_of_purchase" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                                <div v-if="form.errors.date_of_purchase" class="mt-2 text-sm text-red-600"> {{ form.errors.date_of_purchase }} </div>    
                                 <div class="text-gray-600 text-xs">Correct Format: DayDay, MonthMonth, YearYearYearYear.</div>
+                                <div v-if="form.errors.date_of_purchase" class="mt-2 text-sm text-red-600"> {{ form.errors.date_of_purchase }} </div>    
 
                             </div>
                             

@@ -36,8 +36,6 @@ const props = defineProps({
 const showDialog = ref(false);
 const selectedAtelier = ref(null);
 
-
-
 const openEditDialog = (atelier) => {
   selectedAtelier.value = { ...atelier };  // Clone atelier data to edit
   showDialog.value = true;

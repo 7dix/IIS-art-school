@@ -5,12 +5,15 @@
         <hr class="mb-4" />
         <form @submit.prevent="save">
           <div class="mb-4">
-            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+            <label for="name" class="block text-sm font-medium text-gray-700">*Name</label>
             <input type="text" id="name" v-model="editableAtelier.name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"/>
+            <div v-if="errors.name" class="mt-2 text-sm text-red-600"> {{ errors.name }} </div>
           </div>
           <div class="mb-4">
-            <label for="room" class="block text-sm font-medium text-gray-700">Room:</label>
+            <label for="room" class="block text-sm font-medium text-gray-700">/Room:</label>
             <input type="text" id="room" v-model="editableAtelier.room" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"/>
+            <div class="text-gray-600 text-xs">Correct Format: Capital letter followed by exactly 3 numbers</div>
+            <div v-if="errors.room" class="mt-2 text-sm text-red-600"> {{ errors.room }} </div>
           </div>
           <div class="mb-4">
             <label for="manager" class="block text-sm font-medium text-gray-700">Manager:</label>
@@ -19,6 +22,8 @@
                 {{ user.name }}
               </option>
             </select>
+            <div v-if="errors.manager_id" class="mt-2 text-sm text-red-600"> {{ errors.manager_id }} </div>
+
           </div>
           
           <div class="flex justify-between">
@@ -40,6 +45,7 @@
   const props = defineProps<{
     atelier: any,
     managers: any[] | any,
+    errors: any,
     isOpen: boolean;
     types: { data: Array<{ id: number; name: string }> };
     users: { data: Array<{ id: number; name: string; }> };

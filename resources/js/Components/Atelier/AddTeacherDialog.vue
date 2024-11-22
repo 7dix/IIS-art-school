@@ -1,5 +1,5 @@
-<script setup>
-import { ref } from "vue";
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted } from "vue";
 import {
     AlertDialog,
     AlertDialogTrigger,
@@ -55,6 +55,21 @@ const handleConfirm = () => {
 const handleCancel = () => {
     isDialogOpen.value = false;
 };
+
+const handleKeydown = (event: KeyboardEvent) => {
+    if (event.key === 'Escape' && isDialogOpen.value) {
+        handleCancel();
+    }
+  };
+
+  onMounted(() => {
+        document.addEventListener('keydown', handleKeydown);
+    
+    });
+  
+  onUnmounted(() => {
+    document.removeEventListener('keydown', handleKeydown);
+  });
 
 defineExpose({ openDialog });
 </script>

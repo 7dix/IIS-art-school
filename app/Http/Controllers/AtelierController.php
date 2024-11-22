@@ -12,6 +12,7 @@ use App\Models\Type;
 use Illuminate\Container\Attributes\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class AtelierController extends Controller
 {
@@ -56,10 +57,6 @@ class AtelierController extends Controller
     }
 
     public function create() {
-        $user = auth()->user();
-        if (!$user->hasRole('admin')) {
-            return redirect()->route('dashboard')->with('error', 'You are not authorized to view this page');
-        }
 
         $users = UserResource::collection(User::all());
 
@@ -67,19 +64,29 @@ class AtelierController extends Controller
     }
 
     public function store(Request $request) {
-        $user = auth()->user();
-        if (!$user->hasRole('admin')) {
-            return redirect()->route('dashboard')->with('error', 'You are not authorized to view this page');
-        }
-
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'room' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:ateliers,name'],
+            'room' => ['required', 'string', 'max:255', 'unique:ateliers,room', 'regex:/^([A-Z]{1}[0-9]{3})$/'],
             'manager_id' => ['required', 'exists:users,id'],
         ]);
 
         $atelier = Atelier::create($validated);
        
+        return $this->index();
+    }
+
+    public function update(Request $request, $id) {
+        $atelier = Atelier::find($id);
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255', Rule::unique('ateliers', 'name')->ignore($atelier->id),],
+            'room' => ['required', 'string', 'max:255', Rule::unique('ateliers', 'room')->ignore($atelier->id), 'regex:/^([A-Z]{1}[0-9]{3})$/'],
+            'manager_id' => ['required', 'exists:users,id'],
+        ]);
+
+        $atelier->update($validated);
+
+
         return $this->index();
     }
 
@@ -166,21 +173,6 @@ class AtelierController extends Controller
         return response()->json(['message' => 'Teacher role removed successfully.', 'user' => $user]);
     }
 
-
-    public function update(Request $request, $id) {
-        $atelier = Atelier::find($id);
-
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'room' => ['required', 'string', 'max:255'],
-            'manager_id' => ['required', 'exists:users,id'],
-        ]);
-
-        $atelier->update($validated);
-
-
-        return $this->index();
-    }
     public function addTeachers(Request $request, $atelierId) {
         
         $atelier = Atelier::findOrFail($atelierId);

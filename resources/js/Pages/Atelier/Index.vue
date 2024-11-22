@@ -35,33 +35,38 @@ const props = defineProps({
 ////////////////////
 const showDialog = ref(false);
 const selectedAtelier = ref(null);
+const errors = ref({});
+
 
 const openEditDialog = (atelier) => {
-  selectedAtelier.value = { ...atelier };  // Clone atelier data to edit
-  showDialog.value = true;
+    selectedAtelier.value = { ...atelier };  // Clone atelier data to edit
+    showDialog.value = true;
 };
 
 const saveAtelier = async (updatedAtelier) => {
-  updatedAtelier = JSON.parse(JSON.stringify(updatedAtelier));
-  const response = await axios.put(`/api/atelier/${updatedAtelier.id}`, updatedAtelier);
-  if (response.status === 200) {
-    for (let i = 0; i < props.ateliers.data.length; i++) {
-        if (props.ateliers.data[i].id === updatedAtelier.id) {
-        props.ateliers.data[i] = updatedAtelier;
-        props.ateliers.data[i].manager = props.users.data.find(user => user.id === updatedAtelier.manager_id);
+    errors.value = {};
+    updatedAtelier = JSON.parse(JSON.stringify(updatedAtelier));
 
-        break;
-        }
-    }
-    } else {
-        console.error("Failed to update type:", response);
-    }
- 
-  showDialog.value = false;
+    try {
+        await axios.put(`/api/atelier/${updatedAtelier.id}`, updatedAtelier);
+            for (let i = 0; i < props.ateliers.data.length; i++) {
+                if (props.ateliers.data[i].id === updatedAtelier.id) {
+                props.ateliers.data[i] = updatedAtelier;
+                props.ateliers.data[i].manager = props.users.data.find(user => user.id === updatedAtelier.manager_id);
+
+                break;
+                }
+            }
+        } catch (error) {
+            errors.value = error.response.data.errors;
+            return;
+        }  
+    
+    showDialog.value = false;
 };
 
 const closeDialog = () => {
-  showDialog.value = false;
+    showDialog.value = false;
 };
 
 
@@ -174,6 +179,7 @@ const columns: VTColumn[] = [
           :isOpen="showDialog" 
           :types="props.types"
           :users="props.users"
+          :errors="errors"
           @save="saveAtelier" 
           @close="closeDialog"
         />

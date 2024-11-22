@@ -87,7 +87,7 @@ defineExpose({ openDialog });
         </AlertDialogTrigger>
         <AlertDialogContent>
             <AlertDialogHeader>
-                <AlertDialogTitle>Block Equipment for everyone</AlertDialogTitle>
+                <AlertDialogTitle>Equipment can be borrowed by everyone:</AlertDialogTitle>
             </AlertDialogHeader>
             <AlertDialogDescription>
 

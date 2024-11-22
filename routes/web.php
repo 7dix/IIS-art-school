@@ -59,7 +59,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/types/create', [TypeController::class, 'create'])->name('types.create');
     Route::resource('types', TypeController::class);
-    Route::get('/api/types/{type}/user-equipment', action: [EquipmentController::class, 'getUserEquipmentByType']);
+    Route::get('/api/types/{type}/user-equipment', action: [MyReservationController::class, 'getUserEquipmentByType']);
     Route::get('/api/ateliers/{atelier}/equipment', [AtelierController::class, 'getEquipment']);
     Route::get('/api/ateliers/{atelier}/users/{user}/restricted-equipment', [AtelierController::class, 'getRestrictedEquipment']);    //Api routes
     

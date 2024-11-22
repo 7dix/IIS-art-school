@@ -123,28 +123,10 @@ class EquipmentController extends Controller
         return;
     }
 
-
     public function destroy($id) {
         Equipment::destroy($id);
 
         return $this->index();
-    }
-
-    public function getUserEquipmentByType($typeId)
-    {
-        $user = Auth::user();
-        $ateliers = $user->ateliers->pluck('id'); // Get the IDs of the user's ateliers
-    
-        $equipment = Equipment::with(['atelier', 'owner']) // Include atelier and owner relationships
-            ->where('type_id', $typeId)
-            ->whereIn('atelier_id', $ateliers)
-            ->where('can_be_borrowed', true)
-            ->whereDoesntHave('restrictions', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })
-            ->get();
-    
-        return response()->json($equipment);
     }
 
     public function getEquipmentById($id) {

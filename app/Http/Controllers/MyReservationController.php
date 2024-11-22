@@ -8,6 +8,8 @@ use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use App\Models\Equipment;
+
 
 
 class MyReservationController extends Controller
@@ -84,4 +86,25 @@ class MyReservationController extends Controller
 
         return redirect()->route('my-reservation.index')->with('success', 'Reservation created successfully.');
     }
+
+    public function getUserEquipmentByType($typeId)
+    {
+        $user = Auth::user();
+        $ateliers = $user->ateliers->pluck('id'); // Get the IDs of the user's ateliers
+    
+        $equipment = Equipment::with(['atelier', 'owner']) // Include atelier and owner relationships
+            ->where('type_id', $typeId)
+            ->whereIn('atelier_id', $ateliers)
+            ->where('can_be_borrowed', true)
+            ->whereDoesntHave('restrictions', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->get();
+    
+        return response()->json($equipment);
+    }
+
+
+
+
 }

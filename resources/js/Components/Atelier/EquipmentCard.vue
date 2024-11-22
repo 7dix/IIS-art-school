@@ -4,6 +4,8 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/Components/ui/card";
 import { Button } from "@/Components/ui/button";
 import { Icon } from "@iconify/vue";
 import axios from "axios";
+import BlockDialogE from "@/Components/Atelier/BlockDialogE.vue";
+
 
 const props = defineProps({
     title: {
@@ -24,15 +26,11 @@ const props = defineProps({
     },
 });
 
-const addDialogRef = ref(null);
+
+///////////////////
+///BORROW BUTTON///
+///////////////////	
 const restrictedEquipmentIds = ref([]);
-
-const openAddDialog = () => {
-    if (addDialogRef.value) {
-        addDialogRef.value.openDialog();
-    }
-};
-
 const borrowEquipment = (equipment) => {
     console.log("Borrowing equipment:", equipment.name);
     window.location.href = route('my-reservation.create', { type_id: equipment.type_id, equipment_id: equipment.id });
@@ -53,6 +51,29 @@ const fetchRestrictedEquipments = async () => {
 onMounted(() => {
     fetchRestrictedEquipments();
 });
+
+////////////////////
+///BLOCK DIALOG/////
+////////////////////
+const blockDialogRef = ref(null);
+
+const openBlockDialog = (item) => {
+    if (blockDialogRef.value) {
+        blockDialogRef.value.openDialog(item.id);
+    }
+};
+
+
+const confirmBlock = async (selectedEquipment) => {
+    try {
+        await axios.put(`/api/block-equipment/${selectedEquipment.id}/${selectedEquipment.can_be_borrowed == false ? 0 : 1}`, selectedEquipment);
+        props.equipments.data[props.equipments.data.findIndex((equipment) => equipment.id === selectedEquipment.id)].can_be_borrowed = selectedEquipment.can_be_borrowed;   
+    }
+    catch (error) {
+        console.error("Failed to update equipment restrictions:", error);
+    }
+};
+
 </script>
 
 <template>
@@ -76,13 +97,24 @@ onMounted(() => {
                     <span>{{ equipment.name + " (" + equipment.type_name + ")" }}</span>
                     <Button
                         @click="borrowEquipment(equipment)"
-                        :disabled="restrictedEquipmentIds.includes(equipment.id)"
+                        :disabled="restrictedEquipmentIds.includes(equipment.id) || !equipment.can_be_borrowed"
                         class="bg-green-500 disabled:bg-gray-500 text-white hover:bg-yellow-700 w-10 h-10 flex items-center justify-center"
                     >
                         <Icon icon="dashicons:hammer" class="w-5 h-5" />
+                    </Button>
+
+                    <Button
+                            v-if="$page.props.auth.user.permissions.includes('restrict_equipment')"
+                            @click="openBlockDialog(equipment)"
+                            class="bg-yellow-500 text-white hover:bg-yellow-700 w-10 h-10 flex items-center justify-center"
+                        >
+                            <Icon icon="material-symbols:block" class="w-5 h-5" />
                     </Button>
                 </li>
             </ul>
         </CardContent>
     </Card>
+
+    <BlockDialogE ref="blockDialogRef" :onConfirm="confirmBlock" :atelierId="props.atelierId"/>
+
 </template>

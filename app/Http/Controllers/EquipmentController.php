@@ -115,11 +115,16 @@ class EquipmentController extends Controller
         return $this->index();
     }
 
+    public function blockEquipment($id, $value) {
+        $equipment = Equipment::find($id);
+        $equipment->can_be_borrowed = $value;
+
+        $equipment->update();
+        return;
+    }
+
 
     public function destroy($id) {
-        /** @var \App\Models\User */
-        $user = Auth::user();
-
         Equipment::destroy($id);
 
         return $this->index();
@@ -133,11 +138,17 @@ class EquipmentController extends Controller
         $equipment = Equipment::with(['atelier', 'owner']) // Include atelier and owner relationships
             ->where('type_id', $typeId)
             ->whereIn('atelier_id', $ateliers)
+            ->where('can_be_borrowed', true)
             ->whereDoesntHave('restrictions', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
             ->get();
     
+        return response()->json($equipment);
+    }
+
+    public function getEquipmentById($id) {
+        $equipment = Equipment::find($id);
         return response()->json($equipment);
     }
 

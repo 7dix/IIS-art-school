@@ -196,7 +196,7 @@ class AtelierController extends Controller
     public function getEquipment($atelierId)
     {
         $atelier = Atelier::findOrFail($atelierId);
-        $equipments = EquipmentResource::collection($atelier->equipments);
+        $equipments = EquipmentResource::collection($atelier->equipments->where('can_be_borrowed', true));
         return $equipments;
     }
 

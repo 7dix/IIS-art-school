@@ -71,6 +71,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/api/user/{id}', [UserController::class, 'update']);
     Route::put('/api/type/{id}', [TypeController::class, 'update']);
     Route::put('/api/equipment/{id}', [EquipmentController::class, 'update']);
+    Route::get('/api/get-equipment/{id}', [EquipmentController::class, 'getEquipmentById']);
+    Route::put('/api/block-equipment/{id}/{value}', [EquipmentController::class, 'blockEquipment']);
     Route::put('/api/atelier/{id}', [AtelierController::class, 'update']);
     Route::get('/api/getAteliersWithType/{id}', [AtelierController::class, 'getAteliersWithType']);
 });

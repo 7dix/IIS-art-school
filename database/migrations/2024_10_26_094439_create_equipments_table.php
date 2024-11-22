@@ -27,7 +27,6 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->timestamps();
             $table->boolean('can_be_borrowed')->default(true);
-            $table->boolean('is_borrowed')->default(true);
         });
     }
 

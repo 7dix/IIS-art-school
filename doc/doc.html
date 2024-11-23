@@ -1,194 +1,96 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html>
-    <head>
-        <meta
-            http-equiv="content-type"
-            content="text/html; charset=ISO-8859-2"
-        />
-        <title>Projekt IIS</title>
-        <style type="text/css">
-            table {
-                border-collapse: collapse;
-            }
-            td,
-            th {
-                border: 1px solid black;
-                padding: 0.3em 0.5em;
-                text-align: left;
-            }
-            dt {
-                font-weight: bold;
-                margin-top: 0.5em;
-            }
-        </style>
-    </head>
-    <body>
-        <!-- Zkontrolujte prosďż˝m nastavenďż˝ kďż˝dovďż˝nďż˝ v hlaviďż˝ce dokumentu 
-     podle pouďż˝itďż˝ho editoru -->
+<html><head>
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-2">
+    <title>Projekt IIS</title>
+    <style type="text/css">
+    	table { border-collapse: collapse; }
+    	td, th { border: 1px solid black; padding: 0.3em 0.5em; text-align: left; }
+    	dt { font-weight: bold; margin-top: 0.5em; }
+    </style>
+</head>
+<body>
 
-        <h1>Umďż˝leckďż˝ ďż˝kola</h1>
-        <!-- Nahradte nďż˝zvem svďż˝ho zadďż˝nďż˝ -->
+<!-- Zkontrolujte prosím nastavení kódování v hlavičce dokumentu 
+     podle použitého editoru -->
 
-        <dl>
-            <dt>Autoďż˝i</dt>
-            <dd>
-                Marek Tenora
-                <!-- Nahraďż˝te skuteďż˝nďż˝m jmďż˝nem a e-mailem autora a popisem ďż˝innosti -->
-                <a href="mailto:xtenor02@stud.fit.vutbr.cz"
-                    >xtenor02@stud.fit.vutbr.cz</a
-                >
-                - Sprďż˝va profilu, rezervace a spravovďż˝nďż˝ rezervacďż˝. Naplnďż˝nďż˝
-                databďż˝ze. Nasazenďż˝ na server, vďż˝bďż˝r a instalace technologiďż˝.
-            </dd>
-            <dd>
-                Natďż˝lia Sobihardovďż˝
-                <!-- Nahraďż˝te skuteďż˝nďż˝m jmďż˝nem a e-mailem autora a popisem ďż˝innosti -->
-                <a href="mailto:xsobih00@stud.fit.vutbr.cz"
-                    >xsobih00@stud.fit.vutbr.cz</a
-                >
-                - Tabulka typďż˝, Detail ateliďż˝ru a jeho funkce, vytvďż˝ďż˝enďż˝
-                rezervacďż˝, strďż˝nka Moje rezervace, dokumentace.
-            </dd>
-            <dd>
-                Petr ďż˝tancl
-                <!-- Nahraďż˝te skuteďż˝nďż˝m jmďż˝nem a e-mailem autora a popisem ďż˝innosti -->
-                <a href="mailto:xstanc12@stud.fit.vutbr.cz"
-                    >xstanc12@stud.fit.vutbr.cz</a
-                >
-                - Tabulka uďż˝ivatelďż˝ a zaďż˝ďż˝zenďż˝. Vytvďż˝ďż˝enďż˝ ateliďż˝rďż˝, zaďż˝ďż˝zenďż˝,
-                typďż˝. Editaďż˝nďż˝ dialogy. Logika rolďż˝ a povolenďż˝. Blokace
-                uďż˝ivatele na konkrďż˝tnďż˝ zaďż˝ďż˝zenďż˝, blokace zaďż˝ďż˝zenďż˝ celkovďż˝.
-            </dd>
-            <dt>URL aplikace</dt>
-            <dd>
-                <a href="https://iis.olivebranch.cz/"
-                    >https://iis.olivebranch.cz/</a
-                >
-            </dd>
-        </dl>
+<h1>Umělecká škola</h1> <!-- Nahradte názvem svého zadání -->
 
-        <h2>Uďż˝ivatelďż˝ systďż˝mu pro testovďż˝nďż˝</h2>
-        <p>
-            Uveďż˝te prosďż˝m existujďż˝cďż˝ zďż˝stupce
-            <strong>vďż˝ech rolďż˝ uďż˝ivatelďż˝</strong>.
-        </p>
-        <table>
-            <tbody>
-                <tr>
-                    <th>Login</th>
-                    <th>Heslo</th>
-                    <th>Role</th>
-                </tr>
-                <tr>
-                    <td>admin@IIS.com</td>
-                    <td>admin</td>
-                    <td>Administrďż˝tor</td>
-                </tr>
-                <tr>
-                    <td>user@IIS.com</td>
-                    <td>user</td>
-                    <td>Uďż˝ivatel</td>
-                </tr>
-                <tr>
-                    <td>manager@IIS.com</td>
-                    <td>manager</td>
-                    <td>
-                        Sprďż˝vce ateliďż˝ru (zďż˝kladnďż˝ mďż˝ roli uďż˝ivatele, ale
-                        jakmile jej nastavďż˝te u ateliďż˝ru sprďż˝vcem, zďż˝skďż˝ vyďż˝ďż˝
-                        prďż˝va)
-                    </td>
-                </tr>
-                <tr>
-                    <td>teacher@IIS.com</td>
-                    <td>teacher</td>
-                    <td>
-                        Uďż˝itel v ateliďż˝ru (zďż˝kladnďż˝ mďż˝ roli uďż˝ivatele, ale
-                        jakmile jej nastavďż˝te v nďż˝jakďż˝m ateliďż˝ru uďż˝itelem, zďż˝skďż˝
-                        vyďż˝ďż˝ prďż˝va)
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+<dl>
+	<dt>Autoři</dt>
+	<dd>Marek Tenora <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xtenor02@stud.fit.vutbr.cz">xtenor02@stud.fit.vutbr.cz</a> -
+		Správa profilu, rezervace a spravování rezervací. Naplnění databáze. Nasazení na server, výběr a instalace technologií. Video.
+	</dd>
+	<dd>Natália Sobihardová <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xsobih00@stud.fit.vutbr.cz">xsobih00@stud.fit.vutbr.cz</a> - 
+		Tabulka typů, Detail ateliéru a jeho funkce, vytváření rezervací, přehled uživatelových rezervací, dokumentace.
+	</dd>
+  <dd>Petr Štancl <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xstanc12@stud.fit.vutbr.cz">xstanc12@stud.fit.vutbr.cz</a> - 
+		Tabulka uživatelů a zařízení. Vytváření ateliérů, zařízení, typů. Editační dialogy. Logika rolí a povolení. Blokace uživatele na konkrétní zařízení, blokace zařízení celkově.
+	</dd>
+	<dt>URL aplikace</dt>
+	<dd><a href="https://iis.olivebranch.cz/">https://iis.olivebranch.cz/</a></dd>
+</dl>
 
-        <h3>Video</h3>
+<h2>Uživatelé systému pro testování</h2>
+<p>Uveďte prosím existující zástupce <strong>všech rolí uživatelů</strong>.</p>
+<table>
+<tbody><tr><th>Login</th><th>Heslo</th><th>Role</th></tr>
+<tr><td>admin@IIS.com</td><td>admin</td><td>Administrátor</td></tr>
+<tr><td>user@IIS.com</td><td>user</td><td>Uživatel</td></tr>
+<tr><td>manager@IIS.com</td><td>manager</td><td>Správce ateliéru (základně má roli uživatele, ale jakmile jej nastavíte u ateliéru správcem, získá vyší práva)</td></tr>
+<tr><td>teacher@IIS.com</td><td>teacher</td><td>Učitel v ateliéru (základně má roli uživatele, ale jakmile jej nastavíte v nějakém ateliéru učitelem, získá vyší práva)</td></tr>
+</tbody></table>
 
-        <p>
-            Pďż˝iloďż˝te odkaz na komentovanďż˝ video demostrujďż˝cďż˝ pouďż˝itďż˝
-            informaďż˝nďż˝ho systďż˝mu. Zamďż˝ďż˝te se na pďż˝ďż˝pady uďż˝itďż˝ definovanďż˝ zadďż˝nďż˝m
-            (napďż˝. registrace uďż˝ivatele, sprďż˝va uďż˝ivatelďż˝ a ďż˝innosti
-            jednotlivďż˝ch rolďż˝). Video nahrajte napďż˝ďż˝klad na VUT Google Drive,
-            kde ho bude moďż˝nďż˝ pďż˝ďż˝mo spustit z odkazu.
-        </p>
 
-        <h2>Implementace</h2>
-        <ul>
-            <li>
-                AtelierController.php - view na ateliďż˝ry. Zobrazenďż˝ pďż˝ehledu a
-                detailu ateliďż˝rďż˝, editace ateliďż˝ru, tvorba ateliďż˝ru, smazďż˝nďż˝
-                ateliďż˝ru, pďż˝idďż˝nďż˝/odebrďż˝nďż˝ uďż˝ivatele do ateliďż˝ru,
-                pďż˝idďż˝nďż˝/odebrďż˝nďż˝ uďż˝itele do ateliďż˝ru.
-            </li>
-            <li>
-                EquipmentController.php - view na zaďż˝ďż˝zenďż˝. Zobrazenďż˝ pďż˝ehledu
-                zaďż˝ďż˝zenďż˝, editace zaďż˝ďż˝zenďż˝, tvorba zaďż˝ďż˝zenďż˝, smazďż˝nďż˝ zaďż˝ďż˝zenďż˝.
-            </li>
-            <li>
-                MyReservationController.php - view na uďż˝ivatelovi rezervace.
-                Zobrazenďż˝ uďż˝ivatelovďż˝ch rezervacďż˝ a jejich detail, tvorba
-                rezervacďż˝.
-            </li>
-            <li>
-                ProfileController.php - view na sprďż˝vu profilu uďż˝ivatele. Zmďż˝na
-                ďż˝dajďż˝, zmďż˝na hesla, smazďż˝nďż˝ ďż˝ďż˝tu.
-            </li>
-            <li>
-                ReservationController.php - view na sprďż˝vu pďż˝ďż˝chozďż˝ch rezervacďż˝.
-                Zobrazenďż˝ pďż˝ehledu a detailu pďż˝ďż˝chozďż˝ch rezervacďż˝, zmďż˝na stavu
-                rezervace.
-            </li>
-            <li>
-                TypeController.php - view na typy zaďż˝ďż˝zenďż˝. Zobrazenďż˝ pďż˝ehledu
-                typďż˝, editace typu, pďż˝idďż˝nďż˝ typu, smazďż˝nďż˝ typu.
-            </li>
-            <li>
-                UserController.php - view na uďż˝ivatele. Zobrazenďż˝ pďż˝ehledu
-                uďż˝ivatelďż˝, editace uďż˝ivatele, smazďż˝nďż˝ uďż˝ivatele.
-            </li>
-        </ul>
+<h3>Video</h3>
 
-        Uďż˝ivatel - Mďż˝ pďż˝ďż˝stup k strďż˝nkďż˝m: "My Reservations", "Ateliers".<br />
-        Uďż˝itel - Mďż˝ pďż˝ďż˝stup k strďż˝nkďż˝m: "My Reservations", "Manage
-        Reservations", "Ateliers", "Equipments".<br />
-        Sprďż˝vce ateliďż˝ru - Mďż˝ pďż˝ďż˝stup k strďż˝nkďż˝m: "My Reservations", "Ateliers",
-        "Types".<br />
-        Administrďż˝tor - Mďż˝ pďż˝ďż˝stup k strďż˝nkďż˝m: "My Reservations", "Manage
-        Reservation", "Ateliers", "Types", "Equipments".<br />
-        <h3>Databďż˝ze</h3>
+<p>Přiložte odkaz na komentované video demostrující použití informačního
+ systému. Zaměřte se na případy užití definované zadáním (např. 
+registrace uživatele, správa uživatelů a činnosti jednotlivých rolí). 
+Video nahrajte například na VUT Google Drive, kde ho bude možné přímo 
+spustit z odkazu.</p> 
 
-        Zde vloďż˝te grafickďż˝ schďż˝ma relaďż˝nďż˝ databďż˝ze (tabulek v databďż˝zi).
+<h2>Implementace</h2>
+<ul>
+	<li> AtelierController.php - view na ateliéry. Zobrazení přehledu a detailu ateliérů, editace ateliéru, tvorba ateliéru, smazání ateliéru, přidání/odebrání uživatele do ateliéru, přidání/odebrání učitele do ateliéru. </li>
+	<li> EquipmentController.php - view na zařízení. Zobrazení přehledu zařízení, editace zařízení, tvorba zařízení, smazání zařízení. </li> 
+	<li> MyReservationController.php - view na uživatelovi rezervace. Zobrazení uživatelových rezervací a jejich detail, tvorba rezervací. </li> 
+	<li> ProfileController.php - view na správu profilu uživatele. Změna údajů, změna hesla, smazání účtu. </li> 
+	<li> ReservationController.php - view na správu příchozích rezervací. Zobrazení přehledu a detailu příchozích rezervací, změna stavu rezervace.</li> 
+	<li> TypeController.php - view na typy zařízení. Zobrazení přehledu typů, editace typu, přidání typu, smazání typu. </li> 
+	<li> UserController.php - view na uživatele. Zobrazení přehledu uživatelů, editace uživatele, smazání uživatele. </li> 
+</ul>
 
-        <h2>Instalace</h2>
+Uživatel - Má přístup k stránkám: "My Reservations", "Ateliers".<br>
+Učitel - Má přístup k stránkám: "My Reservations", "Manage Reservations", "Ateliers", "Equipments".<br>
+Správce ateliéru - Má přístup k stránkám: "My Reservations", "Ateliers", "Types".<br>
+Administrátor - Má přístup k stránkám: "My Reservations", "Manage Reservation", "Ateliers", "Types", "Equipments".<br>
+<h3>Databáze</h3>
 
-        Struďż˝nďż˝ popiďż˝te:
-        <ul>
-            <li>postup instalace na server,</li>
-            <li>softwarovďż˝ poďż˝adavky (verze PHP apod.),</li>
-            <li>jak rozbalit, konfigurovat, inicializovat databďż˝zi, ...</li>
-            <li>
-                K tvorbďż˝ databďż˝ze je potďż˝eba v MySQL provďż˝st jedinďż˝ pďż˝ďż˝kaz a to
-                "CREATE DATABASE iis;". Potďż˝ se pomocďż˝ pďż˝ďż˝kazu "php artisan
-                migrate:fresh --seed" vytvoďż˝ďż˝ tabulky a naplnďż˝ se ukďż˝zkovďż˝mi
-                datami.
-            </li>
-            <li></li>
-        </ul>
+Zde vložte grafické schéma relační databáze (tabulek v databázi).
 
-        <h2>Znďż˝mďż˝ problďż˝my</h2>
-        <p>
-            Zde popiďż˝te, kterďż˝ body zadďż˝nďż˝ nejsou implementovďż˝ny a z jakďż˝ho
-            dďż˝vodu. Napďż˝. &#8222;Z ďż˝asovďż˝ch dďż˝vodďż˝ nebyla implementovďż˝na sprďż˝va
-            uďż˝ivatelďż˝.&#8221; Pomďż˝ďż˝ete tďż˝m zrychlit hodnocenďż˝, kdyďż˝
-            neimplementovanďż˝ funkce nebudeme muset dlouze hledat.
-        </p>
-    </body>
-</html>
+<h2>Instalace</h2>
+
+Stručně popište: 
+<ul>
+<li>postup instalace na server,</li>
+<li>softwarové požadavky (verze PHP apod.),</li>
+<li>jak rozbalit, konfigurovat, inicializovat databázi, ...</li>
+<li>K tvorbě databáze je potřeba v MySQL provést jediný příkaz a to "CREATE DATABASE iis;". Poté se pomocí příkazu "php artisan migrate:fresh --seed" vytvoří tabulky a naplní se ukázkovými datami.<li>
+
+
+
+
+</ul>
+
+<h2>Známé problémy</h2>
+<p>Zde popište, které body zadání nejsou implementovány a z jakého 
+důvodu. Např. &#8222;Z časových důvodů nebyla implementována správa 
+uživatelů.&#8221; Pomůžete tím zrychlit hodnocení, když neimplementované 
+funkce nebudeme muset dlouze hledat.</p>
+
+
+
+</body></html>

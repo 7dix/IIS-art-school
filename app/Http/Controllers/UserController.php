@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
 use App\Http\Resources\RoleResource;
+use App\Http\Resources\AtelierResource;
 use App\Models\User;
 use App\Models\Role;
 use App\Http\Requests\UpdateUserRequest;
@@ -50,4 +51,23 @@ class UserController extends Controller
 
         return $this->index();
     }
+
+    public function destroy($id) {
+
+        $user = User::find($id);
+        if ($user->isManager()) {
+            $ateliers = AtelierResource::collection($user->managedAteliers());
+            $string = "";
+            foreach ($ateliers as $atelier) {
+                $string .= $atelier->name . ", ";
+            }
+            $string = rtrim($string, ", ");
+
+            return response()->json(['message' => "Manager cannot be deleted. Managed Ateliers: ".$string], 403);        }
+        else {
+            User::destroy($id); 
+            return response()->json(['message' => 'User deleted.'], 200);
+        }        
+    }
+
 }

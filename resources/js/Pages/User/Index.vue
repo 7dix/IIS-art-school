@@ -6,6 +6,8 @@ import Table from '@/Components/Table.vue';
 import { h, ref } from "vue";
 import { Button } from '@/Components/ui/button'
 import EditUserDialog from '@/Components/User/UserEditDialog.vue';
+import DeleteDialog from "@/Components/User/UserDeleteDialog.vue";
+import { Icon } from "@iconify/vue";
 import axios from 'axios';
 
 const props = defineProps({
@@ -52,6 +54,41 @@ const closeDialog = () => {
   showDialog.value = false;
 };
 
+
+////////////////////
+////DELETE DIALOG/////
+////////////////////
+const showDeleteDialog = ref(false);
+const errors = ref({});
+
+const openDeleteDialog = (item) => {
+    selectedUser.value = item;
+    showDeleteDialog.value = true;
+};
+
+const confirmDelete = async (user_id) => {
+    errors.value = {};
+    try {
+        await axios.post(`/api/userDelete/${user_id}`);
+    
+        props.users.data.splice(
+            props.users.data.findIndex((item) => item.id === user_id),
+            1
+        );
+        
+        showDeleteDialog.value = false
+    } catch (error) {
+        errors.value = error.response.data;
+        return;
+    } 
+  };
+
+const closeDeleteDialog = () => {
+    showDeleteDialog.value = false; 
+    errors.value = {};
+};
+
+
 ////////////////////
 ////TABLE/////
 ////////////////////
@@ -85,14 +122,30 @@ const columns: VTColumn[] = [
         "key": "actions",
         "header": "Actions",
         renderAs: (item) => {
-            return h(
+            return h("div", {}, [ 
+            h(
                 Button,
                 {
                     onClick: () => openEditDialog(item),
                     class: 'bg-blue-500 text-white'
                 },
                 'Edit'
-            );
+            ),
+            h(
+                    Button,
+                    {
+                        onClick: () => {
+                            openDeleteDialog(item);
+                        },
+                        class: "bg-red-500 text-white hover:bg-red-700 ml-2",
+
+                    },
+                    h(Icon, {
+                        icon: "material-symbols:delete",
+                        class: "w-5 h-5",
+                    })
+                ),
+            ]);
         },
     }
 ]
@@ -120,17 +173,25 @@ const columns: VTColumn[] = [
                 </div>
             </div>
         </div>
+
+
+        <DeleteDialog 
+            v-if="showDeleteDialog" 
+            :isOpen="showDeleteDialog"
+            :user="selectedUser"
+            :errors="errors" 
+            @save="confirmDelete" 
+            @close="closeDeleteDialog" 
+            />
+        <!-- Edit Dialog -->
+        <EditUserDialog 
+                v-if="showDialog" 
+                :user="selectedUser" 
+                :isOpen="showDialog" 
+                :roles="props.roles"
+                @save="saveUser" 
+                @close="closeDialog"
+                />
+
     </AuthenticatedLayout>
-
-
-     <!-- Edit Dialog -->
-     <EditUserDialog 
-          v-if="showDialog" 
-          :user="selectedUser" 
-          :isOpen="showDialog" 
-          :roles="props.roles"
-          @save="saveUser" 
-          @close="closeDialog"
-        />
-
 </template>

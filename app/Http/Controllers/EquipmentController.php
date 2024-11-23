@@ -80,7 +80,7 @@ class EquipmentController extends Controller
         $leasing_hours_array = array_map('intval', $leasing_hours_array);
         $leasing_hours_json = json_encode($leasing_hours_array);
         $validatedData['allowed_leasing_hours'] = $leasing_hours_json;
-
+        
         $user = Auth::user();
         $validatedData['owner_id'] = $user->id;
 

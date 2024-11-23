@@ -7,6 +7,7 @@ import { h, ref, toRaw, reactive } from "vue";
 import { Button } from "@/Components/ui/button";
 import { Icon } from "@iconify/vue";
 import EditAtelierDialog from '@/Components/Atelier/AtelierEditDialog.vue';
+import DeleteDialog from "@/Components/DeleteDialog.vue";
 import axios from 'axios';
 
 
@@ -69,6 +70,34 @@ const closeDialog = () => {
     showDialog.value = false;
 };
 
+////////////////////
+////DELETE DIALOG/////
+////////////////////
+const deleteDialogRef = ref(null);
+
+const openDeleteDialog = (item) => {
+    selectedAtelier.value = item;
+    if (deleteDialogRef.value) {
+        deleteDialogRef.value.openDialog(item.id);
+    }
+};
+
+const confirmDelete = async (id: number) => {
+    if (id) {
+        const response = await axios.delete(route("atelier.destroy", id));
+        if (response.status === 200) {
+            props.ateliers.data.splice(
+                props.ateliers.data.findIndex((item) => item.id === id),
+                1
+            );
+        } else {
+            console.error(response);
+        }
+    }
+    return { confirmDelete };
+};
+
+
 
 ////////////////////
 ////TABLE/////
@@ -88,7 +117,7 @@ const columns: VTColumn[] = [
         renderAs: (item) => {
             return h(
                 "span",
-                item.manager.name
+                item.manager?.name
             );
         },
     },
@@ -148,6 +177,20 @@ const columns: VTColumn[] = [
                         },
                         'Edit'
                     ),
+                props.role == 'admin' && h(
+                    Button,
+                    {
+                        onClick: () => {
+                            openDeleteDialog(item);
+                        },
+                        class: "bg-red-500 text-white hover:bg-red-700 ml-2",
+
+                    },
+                    h(Icon, {
+                        icon: "material-symbols:delete",
+                        class: "w-5 h-5",
+                    })
+                ),
                 
                 ]
             );
@@ -198,5 +241,7 @@ const columns: VTColumn[] = [
           @save="saveAtelier" 
           @close="closeDialog"
         />
+        <DeleteDialog ref="deleteDialogRef" :onConfirm="confirmDelete" />
+
     </AuthenticatedLayout>
 </template>

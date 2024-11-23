@@ -71,6 +71,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/get-equipment/{id}', [EquipmentController::class, 'getEquipmentById']);
     Route::put('/api/block-equipment/{id}/{value}', [EquipmentController::class, 'blockEquipment']);
     Route::put('/api/atelier/{id}', [AtelierController::class, 'update']);
+    Route::post('/api/userDelete/{id}', [UserController::class, 'destroy'])->name('users.destroy');;
     Route::get('/api/getAteliersWithType/{id}', [AtelierController::class, 'getAteliersWithType']);
 });
 

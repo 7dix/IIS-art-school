@@ -9,7 +9,6 @@ import EditEquipmentDialog from '@/Components/Equipment/EquipmentEditDialog.vue'
 import DeleteDialog from "@/Components/DeleteDialog.vue";
 import { Icon } from "@iconify/vue";
 import axios from 'axios';
-import { isPropertySignature } from 'typescript';
 
 
 

@@ -84,6 +84,12 @@ class AtelierController extends Controller
         return $this->index();
     }
 
+    public function destroy($id) {
+        Atelier::destroy($id);
+
+        return $this->index();
+    }
+
     public function dashboard($id)
     {
         $atelier = Atelier::with(['users.roles'])->findOrFail($id);

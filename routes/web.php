@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/types/{type}/user-equipment', action: [MyReservationController::class, 'getUserEquipmentByType']);
     Route::get('/api/ateliers/{atelier}/equipment', [AtelierController::class, 'getEquipment']);
     Route::get('/api/ateliers/{atelier}/users/{user}/restricted-equipment', [AtelierController::class, 'getRestrictedEquipment']);
-    Route::get('/api/equipment/{id}/reservations', [EquipmentController::class, 'getReservations']);
+    Route::get('/api/equipment/{id}/reservations', [MyReservationController::class, 'getReservations']);
     
     //php artisan route:list    Route::delete('/ateliers/{atelier}/users/{user}', [AtelierController::class, 'removeUser']);
 

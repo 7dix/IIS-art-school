@@ -110,8 +110,14 @@ public function store(Request $request)
 
     public function getUserEquipmentByType($typeId)
     {
+        /** @var \App\Models\User */
         $user = Auth::user();
         $ateliers = $user->ateliers->pluck('id');
+
+        if ($user->isManager()) {
+            $managedAteliers = $user->managedAteliers()->pluck('id');
+            $ateliers = $ateliers->merge($managedAteliers);
+        }
     
         $equipment = Equipment::with(['atelier', 'owner'])
             ->where('type_id', $typeId)

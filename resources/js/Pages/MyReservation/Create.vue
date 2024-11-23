@@ -144,10 +144,11 @@ watch(selectedEquipment, (newEquipment) => {
             })
             .catch((error) => {
                 console.error("Failed to fetch reservations:", error);
+                existingReservations.value = []
             });
     } else {
         form.end_date = "";
-        date.value.end = null;
+        date.value.end = new Date();
         existingReservations.value = [];
     }
 });
@@ -240,6 +241,9 @@ const maxEndDate = computed(() => {
 
 // Compute disabled dates based on existing reservations
 const disabledDates = computed(() => {
+    if (!Array.isArray(existingReservations.value)) {
+        return [];
+    }
     return existingReservations.value.flatMap((reservation) => {
         const start = new Date(reservation.start_date);
         const end = new Date(reservation.end_date);

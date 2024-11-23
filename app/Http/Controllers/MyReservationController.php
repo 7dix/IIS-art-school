@@ -103,8 +103,13 @@ class MyReservationController extends Controller
     
         return response()->json($equipment);
     }
-
-
-
-
+    public function getReservations($id) {
+        $equipment = Equipment::with('reservation')->find($id);
+    
+        if (!$equipment) {
+            return response()->json(['error' => 'Equipment not found'], 404);
+        }
+    
+        return response()->json($equipment->reservation);
+    }
 }

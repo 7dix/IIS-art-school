@@ -29,6 +29,13 @@ class AppServiceProvider extends ServiceProvider
         // add this statement to public function boot()
         if($this->app->environment('production')) {
             URL::forceScheme('https');
+            $this->app['request']->server->set('HTTPS', 'on');
+            
+            // Force HTTPS in Mix/Vite asset loading
+            if (request()->header('x-forwarded-proto') === 'https') {
+                URL::forceScheme('https');
+                \Illuminate\Support\Facades\App::setRequestForConsoleEnvironment();
+            }
         };
 
         Inertia::share([

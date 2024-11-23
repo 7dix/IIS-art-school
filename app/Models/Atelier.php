@@ -114,5 +114,16 @@ class AtelierUser extends \Illuminate\Database\Eloquent\Relations\Pivot
                 } 
             }
         });
+
+        static::created(function ($pivot) {
+            if ($pivot->teacher) {
+                $user = User::find($pivot->user_id);
+                
+                $user->givePermissionTo('manage_equipment');
+                $user->givePermissionTo('restrict_equipment');
+                $user->givePermissionTo('assign_students');
+                $user->givePermissionTo('manage_reservation');
+            }
+        });
     }
 }

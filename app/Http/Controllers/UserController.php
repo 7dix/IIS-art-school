@@ -18,7 +18,7 @@ class UserController extends Controller
 
         $this->middleware(function ($request, $next) {
             if (!$this->user || !$this->user->can('manage_user')) {
-                return redirect()->route('dashboard'); // Unauthorized access
+                return redirect()->route('dashboard');
             }
 
             return $next($request);
@@ -53,7 +53,6 @@ class UserController extends Controller
     }
 
     public function destroy($id) {
-
         $user = User::find($id);
         if ($user->isManager()) {
             $ateliers = AtelierResource::collection($user->managedAteliers());

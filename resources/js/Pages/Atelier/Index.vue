@@ -40,7 +40,7 @@ const errors = ref({});
 
 
 const openEditDialog = (atelier) => {
-    selectedAtelier.value = { ...atelier };  // Clone atelier data to edit
+    selectedAtelier.value = { ...atelier };
     errors.value = {};
     showDialog.value = true;
 };
@@ -216,7 +216,6 @@ const columns: VTColumn[] = [
                 </div>
             </div>
         </div>
-         <!-- Edit Dialog -->
      <EditAtelierDialog 
           v-if="showDialog" 
           :atelier="selectedAtelier" 

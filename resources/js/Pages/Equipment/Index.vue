@@ -49,9 +49,7 @@ const confirmDelete = async (id: number) => {
                 props.equipments.data.findIndex((item) => item.id === id),
                 1
             );
-        } else {
-            console.error(response);
-        }
+        } 
     }
     return { confirmDelete };
 };
@@ -68,7 +66,7 @@ const errors = ref({});
 
 
 const openEditDialog = (equipment) => {
-  selectedEquipment.value = { ...equipment };  // Clone equipment data to edit
+  selectedEquipment.value = { ...equipment };
   showDialog.value = true;
 };
 

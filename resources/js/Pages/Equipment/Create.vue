@@ -44,27 +44,8 @@ const form = useForm({
 });
 
 const createEquipment = () => {    
-    form.post(route('equipment.store'), {
-        onError: (errors) => {
-            // Handle validation errors
-            console.log(errors);
-        },
-    });
-
+    form.post(route('equipment.store'));
 };
-
-
-// const getAteliers = (type_id) => {
-//     axios.get(`/api/getAteliersWithType/${type_id}`)
-//     .then(response => {
-//         console.log(response.data);
-//         ateliers.value = response.data;
-//     })
-//     .catch(error => {
-//         console.log(error);
-//     });
-// }
-
 
 </script>
 

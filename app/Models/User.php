@@ -46,7 +46,6 @@ class User extends Authenticatable
         return $this->belongsToMany(Equipment::class, 'user_equipment_restriction');
     }
 
-    // Manager thingy
     public function isManager()
     {
         return Atelier::where('manager_id', $this->id)->exists();
@@ -62,9 +61,6 @@ class User extends Authenticatable
     {
         return Atelier::where('manager_id', $this->id)->get();
     }
-
-
-
 
     protected $hidden = [
         'password',

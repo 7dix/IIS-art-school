@@ -27,9 +27,9 @@ class MyReservationController extends Controller
     }
     public function index()
     {
-        $userId = Auth::id(); // Get the authenticated user's ID
+        $userId = Auth::id();
         $reservations = Reservation::with(['user', 'equipment'])
-            ->where('user_id', $userId) // Filter by user ID
+            ->where('user_id', $userId)
             ->get()
             ->map(callback: fn (Reservation $reservation) => $this->transformForIndex($reservation));
         
@@ -53,7 +53,7 @@ class MyReservationController extends Controller
 
     public function create(Request $request)
     {
-        $types = Type::all(); // Fetch all types
+        $types = Type::all();
         $userId = Auth::id(); 
         $typeId = (int) $request->query('type_id', 0);
         $equipmentId = (int) $request->query('equipment_id', 0);
@@ -90,9 +90,9 @@ class MyReservationController extends Controller
     public function getUserEquipmentByType($typeId)
     {
         $user = Auth::user();
-        $ateliers = $user->ateliers->pluck('id'); // Get the IDs of the user's ateliers
+        $ateliers = $user->ateliers->pluck('id');
     
-        $equipment = Equipment::with(['atelier', 'owner']) // Include atelier and owner relationships
+        $equipment = Equipment::with(['atelier', 'owner'])
             ->where('type_id', $typeId)
             ->whereIn('atelier_id', $ateliers)
             ->where('can_be_borrowed', true)

@@ -38,12 +38,10 @@ class Atelier extends Model
         parent::boot();
 
         static::updated(function ($atelier) {
-            // Check if manager_id was changed
             if ($atelier->isDirty('manager_id')) {
                 $originalManagerId = $atelier->getOriginal('manager_id');
                 $newManagerId = $atelier->manager_id;
 
-                // Revoke permission from the old manager
                 if ($originalManagerId) {
                     $originalManager = User::find($originalManagerId);
                     if ($originalManager) {
@@ -55,7 +53,6 @@ class Atelier extends Model
                     }
                 }
 
-                // Assign permission to the new manager
                 if ($newManagerId) {
                     $newManager = User::find($newManagerId);
                     if ($newManager) {
@@ -71,10 +68,9 @@ class Atelier extends Model
         });
 
         static::created(function ($atelier) {
-            // Check if manager_id was changed
+            
             if ($atelier->isDirty('manager_id')) {
                 $newManagerId = $atelier->manager_id;
-                // Assign permission to the new manager
                 if ($newManagerId) {
                     $newManager = User::find($newManagerId);
                     if ($newManager) {

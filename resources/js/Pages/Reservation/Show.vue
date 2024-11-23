@@ -50,10 +50,10 @@ const leasingHours = computed(() => {
     let hours = props.reservation.equipment.allowed_leasing_hours;
     if (typeof hours === 'string') {
     hours = hours
-        .replace(/[\[\]\s]/g, '') // Remove brackets and whitespace
+        .replace(/[\[\]\s]/g, '')
         .split(',')
         .map(Number)
-        .filter(n => !isNaN(n)); // Remove any invalid numbers
+        .filter(n => !isNaN(n)); 
     }   
     if (hours === undefined || hours.length === 0) {
         return array;
@@ -133,7 +133,6 @@ const leasingHours = computed(() => {
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
-                        <!-- Reservation Info -->
                         <div class="info-category">
                             <h3 class="info-category-label">Info</h3>
                             <div>
@@ -160,7 +159,6 @@ const leasingHours = computed(() => {
                             </div>
                         </div>
 
-                        <!-- Equipment Info -->
                         <div class="info-category row-span-2">
                             <h3 class="info-category-label">Equipment</h3>
                             <div>
@@ -200,7 +198,6 @@ const leasingHours = computed(() => {
                             </div>
                         </div>
 
-                        <!-- User Info -->
                         <div class="info-category">
                             <h3 class="info-category-label">Who is leasing</h3>
                             <div>

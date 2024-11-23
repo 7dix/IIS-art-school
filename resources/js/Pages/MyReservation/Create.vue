@@ -27,6 +27,8 @@ const calculateEndDate = (startDate, leasingPeriod) => {
     return format(start, "yyyy-MM-dd'T'HH:mm:ss");
 };
 
+const errors = ref({});
+
 const props = defineProps({
     types: {
         type: Array,
@@ -173,8 +175,9 @@ const createReservation = () => {
     }
     form.post(route("my-reservation.store"), {
         onError: (errors) => {
-            if (errors.error) {
-                warningMessage.value = errors.error;
+            console.log(errors);
+            if (errors.date_range) {
+                warningMessage.value = errors.date_range;
             } else {
                 console.log(errors);
             }
@@ -283,6 +286,12 @@ const disabledDates = computed(() => {
                                         {{ type.name }}
                                     </option>
                                 </select>
+                                <div
+                                    v-if="errors.value && errors.value.type_id"
+                                    class="mt-2 text-sm text-red-600"
+                                >
+                                    {{ errors.value.type_id }}
+                                </div>
                             </div>
                             <div class="mb-4">
                                 <label
@@ -314,6 +323,15 @@ const disabledDates = computed(() => {
                                         No equipment of this type available
                                     </option>
                                 </select>
+                                <div
+                                    v-if="
+                                        errors.value &&
+                                        errors.value.equipment_id
+                                    "
+                                    class="mt-2 text-sm text-red-600"
+                                >
+                                    {{ errors.value.equipment_id }}
+                                </div>
                             </div>
 
                             <!-- Display selected equipment details -->
@@ -425,9 +443,17 @@ const disabledDates = computed(() => {
                                             :min-date="new Date()"
                                             :show-months="2"
                                             :show-years="true"
+                                            :disabled-dates="disabledDates"
                                         />
                                     </PopoverContent>
                                 </Popover>
+                                <div
+                                    v-if="
+                                        errors.value && errors.value.date_range
+                                    "
+                                    class="mt-2 text-sm text-red-600"
+                                    v-text="errors.value.date_range"
+                                ></div>
                                 <p
                                     v-if="warningMessage"
                                     class="text-red-500 mt-2"

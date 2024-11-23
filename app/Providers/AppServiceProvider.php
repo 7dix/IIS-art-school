@@ -34,7 +34,6 @@ class AppServiceProvider extends ServiceProvider
             // Force HTTPS in Mix/Vite asset loading
             if (request()->header('x-forwarded-proto') === 'https') {
                 URL::forceScheme('https');
-                \Illuminate\Support\Facades\App::setRequestForConsoleEnvironment();
             }
         };
 

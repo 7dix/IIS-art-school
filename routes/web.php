@@ -24,6 +24,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::put('/profile', [ProfileController::class, 'changePassword'])->name('password.update');
+    
+
     Route::get('/api/ateliers/{atelier}/users-in-atelier', [AtelierController::class, 'usersInAtelier']);    
     Route::delete('/ateliers/{atelier}/users/{user}', [AtelierController::class, 'removeUser']);    
     Route::get('/atelier/{id}/dashboard', [AtelierController::class, 'dashboard'])->name('ateliers.dashboard');

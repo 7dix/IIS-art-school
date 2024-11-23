@@ -66,26 +66,47 @@ class MyReservationController extends Controller
         ]);
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'type_id' => 'required|exists:types,id',
-            'equipment_id' => 'required|exists:equipments,id',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
-            'status' => 'required|string',
-        ]);
+public function store(Request $request)
+{
+    $request->validate([
+        'type_id' => 'required|exists:types,id',
+        'equipment_id' => 'required|exists:equipments,id',
+        'start_date' => 'required|date',
+        'end_date' => 'required|date|after:start_date',
+        'status' => 'required|string',
+    ]);
 
-        $reservation = Reservation::create([
-            'user_id' => Auth::id(),
-            'equipment_id' => $request->equipment_id,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'status' => $request->status,
-        ]);
+    $equipmentId = $request->equipment_id;
+    $startDate = new \DateTime($request->start_date);
+    $endDate = new \DateTime($request->end_date);
 
-        return redirect()->route('my-reservation.index')->with('success', 'Reservation created successfully.');
+    // Fetch existing reservations for the selected equipment
+    $existingReservations = Reservation::where('equipment_id', $equipmentId)
+        ->where(function ($query) use ($startDate, $endDate) {
+            $query->whereBetween('start_date', [$startDate, $endDate])
+                  ->orWhereBetween('end_date', [$startDate, $endDate])
+                  ->orWhere(function ($query) use ($startDate, $endDate) {
+                      $query->where('start_date', '<=', $startDate)
+                            ->where('end_date', '>=', $endDate);
+                  });
+        })
+        ->whereIn('status', ['ONGOING', 'APPROVED'])
+        ->get();
+
+    if ($existingReservations->isNotEmpty()) {
+        return back()->withErrors(['date_range' => 'The selected date range overlaps with an existing reservation.'])->withInput();
     }
+
+    $reservation = Reservation::create([
+        'user_id' => Auth::id(),
+        'equipment_id' => $equipmentId,
+        'start_date' => $request->start_date,
+        'end_date' => $request->end_date,
+        'status' => $request->status,
+    ]);
+
+    return redirect()->route('my-reservation.index')->with('success', 'Reservation created successfully.');
+}
 
     public function getUserEquipmentByType($typeId)
     {

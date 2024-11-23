@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html><head>
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-2">
+    <title>Projekt IIS</title>
+    <style type="text/css">
+    	table { border-collapse: collapse; }
+    	td, th { border: 1px solid black; padding: 0.3em 0.5em; text-align: left; }
+    	dt { font-weight: bold; margin-top: 0.5em; }
+    </style>
+</head>
+<body>
+
+<!-- Zkontrolujte prosím nastavení kódování v hlavičce dokumentu 
+     podle použitého editoru -->
+
+<h1>Umělecká škola</h1> <!-- Nahradte názvem svého zadání -->
+
+<dl>
+	<dt>Autoři</dt>
+	<dd>Marek Tenora <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xtenor02@stud.fit.vutbr.cz">xtenor02@stud.fit.vutbr.cz</a> -
+		Správa profilu, rezervace a spravování rezervací. Naplnění databáze. Nasazení na server, výběr a instalace technologií.
+	</dd>
+	<dd>Natália Sobihardová <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xsobih00@stud.fit.vutbr.cz">xsobih00@stud.fit.vutbr.cz</a> - 
+		Tabulka typů, Detail ateliéru, vytváření rezervací, dokumentace, video.
+	</dd>
+  <dd>Petr Štancl <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xstanc12@stud.fit.vutbr.cz">xstanc12@stud.fit.vutbr.cz</a> - 
+		Tabulka uživatelů a zařízení. Vytváření ateliérů, zařízení, typů. Editační dialogy. Logika rolí a povolení. Blokace uživatele na konkrétní zařízení, blokace zařízení celkově.
+	</dd>
+	<dt>URL aplikace</dt>
+	<dd><a href="https://iis.olivebranch.cz/">https://iis.olivebranch.cz/</a></dd>
+</dl>
+
+<h2>Uživatelé systému pro testování</h2>
+<p>Uveďte prosím existující zástupce <strong>všech rolí uživatelů</strong>.</p>
+<table>
+<tbody><tr><th>Login</th><th>Heslo</th><th>Role</th></tr>
+<tr><td>admin@IIS.com</td><td>admin</td><td>Administrátor</td></tr>
+<tr><td>user@IIS.com</td><td>user</td><td>Uživatel</td></tr>
+<tr><td>manager@IIS.com</td><td>manager</td><td>Správce ateliéru (základně má roli uživatele, ale jakmile jej nastavíte u ateliéru správcem, získá vyší práva)</td></tr>
+<tr><td>teacher@IIS.com</td><td>teacher</td><td>Učitel v ateliéru (základně má roli uživatele, ale jakmile jej nastavíte v nějakém ateliéru učitelem, získá vyší práva)</td></tr>
+</tbody></table>
+
+
+<h3>Video</h3>
+
+<p>Přiložte odkaz na komentované video demostrující použití informačního
+ systému. Zaměřte se na případy užití definované zadáním (např. 
+registrace uživatele, správa uživatelů a činnosti jednotlivých rolí). 
+Video nahrajte například na VUT Google Drive, kde ho bude možné přímo 
+spustit z odkazu.</p> 
+
+<h2>Implementace</h2>
+<ul>
+	<li> AtelierController.php - view na ateliéry. Zobrazení přehledu a detailu ateliérů, editace ateliéru, tvorba ateliéru, smazání ateliéru, přidání/odebrání uživatele do ateliéru, přidání/odebrání učitele do ateliéru. </li>
+	<li> EquipmentController.php - view na zařízení. Zobrazení přehledu zařízení, editace zařízení, tvorba zařízení, smazání zařízení. </li> 
+	<li> MyReservationController.php - view na uživatelovi rezervace. Zobrazení uživatelových rezervací a jejich detail, tvorba rezervací. </li> 
+	<li> ProfileController.php - view na správu profilu uživatele. Změna údajů, změna hesla, smazání účtu. </li> 
+	<li> ReservationController.php - view na správu příchozích rezervací. Zobrazení přehledu a detailu příchozích rezervací, změna stavu rezervace.</li> 
+	<li> TypeController.php - view na typy zařízení. Zobrazení přehledu typů, editace typu, přidání typu, smazání typu. </li> 
+	<li> UserController.php - view na uživatele. Zobrazení přehledu uživatelů, editace uživatele, smazání uživatele. </li> 
+</ul>
+
+Uživatel - Má přístup k stránkám: "My Reservations", "Ateliers".<br>
+Učitel - Má přístup k stránkám: "My Reservations", "Manage Reservations", "Ateliers", "Equipments".<br>
+Správce ateliéru - Má přístup k stránkám: "My Reservations", "Ateliers", "Types".<br>
+Administrátor - Má přístup k stránkám: "My Reservations", "Manage Reservation", "Ateliers", "Types", "Equipments".<br>
+<h3>Databáze</h3>
+
+Zde vložte grafické schéma relační databáze (tabulek v databázi).
+
+<h2>Instalace</h2>
+
+Stručně popište: 
+<ul>
+<li>postup instalace na server,</li>
+<li>softwarové požadavky (verze PHP apod.),</li>
+<li>jak rozbalit, konfigurovat, inicializovat databázi, ...</li>
+</ul>
+
+<h2>Známé problémy</h2>
+<p>Zde popište, které body zadání nejsou implementovány a z jakého 
+důvodu. Např. &#8222;Z časových důvodů nebyla implementována správa 
+uživatelů.&#8221; Pomůžete tím zrychlit hodnocení, když neimplementované 
+funkce nebudeme muset dlouze hledat.</p>
+
+
+
+</body></html>

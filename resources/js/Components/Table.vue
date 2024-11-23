@@ -83,7 +83,7 @@ const props = withDefaults(
         flatData: false,
         filter: () => [],
         showSelect: false,
-        showDisplayOption: true,
+        showDisplayOption: false,
         showColumnToggle: false,
         showFilters: false,
         showSearch: true,
@@ -329,7 +329,6 @@ let columnsFilters = getFiltersForCols();
                 </div>
 
                 <div class="inline-flex items-center gap-2">
-
                     <Button
                         v-if="props.showDisplayOption"
                         size="icon"

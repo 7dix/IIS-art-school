@@ -104,7 +104,9 @@ const columns = [
         key: "actions",
         header: "Actions",
         renderAs: (item: any) => {
-            return h("div", {}, [
+            return h("div", {
+                class: "flex items-center",
+            }, [
                 h(
                     Button,
                     {
@@ -153,7 +155,6 @@ const columns = [
                         </Link>
                     </div>
                     <div class="p-6 text-gray-900">
-                        {{ props.types.data.length }}
                         <Table
                             :data="types.data"
                             :columns="columns"

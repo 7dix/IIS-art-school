@@ -6,7 +6,7 @@ import Modal from '@/Components/Modal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import { useForm } from '@inertiajs/vue3';
 import { nextTick, ref } from 'vue';
-import { Input } from '@/Components/ui/Input';
+import { Input } from '@/Components/ui/input';
 
 
 const confirmingUserDeletion = ref(false);

@@ -96,15 +96,8 @@ const columns = [
         key: "equipments",
         header: "Equipments",
         renderAs: (item: any) => {
-            return h(
-                Button,
-                {
-                    onClick: () => {
-                        console.log(item);
-                    },
-                },
-                item.equipments.length
-            );
+            return item.equipments.length
+        
         },
     },
     {

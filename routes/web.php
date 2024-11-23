@@ -13,10 +13,11 @@ use App\Http\Controllers\ReservationController;
 use App\Http\Middleware\EnsureUserHasRole;
 
 
+
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
         return Inertia::render('Dashboard');
-    });
+    })->name('dashboard');
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');});
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

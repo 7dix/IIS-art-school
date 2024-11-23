@@ -17,7 +17,7 @@ import { Select,
   NumberFieldDecrement,
   NumberFieldIncrement,
   NumberFieldInput,
-} from '@/components/ui/number-field'
+} from '@/Components/ui/number-field'
 import EquipmentSelectHours from '@/Components/Equipment/EquipmentSelectHours.vue';
 
 

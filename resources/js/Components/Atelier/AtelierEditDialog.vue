@@ -67,13 +67,13 @@ import { Select,
             <div v-if="errors.name" class="mt-2 text-sm text-red-600"> {{ errors.name }} </div>
           </div>
           <div class="mb-4">
-            <label for="room" class="block text-sm font-medium text-gray-700">/Room:</label>
+            <label for="room" class="block text-sm font-medium text-gray-700">*Room:</label>
             <Input type="text" id="room" v-model="editableAtelier.room" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"/>
             <div class="text-gray-600 text-xs">Correct Format: Capital letter followed by exactly 3 numbers</div>
             <div v-if="errors.room" class="mt-2 text-sm text-red-600"> {{ errors.room }} </div>
           </div>
           <div class="mb-4">
-            <label for="manager" class="block text-sm font-medium text-gray-700">Manager:</label>
+            <label for="manager" class="block text-sm font-medium text-gray-700">*Manager:</label>
             <Select v-model="editableAtelier.manager_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
               <SelectTrigger>
                   <SelectValue placeholder="Select a manager" />

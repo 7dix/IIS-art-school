@@ -5,7 +5,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
-import { Input } from '@/Components/ui/Input';
+import { Input } from '@/Components/ui/input';
 
 const passwordInput = ref(null);
 const currentPasswordInput = ref(null);

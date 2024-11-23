@@ -4,16 +4,6 @@ import { Head, useForm, Link, usePage } from "@inertiajs/vue3";
 import { ref, watch, computed } from "vue";
 import axios from "axios";
 import { Button } from "@/Components/ui/button";
-import { Input } from '@/Components/ui/input';
-import { Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
- } from '@/Components/ui/select';
-
 import {
     Popover,
     PopoverContent,
@@ -21,8 +11,7 @@ import {
 } from "@/Components/ui/popover";
 import { Calendar } from "@/Components/ui/v-calendar";
 import { CalendarIcon } from "@radix-icons/vue";
-import { addDays, format, isWithinInterval } from "date-fns";
-import { type DateValue, getLocalTimeZone, today } from '@internationalized/date'
+import { addDays, format } from "date-fns";
 import "@vuepic/vue-datepicker/dist/main.css";
 
 const getCurrentDate = () => {
@@ -35,6 +24,8 @@ const calculateEndDate = (startDate, leasingPeriod) => {
     start.setDate(start.getDate() + leasingPeriod);
     return format(start, "yyyy-MM-dd'T'HH:mm:ss");
 };
+
+const errors = ref({});
 
 const props = defineProps({
     types: {
@@ -136,11 +127,10 @@ watch(selectedEquipment, (newEquipment) => {
             })
             .catch((error) => {
                 console.error("Failed to fetch reservations:", error);
-                existingReservations.value = []
             });
     } else {
         form.end_date = "";
-        date.value.end = new Date();
+        date.value.end = null;
         existingReservations.value = [];
     }
 });
@@ -156,8 +146,10 @@ watch(
                 newStartDate,
                 selectedEquipment.value.maximum_leasing_period
             );
-            form.end_date = endDate;
-            date.value.end = new Date(endDate);
+            if (new Date(form.end_date) > new Date(endDate)) {
+                form.end_date = endDate;
+                date.value.end = new Date(endDate);
+            }
         }
     }
 );
@@ -168,11 +160,19 @@ const createReservation = () => {
         selectedEquipment.value.maximum_leasing_period
     );
     if (new Date(form.end_date) > new Date(maxEndDate)) {
-        alert("Selected end date exceeds maximum leasing period.");
+        warningMessage.value =
+            "Selected end date exceeds maximum leasing period.";
         return;
     }
     form.post(route("my-reservation.store"), {
-        onError: (errors) => console.log(errors),
+        onError: (errors) => {
+            console.log(errors);
+            if (errors.date_range) {
+                warningMessage.value = errors.date_range;
+            } else {
+                console.log(errors);
+            }
+        },
     });
 };
 
@@ -224,9 +224,6 @@ const maxEndDate = computed(() => {
 });
 
 const disabledDates = computed(() => {
-    if (!Array.isArray(existingReservations.value)) {
-        return [];
-    }
     return existingReservations.value.flatMap((reservation) => {
         const start = new Date(reservation.start_date);
         const end = new Date(reservation.end_date);
@@ -238,6 +235,7 @@ const disabledDates = computed(() => {
     });
 });
 
+// Compute the maximum range based on the selected equipment's maximum leasing period
 const maxRange = computed(() => {
     return selectedEquipment.value
         ? selectedEquipment.value.maximum_leasing_period
@@ -245,15 +243,16 @@ const maxRange = computed(() => {
 });
 
 
+// Compute leasing hours based on the selected equipment's allowed leasing hours
 const leasingHours = computed(() => {
     let array = [];
     let hours = selectedEquipment.value.allowed_leasing_hours;
     if (typeof hours === 'string') {
     hours = hours
-        .replace(/[\[\]\s]/g, '') 
+        .replace(/[\[\]\s]/g, '') // Remove brackets and whitespace
         .split(',')
         .map(Number)
-        .filter(n => !isNaN(n)); 
+        .filter(n => !isNaN(n)); // Remove any invalid numbers
     }   
     if (hours === undefined || hours === null || hours.length === 0) {
         return array;
@@ -291,18 +290,30 @@ const leasingHours = computed(() => {
                                     class="block text-sm font-medium text-gray-700"
                                     >Type</label
                                 >
-                                <Select required id="type_id" name="type_id" v-model="form.type_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select a type of equipment" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem v-for="type in types"
-                                            :key="type.id"
-                                            :value="type.id">
-                                            {{ type.name }}
-                                        </SelectItem>
-                                    </SelectContent>
-                                </Select> 
+                                <select
+                                    id="type_id"
+                                    name="type_id"
+                                    v-model="form.type_id"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                    required
+                                >
+                                    <option value="" disabled>
+                                        Select Type
+                                    </option>
+                                    <option
+                                        v-for="type in types"
+                                        :key="type.id"
+                                        :value="type.id"
+                                    >
+                                        {{ type.name }}
+                                    </option>
+                                </select>
+                                <div
+                                    v-if="errors.value && errors.value.type_id"
+                                    class="mt-2 text-sm text-red-600"
+                                >
+                                    {{ errors.value.type_id }}
+                                </div>
                             </div>
                             <div class="mb-4">
                                 <label
@@ -310,23 +321,39 @@ const leasingHours = computed(() => {
                                     class="block text-sm font-medium text-gray-700"
                                     >Equipment</label
                                 >
-                                <Select required id="equipment_id" name="equipment_id" v-model="form.equipment_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select a equipment" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem v-for="equipment in filteredEquipment"
-                                            :key="equipment.id"
-                                            :value="equipment.id"
-                                        >{{ equipment.name }}
-                                        </SelectItem>
-                                        <SelectItem
-                                            v-if="filteredEquipment.length === 0"
-                                            disabled
-                                        >No equipment of this type available
-                                        </SelectItem>
-                                    </SelectContent>
-                                </Select> 
+                                <select
+                                    id="equipment_id"
+                                    name="equipment_id"
+                                    v-model="form.equipment_id"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                    required
+                                >
+                                    <option value="" disabled>
+                                        Select Equipment
+                                    </option>
+                                    <option
+                                        v-for="equipment in filteredEquipment"
+                                        :key="equipment.id"
+                                        :value="equipment.id"
+                                    >
+                                        {{ equipment.name }}
+                                    </option>
+                                    <option
+                                        v-if="filteredEquipment.length === 0"
+                                        disabled
+                                    >
+                                        No equipment of this type available
+                                    </option>
+                                </select>
+                                <div
+                                    v-if="
+                                        errors.value &&
+                                        errors.value.equipment_id
+                                    "
+                                    class="mt-2 text-sm text-red-600"
+                                >
+                                    {{ errors.value.equipment_id }}
+                                </div>
                             </div>
 
                             <div v-if="selectedEquipment" class="mb-4">
@@ -359,9 +386,9 @@ const leasingHours = computed(() => {
                                         Allowed Leasing Hours
                                     </div>
                                     <div class="info-box-value">
-                                        <div v-for="range in leasingHours" :key="range">
-                                            {{ range.from.toString().padStart(2, '0') }}:00 - {{ range.to.toString().padStart(2, '0') }}:00
-                                        </div>
+                                        {{
+                                            selectedEquipment.allowed_leasing_hours
+                                        }}
                                     </div>
                                 </div>
                                 <div
@@ -392,6 +419,63 @@ const leasingHours = computed(() => {
                             </div>
 
                             <div class="mb-4 flex flex-row gap-4" v-if="selectedEquipment">
+                                <!-- <div>
+                                    <label
+                                        for="date_range"
+                                        class="block text-sm font-medium text-gray-700"
+                                        >Lease from</label
+                                    >
+                                    <Popover>
+                                        <PopoverTrigger as-child>
+                                        <Button
+                                            variant="outline"
+                                            :class="cn(
+                                            'w-[160px] justify-start text-left font-normal',
+                                            !date.start && 'text-muted-foreground',
+                                            )"
+                                        >
+                                            <CalendarIcon class="mr-2 h-4 w-4" />
+                                            {{
+                                                date.start ? `${format(
+                                                              date.start,
+                                                              "LLL dd, y")}` : "Pick a date"
+                                            }}
+                                        </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent class="w-auto p-0">
+                                        <Calendar :columns="2" :min-date="new Date()" v-model="date.start" initial-focus />
+                                        </PopoverContent>
+                                    </Popover>
+                                </div>
+                                <div>
+                                    <label
+                                        for="date_range"
+                                        class="block text-sm font-medium text-gray-700"
+                                        >Lease until</label
+                                    >
+                                    <Popover>
+                                        <PopoverTrigger as-child>
+                                        <Button
+                                            variant="outline"
+                                            :class="cn(
+                                            'w-[160px] justify-start text-left font-normal',
+                                            !date.end && 'text-muted-foreground',
+                                            )"
+                                        >
+                                            <CalendarIcon class="mr-2 h-4 w-4" />
+                                            {{
+                                                date.end ? `${format(
+                                                              date.end,
+                                                              "LLL dd, y")}` : "Pick a date"
+                                            }}
+                                        </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent class="w-auto p-0">
+                                        <Calendar :columns="2" :min-date="date.start" :max-date="maxEndDate" v-model="date.end" initial-focus :disabled-dates="disabledDates" />
+                                        </PopoverContent>
+                                    </Popover>
+                                </div> -->
+
                                 <Popover>
                                     <PopoverTrigger as-child>
                                         <Button
@@ -433,10 +517,16 @@ const leasingHours = computed(() => {
                                             :show-months="2"
                                             :show-years="true"
                                             :disabled-dates="disabledDates"
-                                            :max-range="maxRange"
                                         />
                                     </PopoverContent>
                                 </Popover>
+                                <div
+                                    v-if="
+                                        errors.value && errors.value.date_range
+                                    "
+                                    class="mt-2 text-sm text-red-600"
+                                    v-text="errors.value.date_range"
+                                ></div>
                                 <p
                                     v-if="warningMessage"
                                     class="text-red-500 mt-2"

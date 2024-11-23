@@ -28,12 +28,6 @@ const props = defineProps({
 const { props: pageProps } = usePage();
 const userId = pageProps.auth.user.id;
 
-onMounted(() => {
-    console.log("Atelier:", props.atelier);
-    console.log("Users:", props.users);
-    console.log("Teachers:", props.teachers);
-    console.log("User ID:", userId);
-});
 </script>
 
 <template>

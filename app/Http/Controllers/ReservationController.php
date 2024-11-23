@@ -49,8 +49,6 @@ class ReservationController extends Controller
 
     public function reservationStateUpdate(Request $request, Reservation $reservation)
     {
-
-        // Validate the request
         $status = $request->input('status');
         if ($status === 'approved' || $status === 'rejected') {
             if ($reservation->status !== 'pending') {
@@ -68,7 +66,6 @@ class ReservationController extends Controller
             return response()->json(['message' => 'Invalid status'], 400);
         }
 
-        // Update the reservation status
         $reservation->status = $status;
         $reservation->save();
 

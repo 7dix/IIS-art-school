@@ -246,6 +246,40 @@ const disabledDates = computed(() => {
         return dates;
     });
 });
+
+// Compute the maximum range based on the selected equipment's maximum leasing period
+const maxRange = computed(() => {
+    return selectedEquipment.value
+        ? selectedEquipment.value.maximum_leasing_period
+        : null;
+});
+
+
+// Compute leasing hours based on the selected equipment's allowed leasing hours
+const leasingHours = computed(() => {
+    let array = [];
+    let hours = selectedEquipment.value.allowed_leasing_hours;
+    if (typeof hours === 'string') {
+    hours = hours
+        .replace(/[\[\]\s]/g, '') // Remove brackets and whitespace
+        .split(',')
+        .map(Number)
+        .filter(n => !isNaN(n)); // Remove any invalid numbers
+    }   
+    if (hours === undefined || hours === null || hours.length === 0) {
+        return array;
+    } else {
+        hours = hours.sort((a, b) => a - b);
+        let currentMin = hours[0];
+        for (let i = 0; i < hours.length; i++) {
+            if (hours[i] + 1 !== hours[i + 1]) {
+                array.push({ from: currentMin, to: hours[i] + 1 });
+                currentMin = hours[i + 1];
+            }
+        }
+    }
+    return array;
+})
 </script>
 
 <template>

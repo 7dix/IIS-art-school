@@ -18,9 +18,7 @@ class Equipment extends Model
         'atelier_id',
         'year_of_manufacture',
         'date_of_purchase',
-        // Maximální doba pronájmu (ve dnech)
         'maximum_leasing_period',
-        // Hodiny ve kterých je možné zařízení pronajmout json array
         'allowed_leasing_hours',
         'image',
     ];

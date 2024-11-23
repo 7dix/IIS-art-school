@@ -33,20 +33,10 @@ const form = useForm({
 });
 
 const createAtelier = () => {
-    
-    form.post(route('atelier.store'),
-    {
-        onError: (errors) => {
-            // Handle validation errors
-            console.log(errors);
-        },
-    });
-    
+    form.post(route('atelier.store'));
 };
 
 </script>
-
-
 
 <template>
     <Head title="Dashboard" />

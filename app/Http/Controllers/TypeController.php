@@ -15,7 +15,7 @@ class TypeController extends Controller
 
         $this->middleware(function ($request, $next) {
             if (!$this->user || !$this->user->can('manage_type')) {
-                return redirect()->route('dashboard'); // Unauthorized access
+                return redirect()->route('dashboard');
             }
 
             return $next($request);
@@ -23,19 +23,12 @@ class TypeController extends Controller
 
     }
 
-    public function index()
-    {
-        /** @var \App\Models\User */
-        $user = Auth::user();
-
+    public function index() {
         $types = Type::with(['equipments'])->get();
         return inertia('Types/Index', ['types' => TypeResource::collection($types)]);
     }
 
     public function create() {
-        /** @var \App\Models\User */
-        $user = Auth::user();
-
         return inertia('Types/Create');
     }
 
@@ -56,9 +49,6 @@ class TypeController extends Controller
 
     public function update(Request $request, $id) {
 
-        /** @var \App\Models\User */
-        $user = Auth::user();
-
        $type = Type::find($id);
        $type->update($request->validate([
         'name' => ['required', 'string', 'max:255', Rule::unique('types', 'name')->ignore($type->id),],
@@ -68,8 +58,7 @@ class TypeController extends Controller
        return $this->index();
    }
 
-    public function destroy(Type $type)
-    {
+    public function destroy(Type $type) {
         $type->delete();
         return $this->index();
     }

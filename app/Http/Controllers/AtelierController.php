@@ -19,7 +19,6 @@ class AtelierController extends Controller
     public function index()
     {
         $user = $this->user;
-        // Not dependant on user role
         $types = TypeResource::collection(Type::all());
         $users = UserResource::collection(User::whereHas('roles', function($query) {
             $query->where('name', 'user');
@@ -106,8 +105,8 @@ class AtelierController extends Controller
     
         return inertia('Atelier/Dashboard', [
             'atelier' => $atelier,
-            'users' => $users->values(), // Ensure collection is re-indexed
-            'teachers' => $teachers->values(), // Ensure collection is re-indexed
+            'users' => $users->values(), 
+            'teachers' => $teachers->values(),
             'equipments' => $equipments,
         ]);
     }
@@ -145,17 +144,14 @@ class AtelierController extends Controller
     {
         $atelier = Atelier::findOrFail($atelierId);
     
-        // Validate the request
         $request->validate([
             'users' => 'required|array',
             'users.*.id' => 'required|exists:users,id',
         ]);
     
-        // Attach users to the atelier
         $userIds = collect($request->input('users'))->pluck('id');
         $atelier->users()->attach($userIds);
     
-        // Fetch the newly added users with the correct table alias
         $newUsers = $atelier->users()->whereIn('users.id', $userIds)->get();
     
         return response()->json(['message' => 'Users added successfully.', 'users' => $newUsers]);
@@ -166,7 +162,6 @@ class AtelierController extends Controller
         $atelier = Atelier::findOrFail($atelierId);
         $userId = $request->input('user_id');
     
-        // Find the user and remove the teacher role
         $user = $atelier->users()->findOrFail($userId);
         $atelier->users()->updateExistingPivot($userId, ['teacher' => false]);
     
@@ -180,7 +175,6 @@ class AtelierController extends Controller
 
         foreach ($userIds as $userId) {
             
-            // Check if the user is already attached to avoid duplicates
             if (!$atelier->users()->where('users.id', $userId)->exists()) {
                 $atelier->users()->attach($userId);
             }

@@ -38,12 +38,10 @@ class Atelier extends Model
         parent::boot();
 
         static::updated(function ($atelier) {
-            // Check if manager_id was changed
             if ($atelier->isDirty('manager_id')) {
                 $originalManagerId = $atelier->getOriginal('manager_id');
                 $newManagerId = $atelier->manager_id;
 
-                // Revoke permission from the old manager
                 if ($originalManagerId) {
                     $originalManager = User::find($originalManagerId);
                     if ($originalManager) {
@@ -51,11 +49,9 @@ class Atelier extends Model
                         $originalManager->revokePermissionTo('manage_type');
                         $originalManager->revokePermissionTo('assign_teacher');
                         $originalManager->revokePermissionTo('assign_students');
-                        $originalManager->revokePermissionTo('restrict_equipment');
                     }
                 }
 
-                // Assign permission to the new manager
                 if ($newManagerId) {
                     $newManager = User::find($newManagerId);
                     if ($newManager) {
@@ -63,7 +59,6 @@ class Atelier extends Model
                         $newManager->givePermissionTo('assign_students');
                         $newManager->givePermissionTo('manage_type');
                         $newManager->givePermissionTo('assign_teacher');
-                        $newManager->givePermissionTo('restrict_equipment');
 
                     }
                 }
@@ -71,10 +66,9 @@ class Atelier extends Model
         });
 
         static::created(function ($atelier) {
-            // Check if manager_id was changed
+            
             if ($atelier->isDirty('manager_id')) {
                 $newManagerId = $atelier->manager_id;
-                // Assign permission to the new manager
                 if ($newManagerId) {
                     $newManager = User::find($newManagerId);
                     if ($newManager) {
@@ -83,7 +77,6 @@ class Atelier extends Model
                         $newManager->givePermissionTo('manage_type');
                         $newManager->givePermissionTo('assign_teacher');
                         $newManager->givePermissionTo('assign_students');
-                        $newManager->givePermissionTo('restrict_equipment');
 
                     }
                 }

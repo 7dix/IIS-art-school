@@ -9,7 +9,6 @@ const form = useForm({
 const createType = () => {
     form.post(route("types.store"), {
         onError: (errors) => {
-            // Handle validation errors
             console.log(errors);
         },
     });

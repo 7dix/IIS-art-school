@@ -32,7 +32,7 @@ class EquipmentController extends Controller
 
         $this->middleware(function ($request, $next) {
             if (!$this->user || !$this->user->can('manage_equipment')) {
-                return redirect()->route('dashboard'); // Unauthorized access
+                return redirect()->route('dashboard');
             }
 
             return $next($request);
@@ -75,7 +75,6 @@ class EquipmentController extends Controller
             'atelier_id' => ['required', 'exists:ateliers,id']
         ]);
 
-        // No need to split and convert since we're already receiving an array
         $validatedData['allowed_leasing_hours'] = json_encode(
             array_values(array_unique($request->input('allowed_leasing_hours')))
         );
@@ -105,7 +104,6 @@ class EquipmentController extends Controller
         ]);
 
 
-        // No need to split and convert since we're already receiving an array
         $validatedData['allowed_leasing_hours'] = json_encode(
             array_values(array_unique($request->input('allowed_leasing_hours')))
         );

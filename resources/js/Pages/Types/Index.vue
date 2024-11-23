@@ -53,7 +53,7 @@ const showDialog = ref(false);
 const errors = ref({});
 
 const openEditDialog = (type) => {
-    selectedType.value = { ...type }; // Clone user data to edit
+    selectedType.value = { ...type };
     showDialog.value = true;
 };
 

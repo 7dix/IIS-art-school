@@ -19,10 +19,7 @@ return new class extends Migration
             $table->foreignId('atelier_id')->constrained('ateliers')->onDelete('cascade');
             $table->year('year_of_manufacture')->nullable();;
             $table->date('date_of_purchase')->nullable();;
-             // Maximální doba pronájmu ve dnech
             $table->integer('maximum_leasing_period');
-            // Hodiny ve kterých je možné zařízení pronajmout
-            // example: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
             $table->json('allowed_leasing_hours')->nullable(); 
             $table->string('image')->nullable();
             $table->timestamps();

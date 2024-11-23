@@ -22,6 +22,7 @@ import {
 import { Calendar } from "@/Components/ui/v-calendar";
 import { CalendarIcon } from "@radix-icons/vue";
 import { addDays, format, isWithinInterval } from "date-fns";
+import { type DateValue, getLocalTimeZone, today } from '@internationalized/date'
 import "@vuepic/vue-datepicker/dist/main.css";
 
 // Get the current date in the required format
@@ -199,6 +200,11 @@ watch(date, (newDate) => {
         ? format(newDate.end, "yyyy-MM-dd'T'HH:mm:ss")
         : "";
 
+    // if (new Date(form.start_date) > new Date(form.end_date)) {
+    //     form.end_date = form.start_date;
+    //     date.value.end = new Date(form.start_date);
+    // }
+
     if (
         selectedEquipment.value &&
         selectedEquipment.value.maximum_leasing_period
@@ -252,6 +258,8 @@ const maxRange = computed(() => {
         : null;
 });
 
+
+// Compute leasing hours based on the selected equipment's allowed leasing hours
 const leasingHours = computed(() => {
     let array = [];
     let hours = selectedEquipment.value.allowed_leasing_hours;
@@ -399,12 +407,64 @@ const leasingHours = computed(() => {
                                 </div>
                             </div>
 
-                            <div class="mb-4">
-                                <label
-                                    for="date_range"
-                                    class="block text-sm font-medium text-gray-700"
-                                    >Date Range</label
-                                >
+                            <div class="mb-4 flex flex-row gap-4" v-if="selectedEquipment">
+                                <!-- <div>
+                                    <label
+                                        for="date_range"
+                                        class="block text-sm font-medium text-gray-700"
+                                        >Lease from</label
+                                    >
+                                    <Popover>
+                                        <PopoverTrigger as-child>
+                                        <Button
+                                            variant="outline"
+                                            :class="cn(
+                                            'w-[160px] justify-start text-left font-normal',
+                                            !date.start && 'text-muted-foreground',
+                                            )"
+                                        >
+                                            <CalendarIcon class="mr-2 h-4 w-4" />
+                                            {{
+                                                date.start ? `${format(
+                                                              date.start,
+                                                              "LLL dd, y")}` : "Pick a date"
+                                            }}
+                                        </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent class="w-auto p-0">
+                                        <Calendar :columns="2" :min-date="new Date()" v-model="date.start" initial-focus />
+                                        </PopoverContent>
+                                    </Popover>
+                                </div>
+                                <div>
+                                    <label
+                                        for="date_range"
+                                        class="block text-sm font-medium text-gray-700"
+                                        >Lease until</label
+                                    >
+                                    <Popover>
+                                        <PopoverTrigger as-child>
+                                        <Button
+                                            variant="outline"
+                                            :class="cn(
+                                            'w-[160px] justify-start text-left font-normal',
+                                            !date.end && 'text-muted-foreground',
+                                            )"
+                                        >
+                                            <CalendarIcon class="mr-2 h-4 w-4" />
+                                            {{
+                                                date.end ? `${format(
+                                                              date.end,
+                                                              "LLL dd, y")}` : "Pick a date"
+                                            }}
+                                        </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent class="w-auto p-0">
+                                        <Calendar :columns="2" :min-date="date.start" :max-date="maxEndDate" v-model="date.end" initial-focus :disabled-dates="disabledDates" />
+                                        </PopoverContent>
+                                    </Popover>
+                                </div> -->
+
                                 <Popover>
                                     <PopoverTrigger as-child>
                                         <Button

@@ -4,6 +4,16 @@ import { Head, useForm, Link, usePage } from "@inertiajs/vue3";
 import { ref, watch, computed } from "vue";
 import axios from "axios";
 import { Button } from "@/Components/ui/button";
+import { Input } from '@/Components/ui/input';
+import { Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+ } from '@/Components/ui/select';
+
 import {
     Popover,
     PopoverContent,
@@ -241,6 +251,31 @@ const maxRange = computed(() => {
         ? selectedEquipment.value.maximum_leasing_period
         : null;
 });
+
+const leasingHours = computed(() => {
+    let array = [];
+    let hours = selectedEquipment.value.allowed_leasing_hours;
+    if (typeof hours === 'string') {
+    hours = hours
+        .replace(/[\[\]\s]/g, '') // Remove brackets and whitespace
+        .split(',')
+        .map(Number)
+        .filter(n => !isNaN(n)); // Remove any invalid numbers
+    }   
+    if (hours === undefined || hours === null || hours.length === 0) {
+        return array;
+    } else {
+        hours = hours.sort((a, b) => a - b);
+        let currentMin = hours[0];
+        for (let i = 0; i < hours.length; i++) {
+            if (hours[i] + 1 !== hours[i + 1]) {
+                array.push({ from: currentMin, to: hours[i] + 1 });
+                currentMin = hours[i + 1];
+            }
+        }
+    }
+    return array;
+})
 </script>
 
 <template>
@@ -263,24 +298,18 @@ const maxRange = computed(() => {
                                     class="block text-sm font-medium text-gray-700"
                                     >Type</label
                                 >
-                                <select
-                                    id="type_id"
-                                    name="type_id"
-                                    v-model="form.type_id"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                                    required
-                                >
-                                    <option value="" disabled>
-                                        Select Type
-                                    </option>
-                                    <option
-                                        v-for="type in types"
-                                        :key="type.id"
-                                        :value="type.id"
-                                    >
-                                        {{ type.name }}
-                                    </option>
-                                </select>
+                                <Select required id="type_id" name="type_id" v-model="form.type_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select a type of equipment" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem v-for="type in types"
+                                            :key="type.id"
+                                            :value="type.id">
+                                            {{ type.name }}
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select> 
                             </div>
                             <div class="mb-4">
                                 <label
@@ -288,30 +317,23 @@ const maxRange = computed(() => {
                                     class="block text-sm font-medium text-gray-700"
                                     >Equipment</label
                                 >
-                                <select
-                                    id="equipment_id"
-                                    name="equipment_id"
-                                    v-model="form.equipment_id"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                                    required
-                                >
-                                    <option value="" disabled>
-                                        Select Equipment
-                                    </option>
-                                    <option
-                                        v-for="equipment in filteredEquipment"
-                                        :key="equipment.id"
-                                        :value="equipment.id"
-                                    >
-                                        {{ equipment.name }}
-                                    </option>
-                                    <option
-                                        v-if="filteredEquipment.length === 0"
-                                        disabled
-                                    >
-                                        No equipment of this type available
-                                    </option>
-                                </select>
+                                <Select required id="equipment_id" name="equipment_id" v-model="form.equipment_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select a equipment" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem v-for="equipment in filteredEquipment"
+                                            :key="equipment.id"
+                                            :value="equipment.id"
+                                        >{{ equipment.name }}
+                                        </SelectItem>
+                                        <SelectItem
+                                            v-if="filteredEquipment.length === 0"
+                                            disabled
+                                        >No equipment of this type available
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select> 
                             </div>
 
                             <!-- Display selected equipment details -->
@@ -345,9 +367,9 @@ const maxRange = computed(() => {
                                         Allowed Leasing Hours
                                     </div>
                                     <div class="info-box-value">
-                                        {{
-                                            selectedEquipment.allowed_leasing_hours
-                                        }}
+                                        <div v-for="range in leasingHours" :key="range">
+                                            {{ range.from.toString().padStart(2, '0') }}:00 - {{ range.to.toString().padStart(2, '0') }}:00
+                                        </div>
                                     </div>
                                 </div>
                                 <div

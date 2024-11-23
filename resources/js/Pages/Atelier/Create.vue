@@ -2,6 +2,16 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import { reactive, watch } from 'vue';
+import { Input } from '@/Components/ui/input';
+import { Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+ } from '@/Components/ui/select';
+
 
 
 
@@ -56,21 +66,28 @@ const createAtelier = () => {
                         <div class="p-6 bg-white border-b border-gray-200">
                             <div class="mb-4">
                                 <label for="name" class="block text-sm font-medium text-gray-700">*Name</label>
-                                <input type="text" id="name" v-model="form.name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                <Input type="text" id="name" v-model="form.name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"/>
                                 <div v-if="form.errors.name" class="mt-2 text-sm text-red-600"> {{ form.errors.name }} </div>    
                             </div>
                         
                             <div class="mb-4">
                                 <label for="room" class="block text-sm font-medium text-gray-700">*Room</label>
-                                <input type="text" id="room" v-model="form.room" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                <Input type="text" id="room" v-model="form.room" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"/>
                                 <div class="text-gray-600 text-xs">Correct Format: Capital letter followed by exactly 3 numbers</div>
                                 <div v-if="form.errors.room" class="mt-2 text-sm text-red-600"> {{ form.errors.room }} </div>    
                             </div>
                             <div class="mb-4">
                                 <label for="role" class="block text-sm font-medium text-gray-700">*Manager:</label>
-                                <select v-model="form.manager_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                                    <option v-for="user in props.users.data" :key="user.id" :value="user.id">{{ user.name }}</option>
-                                </select> 
+                                <Select v-model="form.manager_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select a manager" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem v-for="user in props.users.data" :key="user.id" :value="user.id">
+                                            {{ user.name }}
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select> 
                                 <div v-if="form.errors.manager_id" class="mt-2 text-sm text-red-600"> {{ form.errors.manager_id }} </div>    
                             </div>
                             <div class="flex items-center justify-end mt-4">

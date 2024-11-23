@@ -69,17 +69,17 @@ class EquipmentController extends Controller
             'name' => ['required', 'string', 'max:255', 'unique:equipments,name'],
             'maximum_leasing_period' => ['required', 'integer','min:1', 'max:90'],
             'year_of_manufacture' => ['integer', 'nullable'],
-            'allowed_leasing_hours' => ['required','string', 'regex:/^([8-9]|1[0-8])(,([8-9]|1[0-8]))*$/'],
+            'allowed_leasing_hours' => ['required', 'array', 'min:1'],
+            'allowed_leasing_hours.*' => ['integer', 'min:0', 'max:23'],
             'date_of_purchase' => ['date', 'nullable'],
             'type_id' => ['required', 'exists:types,id'],
             'atelier_id' => ['required', 'exists:ateliers,id']
         ]);
 
-        $leasing_hours = $request->input('allowed_leasing_hours');
-        $leasing_hours_array = explode(',', $leasing_hours);
-        $leasing_hours_array = array_map('intval', $leasing_hours_array);
-        $leasing_hours_json = json_encode($leasing_hours_array);
-        $validatedData['allowed_leasing_hours'] = $leasing_hours_json;
+        // No need to split and convert since we're already receiving an array
+        $validatedData['allowed_leasing_hours'] = json_encode(
+            array_values(array_unique($request->input('allowed_leasing_hours')))
+        );
 
         $user = Auth::user();
         $validatedData['owner_id'] = $user->id;
@@ -98,18 +98,18 @@ class EquipmentController extends Controller
             'name' => ['required', 'string', 'max:255', Rule::unique('equipments', 'name')->ignore($equipment->id),],
             'maximum_leasing_period' => ['required', 'integer','min:1', 'max:90'],
             'year_of_manufacture' => ['integer', 'nullable'],
-            'allowed_leasing_hours' => ['required','string', 'regex:/^([8-9]|1[0-8])(,([8-9]|1[0-8]))*$/'],
+            'allowed_leasing_hours' => ['required', 'array', 'min:1'],
+            'allowed_leasing_hours.*' => ['integer', 'min:0', 'max:23'],
             'date_of_purchase' => ['date', 'nullable'],
             'type_id' => ['required', 'exists:types,id'],
             'atelier_id' => ['required', 'exists:ateliers,id']
         ]);
 
 
-        $leasing_hours = $request->input('allowed_leasing_hours');
-        $leasing_hours_array = explode(',', $leasing_hours);
-        $leasing_hours_array = array_map('intval', $leasing_hours_array);
-        $leasing_hours_json = json_encode($leasing_hours_array);
-        $validatedData['allowed_leasing_hours'] = $leasing_hours_json;
+        // No need to split and convert since we're already receiving an array
+        $validatedData['allowed_leasing_hours'] = json_encode(
+            array_values(array_unique($request->input('allowed_leasing_hours')))
+        );
 
         $equipment->update($validatedData);
         return $this->index();

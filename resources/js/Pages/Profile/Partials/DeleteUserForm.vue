@@ -4,9 +4,10 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import Modal from '@/Components/Modal.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
 import { useForm } from '@inertiajs/vue3';
 import { nextTick, ref } from 'vue';
+import { Input } from '@/Components/ui/Input';
+
 
 const confirmingUserDeletion = ref(false);
 const passwordInput = ref(null);
@@ -46,9 +47,7 @@ const closeModal = () => {
             </h2>
 
             <p class="mt-1 text-sm text-gray-600">
-                Once your account is deleted, all of its resources and data will
-                be permanently deleted. Before deleting your account, please
-                download any data or information that you wish to retain.
+                Permanently delete your account. This action cannot be undone.
             </p>
         </header>
 
@@ -68,14 +67,9 @@ const closeModal = () => {
                     confirm you would like to permanently delete your account.
                 </p>
 
-                <div class="mt-6">
-                    <InputLabel
-                        for="password"
-                        value="Password"
-                        class="sr-only"
-                    />
+                <div class="mt-6 flex justify-center">
 
-                    <TextInput
+                    <Input
                         id="password"
                         ref="passwordInput"
                         v-model="form.password"

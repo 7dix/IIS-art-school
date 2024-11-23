@@ -11,7 +11,7 @@ import {
 import { statusClassColor, parseDateTime } from "@/Composables/reservationUtils";
 import { Badge } from '@/Components/ui/badge'
 import { Button } from '@/Components/ui/button'
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useToast } from '@/Components/ui/toast/use-toast'
 
 
@@ -45,7 +45,30 @@ const changeStatus = (status) => {
         console.error(error);
     });
 }
-
+const leasingHours = computed(() => {
+    let array = [];
+    let hours = props.reservation.equipment.allowed_leasing_hours;
+    if (typeof hours === 'string') {
+    hours = hours
+        .replace(/[\[\]\s]/g, '') // Remove brackets and whitespace
+        .split(',')
+        .map(Number)
+        .filter(n => !isNaN(n)); // Remove any invalid numbers
+    }   
+    if (hours === undefined || hours.length === 0) {
+        return array;
+    } else {
+        hours = hours.sort((a, b) => a - b);
+        let currentMin = hours[0];
+        for (let i = 0; i < hours.length; i++) {
+            if (hours[i] + 1 !== hours[i + 1]) {
+                array.push({ from: currentMin, to: hours[i] + 1 });
+                currentMin = hours[i + 1];
+            }
+        }
+    }
+    return array;
+})
 
 
 </script>
@@ -125,9 +148,9 @@ const changeStatus = (status) => {
                                 <div class="info-box">
                                     <div class="info-box-label">Leasing period</div>
                                     <div class="flex space-x-2 items-center">
-                                        <div class="info-box-value">{{ parseDateTime(reservation.start_date) }}</div>
+                                        <div class="info-box-value">{{ parseDateTime(reservation.start_date, true) }}</div>
                                         <Icon icon="solar:arrow-right-broken" />
-                                        <div class="info-box-value">{{ parseDateTime(reservation.end_date) }}</div>
+                                        <div class="info-box-value">{{ parseDateTime(reservation.end_date, true) }}</div>
                                     </div>
                                 </div>
                                 <div class="info-box">
@@ -165,6 +188,14 @@ const changeStatus = (status) => {
                                 <div class="info-box">
                                     <div class="info-box-label">Owner</div>
                                     <div class="info-box-value">{{ reservation.equipment.owner.name }} | {{ reservation.equipment.owner.email }}</div>
+                                </div>
+                                <div class="info-box">
+                                    <div class="info-box-label">Leasing hours</div>
+                                    <div class="info-box-value">
+                                        <div v-for="range in leasingHours" :key="range">
+                                            {{ range.from.toString().padStart(2, '0') }}:00 - {{ range.to.toString().padStart(2, '0') }}:00
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -41,6 +41,7 @@ const errors = ref({});
 
 const openEditDialog = (atelier) => {
     selectedAtelier.value = { ...atelier };  // Clone atelier data to edit
+    errors.value = {};
     showDialog.value = true;
 };
 

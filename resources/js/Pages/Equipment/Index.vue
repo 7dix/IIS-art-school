@@ -106,6 +106,7 @@ const saveEquipment = async (updatedEquipment) => {
 
 const closeDialog = () => {
   showDialog.value = false;
+  errors.value = {};
 };
 
 
@@ -145,7 +146,9 @@ const columns: VTColumn[] = [
         "key": "actions",
         "header": "Actions",
         renderAs: (item) => {
-            return h("div", {}, [
+            return h("div", {
+                class: "flex items-center"
+            }, [
             h(
                 Button,
                 {

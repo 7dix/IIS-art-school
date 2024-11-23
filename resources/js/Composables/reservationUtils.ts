@@ -19,8 +19,15 @@ export const statusClassColor = (status: string) => {
     return `${color()} text-white hover:${color()} hover:text-white`;
 }
 
-export const parseDateTime = (date: string) => {
+export const parseDateTime = (date: string, onlyDate: boolean = false) => {
     const dateObj = new Date(date);
+    if (onlyDate) {
+        return dateObj.toLocaleDateString('cs-CZ', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+        });
+    }
     return dateObj.toLocaleDateString('cs-CZ', {
         day: '2-digit',
         month: '2-digit',

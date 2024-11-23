@@ -12,22 +12,13 @@ use Inertia\Inertia;
 use App\Http\Controllers\ReservationController;
 use App\Http\Middleware\EnsureUserHasRole;
 
-Route::get('/', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-
-Route::get('/test', function () {
-    return Inertia::render('Test');
-});
-
-
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 
 Route::middleware('auth')->group(function () {
+    Route::get('/', function () {
+        return Inertia::render('Dashboard');
+    });
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');});
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -58,7 +49,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('types', TypeController::class);
     Route::get('/api/types/{type}/user-equipment', action: [MyReservationController::class, 'getUserEquipmentByType']);
     Route::get('/api/ateliers/{atelier}/equipment', [AtelierController::class, 'getEquipment']);
-    Route::get('/api/ateliers/{atelier}/users/{user}/restricted-equipment', [AtelierController::class, 'getRestrictedEquipment']);    //Api routes
+    Route::get('/api/ateliers/{atelier}/users/{user}/restricted-equipment', [AtelierController::class, 'getRestrictedEquipment']);
+    Route::get('/api/equipment/{id}/reservations', [EquipmentController::class, 'getReservations']);
     
     //php artisan route:list    Route::delete('/ateliers/{atelier}/users/{user}', [AtelierController::class, 'removeUser']);
 

@@ -14,11 +14,13 @@ import { CalendarIcon } from "@radix-icons/vue";
 import { addDays, format } from "date-fns";
 import "@vuepic/vue-datepicker/dist/main.css";
 
+// Get the current date in the required format
 const getCurrentDate = () => {
     const now = new Date();
     return format(now, "yyyy-MM-dd'T'HH:mm:ss");
 };
 
+// Calculate the end date based on the start date and leasing period
 const calculateEndDate = (startDate, leasingPeriod) => {
     const start = new Date(startDate);
     start.setDate(start.getDate() + leasingPeriod);
@@ -49,7 +51,7 @@ const props = defineProps({
 const form = useForm({
     type_id: props.typeId || "",
     equipment_id: props.equipmentId || "",
-    start_date: getCurrentDate(),
+    start_date: getCurrentDate(), // Set the default value to today's date
     end_date: "",
     status: "pending",
 });
@@ -63,10 +65,12 @@ watch(
     () => form.type_id,
     (newTypeId) => {
         if (newTypeId) {
+            // Fetch equipment based on the selected type and user's ateliers
             axios
                 .get(`/api/types/${newTypeId}/user-equipment`)
                 .then((response) => {
                     filteredEquipment.value = response.data;
+                    // Set the equipment_id if it is provided
                     if (props.equipmentId) {
                         form.equipment_id = props.equipmentId;
                     }
@@ -81,11 +85,13 @@ watch(
     }
 );
 
+// Ensure the equipment list is fetched when the component is mounted
 if (form.type_id) {
     axios
         .get(`/api/types/${form.type_id}/user-equipment`)
         .then((response) => {
             filteredEquipment.value = response.data;
+            // Set the equipment_id if it is provided
             if (props.equipmentId) {
                 form.equipment_id = props.equipmentId;
             }
@@ -104,6 +110,7 @@ const selectedEquipment = computed(() => {
     );
 });
 
+// Watch for changes to selectedEquipment and fetch existing reservations
 watch(selectedEquipment, (newEquipment) => {
     if (newEquipment && newEquipment.maximum_leasing_period) {
         if (!isInitialized.value) {
@@ -116,6 +123,7 @@ watch(selectedEquipment, (newEquipment) => {
             isInitialized.value = true;
         }
 
+        // Fetch existing reservations for the selected equipment
         axios
             .get(`/api/equipment/${newEquipment.id}/reservations`)
             .then((response) => {
@@ -135,6 +143,7 @@ watch(selectedEquipment, (newEquipment) => {
     }
 });
 
+// Watch for changes to start_date and update end_date accordingly
 watch(
     () => form.start_date,
     (newStartDate) => {
@@ -185,6 +194,7 @@ const date = ref({
     end: form.end_date ? new Date(form.end_date) : addDays(new Date(), 20),
 });
 
+// Watch for changes to the date range and update form.start_date and form.end_date accordingly
 watch(date, (newDate) => {
     form.start_date = format(newDate.start, "yyyy-MM-dd'T'HH:mm:ss");
     form.end_date = newDate.end
@@ -210,6 +220,7 @@ watch(date, (newDate) => {
     }
 });
 
+// Calculate the maximum end date based on the selected equipment's maximum leasing period
 const maxEndDate = computed(() => {
     if (
         selectedEquipment.value &&
@@ -223,6 +234,7 @@ const maxEndDate = computed(() => {
     return null;
 });
 
+// Compute disabled dates based on existing reservations
 const disabledDates = computed(() => {
     return existingReservations.value.flatMap((reservation) => {
         const start = new Date(reservation.start_date);
@@ -356,6 +368,7 @@ const leasingHours = computed(() => {
                                 </div>
                             </div>
 
+                            <!-- Display selected equipment details -->
                             <div v-if="selectedEquipment" class="mb-4">
                                 <h3 class="text-lg font-semibold">
                                     Selected Equipment Details
@@ -418,64 +431,12 @@ const leasingHours = computed(() => {
                                 </div>
                             </div>
 
-                            <div class="mb-4 flex flex-row gap-4" v-if="selectedEquipment">
-                                <!-- <div>
-                                    <label
-                                        for="date_range"
-                                        class="block text-sm font-medium text-gray-700"
-                                        >Lease from</label
-                                    >
-                                    <Popover>
-                                        <PopoverTrigger as-child>
-                                        <Button
-                                            variant="outline"
-                                            :class="cn(
-                                            'w-[160px] justify-start text-left font-normal',
-                                            !date.start && 'text-muted-foreground',
-                                            )"
-                                        >
-                                            <CalendarIcon class="mr-2 h-4 w-4" />
-                                            {{
-                                                date.start ? `${format(
-                                                              date.start,
-                                                              "LLL dd, y")}` : "Pick a date"
-                                            }}
-                                        </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent class="w-auto p-0">
-                                        <Calendar :columns="2" :min-date="new Date()" v-model="date.start" initial-focus />
-                                        </PopoverContent>
-                                    </Popover>
-                                </div>
-                                <div>
-                                    <label
-                                        for="date_range"
-                                        class="block text-sm font-medium text-gray-700"
-                                        >Lease until</label
-                                    >
-                                    <Popover>
-                                        <PopoverTrigger as-child>
-                                        <Button
-                                            variant="outline"
-                                            :class="cn(
-                                            'w-[160px] justify-start text-left font-normal',
-                                            !date.end && 'text-muted-foreground',
-                                            )"
-                                        >
-                                            <CalendarIcon class="mr-2 h-4 w-4" />
-                                            {{
-                                                date.end ? `${format(
-                                                              date.end,
-                                                              "LLL dd, y")}` : "Pick a date"
-                                            }}
-                                        </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent class="w-auto p-0">
-                                        <Calendar :columns="2" :min-date="date.start" :max-date="maxEndDate" v-model="date.end" initial-focus :disabled-dates="disabledDates" />
-                                        </PopoverContent>
-                                    </Popover>
-                                </div> -->
-
+                            <div class="mb-4">
+                                <label
+                                    for="date_range"
+                                    class="block text-sm font-medium text-gray-700"
+                                    >Date Range</label
+                                >
                                 <Popover>
                                     <PopoverTrigger as-child>
                                         <Button

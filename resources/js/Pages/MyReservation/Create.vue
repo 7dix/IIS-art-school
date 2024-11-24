@@ -399,9 +399,9 @@ const leasingHours = computed(() => {
                                         Allowed Leasing Hours
                                     </div>
                                     <div class="info-box-value">
-                                        {{
-                                            selectedEquipment.allowed_leasing_hours
-                                        }}
+                                        <div v-for="range in leasingHours" :key="range">
+                                            {{ range.from.toString().padStart(2, '0') }}:00 - {{ range.to.toString().padStart(2, '0') }}:00
+                                        </div>
                                     </div>
                                 </div>
                                 <div

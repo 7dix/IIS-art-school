@@ -62,6 +62,10 @@ class ReservationController extends Controller
             if ($reservation->status !== 'ongoing') {
                 return response()->json(['message' => 'Invalid status change'], 400);
             }
+        } else if ($status === 'cancelled') {
+            if ($reservation->status !== 'approved') {
+                return response()->json(['message' => 'Invalid status change'], 400);
+        }
         } else {
             return response()->json(['message' => 'Invalid status'], 400);
         }

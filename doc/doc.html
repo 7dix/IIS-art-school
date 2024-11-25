@@ -19,7 +19,7 @@
 	<dt>Autoøi</dt>
 	<dd>Marek Tenora <!-- Nahraïte skuteèným jménem a e-mailem autora a popisem èinnosti -->
 	    <a href="mailto:xtenor02@stud.fit.vutbr.cz">xtenor02@stud.fit.vutbr.cz</a> -
-		Správa profilu, rezervace a spravování rezervací. Naplnìní databáze. Nasazení na server, výbìr a instalace technologií. Video.
+		Správa profilu, rezervace a spravování rezervací. Vytvoøení generování seedù a naplnìní databáze. Nasazení na server, výbìr a instalace technologií. Video.
 	</dd>
 	<dd>Natália Sobihardová <!-- Nahraïte skuteèným jménem a e-mailem autora a popisem èinnosti -->
 	    <a href="mailto:xsobih00@stud.fit.vutbr.cz">xsobih00@stud.fit.vutbr.cz</a> - 
@@ -45,12 +45,7 @@
 
 
 <h3>Video</h3>
-
-<p>Pøilo¾te odkaz na komentované video demostrující pou¾ití informaèního
- systému. Zamìøte se na pøípady u¾ití definované zadáním (napø. 
-registrace u¾ivatele, správa u¾ivatelù a èinnosti jednotlivých rolí). 
-Video nahrajte napøíklad na VUT Google Drive, kde ho bude mo¾né pøímo 
-spustit z odkazu.</p> 
+<a href="https://drive.google.com/file/d/1j5lB6PU3VJhMWzh38dpSDpw9TU8SDb7D/view?usp=sharing">Odkaz na video</a>
 
 <h2>Implementace</h2>
 <ul>
@@ -69,16 +64,36 @@ Správce ateliéru - Má pøístup k stránkám: "My Reservations", "Ateliers", "Types"
 Administrátor - Má pøístup k stránkám: "My Reservations", "Manage Reservation", "Ateliers", "Types", "Equipments".<br>
 <h3>Databáze</h3>
 
-Zde vlo¾te grafické schéma relaèní databáze (tabulek v databázi).
+<h3>ERD Diagram</h3>
+<img src="ERD.png" width="1500" alt="ERD Diagram">
 
 <h2>Instalace</h2>
 
 Struènì popi¹te: 
 <ul>
-<li>postup instalace na server,</li>
-<li>softwarové po¾adavky (verze PHP apod.),</li>
-<li>jak rozbalit, konfigurovat, inicializovat databázi, ...</li>
-<li>K tvorbì databáze je potøeba v MySQL provést jediný pøíkaz a to "CREATE DATABASE iis;". Poté se pomocí pøíkazu "php artisan migrate:fresh --seed" vytvoøí tabulky a naplní se ukázkovými datami.<li>
+<li>Pro rozjetí aplikace je potøeba mít <b>php 8.2 >= s knihovnou 'composer', node.js s modulem 'npm' a MySQL databázi.</b></li>
+<li><b>Instalace</b>: 
+	<ul>
+		<li>
+			1) Instalace dependencí:
+				<pre>php composer install</pre>
+				<pre>npm install</pre>
+		</li>
+		<li>
+			2) Vytvoøení databáze:
+			<pre>K tvorbì databáze je potøeba v MySQL provést jediný pøíkaz a to "CREATE DATABASE iis;". Poté se pomocí pøíkazu "php artisan migrate:fresh --seed" vytvoøí tabulky a naplní se ukázkovými datami.</pre>
+		</li>
+		<li>3) Nastavení .env:
+			<pre>Pøejmenovat .env.example na .env a nastavit dle potøeb. Hlavní je nastavení APP_KEY který je mo¾né vygenerovat pomocí
+"php artisan key:generate". Dále je zde potøeba napojit databázi dle pøedlohy. Více info o .env je mo¾né najít <a href='https://laravel.com/docs/11.x/configuration'>zde</a>.</pre>
+		</li>
+		<li>
+			4) Spu¹tìní serveru:
+			<b><pre>npm run build</pre>
+			<pre>php artisan serve</pre></b>
+		</li>
+	</ul>
+</li>
 
 
 

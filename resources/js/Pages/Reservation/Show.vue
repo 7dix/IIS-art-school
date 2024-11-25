@@ -100,7 +100,7 @@ const leasingHours = computed(() => {
                             Reservation detail
                         </h2>
                         <div class="flex items-end justify-end space-x-4"
-                        v-if="$page.props.auth.user.permissions.includes('manage_reservation')"
+                        v-if="$page.props.auth.user.permissions.includes('manage_reservation') && props.reservation.equipment.owner.id == $page.props.auth.user.id"
                         >
                             <Button v-if="state === 'pending'"
                                 variant="outline"

@@ -1,66 +1,89 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Umělecká škola
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+### Autoři
+- **Marek Tenora**  
+  [xtenor02@stud.fit.vutbr.cz](mailto:xtenor02@stud.fit.vutbr.cz) - Správa profilu, rezervace a spravování rezervací, komponenta tabulky. Vytvoření generování seedů a naplnění databáze. Nasazení na server, výběr a instalace technologií. Video.
+  
+- **Natália Sobihardová**  
+  [xsobih00@stud.fit.vutbr.cz](mailto:xsobih00@stud.fit.vutbr.cz) - Tabulka typů, Detail ateliéru a jeho funkce, vytváření rezervací, přehled uživatelových rezervací, dokumentace.
 
-## About Laravel
+- **Petr Štancl**  
+  [xstanc12@stud.fit.vutbr.cz](mailto:xstanc12@stud.fit.vutbr.cz) - Tabulka uživatelů a zařízení. Vytváření ateliérů, zařízení, typů. Editační dialogy. Logika rolí a povolení. Blokace uživatele na konkrétní zařízení, blokace zařízení celkově.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### URL aplikace
+[https://iis.olivebranch.cz/](https://iis.olivebranch.cz/)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Uživatelé systému pro testování
 
-## Learning Laravel
+Uveďte prosím existující zástupce **všech rolí uživatelů**.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+| Login              | Heslo | Role                                                                                                                                          |
+|--------------------|-------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| admin@IIS.com      | admin | Administrátor                                                                                                                                  |
+| user@IIS.com       | user  | Uživatel                                                                                                                                       |
+| manager@IIS.com    | manager | Správce ateliéru (základně má roli uživatele, ale jakmile jej nastavíte u ateliéru správcem, získá vyšší práva)                             |
+| teacher@IIS.com    | teacher | Učitel v ateliéru (základně má roli uživatele, ale jakmile jej nastavíte v nějakém ateliéru učitelem, získá vyšší práva)                      |
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Video
+[Odkaz na video](https://drive.google.com/file/d/1j5lB6PU3VJhMWzh38dpSDpw9TU8SDb7D/view?usp=sharing)
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Implementace
+- **AtelierController.php** - view na ateliéry. Zobrazení přehledu a detailu ateliérů, editace ateliéru, tvorba ateliéru, smazání ateliéru, přidání/odebrání uživatele do ateliéru, přidání/odebrání učitele do ateliéru.  
+- **EquipmentController.php** - view na zařízení. Zobrazení přehledu zařízení, editace zařízení, tvorba zařízení, smazání zařízení.  
+- **MyReservationController.php** - view na uživatelovi rezervace. Zobrazení uživatelových rezervací a jejich detail, tvorba rezervací.  
+- **ProfileController.php** - view na správu profilu uživatele. Změna údajů, změna hesla, smazání účtu.  
+- **ReservationController.php** - view na správu příchozích rezervací. Zobrazení přehledu a detailu příchozích rezervací, změna stavu rezervace.  
+- **TypeController.php** - view na typy zařízení. Zobrazení přehledu typů, editace typu, přidání typu, smazání typu.  
+- **UserController.php** - view na uživatele. Zobrazení přehledu uživatelů, editace uživatele, smazání uživatele.  
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Přístup podle rolí
+- **Uživatel** - Má přístup k stránkám: "My Reservations", "Ateliers".  
+- **Učitel** - Má přístup k stránkám: "My Reservations", "Manage Reservations", "Ateliers", "Equipments".  
+- **Správce ateliéru** - Má přístup k stránkám: "My Reservations", "Ateliers", "Types".  
+- **Administrátor** - Má přístup k stránkám: "My Reservations", "Manage Reservation", "Ateliers", "Types", "Equipments".
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Databáze
+![ERD Diagram](doc/ERD.png)
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Instalace
 
-## Security Vulnerabilities
+Stručně popište:
+- Pro rozjetí aplikace je potřeba mít **php 8.2 >= s knihovnou 'composer', node.js s modulem 'npm' a MySQL databázi.**
+- **Instalace**:
+  1) Instalace dependencí:
+      ```
+      php composer install
+      npm install
+      ```
+  2) Vytvoření databáze:
+      ```
+      K tvorbě databáze je potřeba v MySQL provést jediný příkaz a to "CREATE DATABASE iis;". Poté se pomocí příkazu "php artisan migrate:fresh --seed" vytvoří tabulky a naplní se ukázkovými datami.
+      ```
+  3) Nastavení `.env`:
+      ```
+      Přejmenovat .env.example na .env a nastavit dle potřeb. Hlavní je nastavení APP_KEY, který je možné vygenerovat pomocí "php artisan key:generate". Dále je zde potřeba napojit databázi dle předlohy. Více info o .env je možné najít [zde](https://laravel.com/docs/11.x/configuration).
+      ```
+  4) Spuštění serveru:
+      ```
+      npm run build
+      php artisan serve
+      ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## Známé problémy
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- Nepoužití dynamického načítání dat z backendu může v případě většího naplnění databáze výrazně zpomalit aplikaci.
+- Optimalizace UI pro mobilní zařízení a pro lepší orientaci v aplikaci.

@@ -1,4 +1,4 @@
-# Umělecká škola
+# Informační systém pro Uměleckou školu
 
 ### Autoři
 - **Marek Tenora**  
@@ -9,9 +9,6 @@
 
 - **Petr Štancl**  
   [xstanc12@stud.fit.vutbr.cz](mailto:xstanc12@stud.fit.vutbr.cz) - Tabulka uživatelů a zařízení. Vytváření ateliérů, zařízení, typů. Editační dialogy. Logika rolí a povolení. Blokace uživatele na konkrétní zařízení, blokace zařízení celkově.
-
-### URL aplikace
-[https://iis.olivebranch.cz/](https://iis.olivebranch.cz/)
 
 ---
 
@@ -26,10 +23,6 @@ Uveďte prosím existující zástupce **všech rolí uživatelů**.
 | manager@IIS.com    | manager | Správce ateliéru (základně má roli uživatele, ale jakmile jej nastavíte u ateliéru správcem, získá vyšší práva)                             |
 | teacher@IIS.com    | teacher | Učitel v ateliéru (základně má roli uživatele, ale jakmile jej nastavíte v nějakém ateliéru učitelem, získá vyšší práva)                      |
 
----
-
-### Video
-[Odkaz na video](https://drive.google.com/file/d/1j5lB6PU3VJhMWzh38dpSDpw9TU8SDb7D/view?usp=sharing)
 
 ---
 
